@@ -7,7 +7,7 @@ export const AIAgentSpace: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [chatMessages, setChatMessages] = useState<{ role: 'ai' | 'user'; content: string }[]>([
-    { role: 'ai', content: "Bonjour ! Je suis votre assistant IA spécialisé dans les appels d'offres. Déposez un document d'appel d'offres ici (PDF), et je l'enregistrerai dans notre base de données PostgreSQL, le stockerai dans MinIO et l'analyserai pour vous." }
+    { role: 'ai', content: "Bonjour ! Je suis votre assistant IA spécialisé dans les appels d'offres. Déposez un document d'appel d'offres ici (PDF), et je l'enregistrerai dans votre base de données PostgreSQL locale, le stockerai dans MinIO et l'analyserai pour vous." }
   ]);
   const [inputValue, setInputValue] = useState('');
 
@@ -125,11 +125,29 @@ export const AIAgentSpace: React.FC = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   className="flex flex-col items-center text-center"
                 >
-                  <div className="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 mb-4">
+                  <motion.div 
+                    className="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 mb-4"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ 
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                      delay: 0.1 
+                    }}
+                  >
                     <CheckCircle2 className="w-10 h-10" />
-                  </div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="bg-emerald-50 border border-emerald-200 rounded-xl px-6 py-2 mb-3"
+                  >
+                    <p className="text-emerald-700 font-bold text-sm">✓ TÉLÉCHARGEMENT RÉUSSI</p>
+                  </motion.div>
                   <h3 className="text-lg font-bold text-slate-900 mb-2">{file.name}</h3>
-                  <p className="text-slate-500 text-sm mb-6">Traité et indexé avec succès.</p>
+                  <p className="text-slate-500 text-sm mb-6">Traité et indexé avec succès dans PostgreSQL.</p>
                   <button 
                     onClick={(e) => { e.stopPropagation(); setFile(null); }}
                     className="text-sm font-bold text-red-500 hover:text-red-600 px-4 py-2"
