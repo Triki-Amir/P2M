@@ -23,9 +23,15 @@ const minioClient = new Minio.Client({
 });
 
 // Supabase client
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
+  console.error("ERROR: SUPABASE_URL and SUPABASE_KEY environment variables are required");
+  console.error("Please create a .env file based on .env.example");
+  process.exit(1);
+}
+
 const supabase = createClient(
-  process.env.SUPABASE_URL || "https://iscswsczvtjwwmwrlnxz.supabase.co",
-  process.env.SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzY3N3c2N6dnRqd3dtd3Jsbnh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5Mzc4MjQsImV4cCI6MjA4NTUxMzgyNH0.VWz-G1F-psTlBPcxIuTV1r-9hWk7HnVp0bEFNajPQQA"
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
 );
 
 const BUCKET_NAME = process.env.MINIO_BUCKET || "pdf-storage";
@@ -55,6 +61,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     );
 
     // Insert metadata into PostgreSQL via Supabase
+    // Status set to 'uploaded' to indicate file is in storage and ready for processing
+    // (differs from schema default 'pending' which is for records not yet uploaded)
     const { data, error } = await supabase
       .from("documents")
       .insert({
