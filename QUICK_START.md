@@ -186,3 +186,7 @@ minio.exe server C:\MinIO\data
 
 
 **Happy coding! 🚀**
+# run the ocr command
+1) ollama run qwen2.5vl:7bn (in case you didnt run this version of ollama run qwen2.5vl:7b)
+2) pip install ollama (in case you didnt instrall ollama)
+3) python .\vision.py (in this part you make sure that you name the path in the vision.py file like the example you want it to run it(path = 'test.jpg'))

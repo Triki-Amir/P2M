@@ -94,6 +94,11 @@ npm install
 npm run dev
 ```
 
+# Minio Activate server
+minio.exe server C:\MinIO\data
+
+
+
 ## Configuration
 
 ### Environment Variables
