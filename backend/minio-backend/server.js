@@ -29,14 +29,18 @@ if (!process.env.DATABASE_URL && !process.env.PGHOST) {
   process.exit(1);
 }
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  host: process.env.PGHOST,
-  port: process.env.PGPORT || 5432,
-  database: process.env.PGDATABASE,
-  user: process.env.PGUSER,
-  password: process.env.PGPASSWORD,
-});
+// Pool configuration: DATABASE_URL takes precedence over individual parameters if both are provided
+const pool = new Pool(
+  process.env.DATABASE_URL
+    ? { connectionString: process.env.DATABASE_URL }
+    : {
+        host: process.env.PGHOST,
+        port: process.env.PGPORT || 5432,
+        database: process.env.PGDATABASE,
+        user: process.env.PGUSER,
+        password: process.env.PGPASSWORD,
+      }
+);
 
 const BUCKET_NAME = process.env.MINIO_BUCKET || "pdf-storage";
 const DEFAULT_TENANT_ID = process.env.DEFAULT_TENANT_ID || "00000000-0000-0000-0000-000000000000";
