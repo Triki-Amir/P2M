@@ -7,25 +7,53 @@ export const AIAgentSpace: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [chatMessages, setChatMessages] = useState<{ role: 'ai' | 'user'; content: string }[]>([
-    { role: 'ai', content: "Bonjour ! Je suis votre assistant IA spécialisé dans les appels d'offres. Déposez un document d'appel d'offres ici, et je l'analyserai pour vous, en extrairai les dates clés et vous aiderai à élaborer une stratégie de réponse." }
+    { role: 'ai', content: "Bonjour ! Je suis votre assistant IA spécialisé dans les appels d'offres. Déposez un document d'appel d'offres ici (PDF), et je l'enregistrerai dans notre base de données PostgreSQL, le stockerai dans MinIO et l'analyserai pour vous." }
   ]);
   const [inputValue, setInputValue] = useState('');
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       const droppedFile = acceptedFiles[0];
       setFile(droppedFile);
       setIsProcessing(true);
       
-      // Simulate AI processing
-      setTimeout(() => {
+      try {
+        // Upload to backend
+        const formData = new FormData();
+        formData.append("file", droppedFile);
+
+        const response = await fetch("http://localhost:3000/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await response.json();
+        
+        setIsProcessing(false);
+        
+        if (response.ok) {
+          setChatMessages(prev => [
+            ...prev,
+            { role: 'user', content: `Document téléchargé : ${droppedFile.name}` },
+            { role: 'ai', content: `J'ai analysé "${droppedFile.name}". Le document a été enregistré avec succès dans la base de données.\n\nID du document : ${result.documentId}\nChemin de stockage : ${result.storagePath}\n\nJe peux maintenant vous aider à analyser ce document. Que souhaitez-vous savoir ?` }
+          ]);
+        } else {
+          setChatMessages(prev => [
+            ...prev,
+            { role: 'user', content: `Tentative de téléchargement : ${droppedFile.name}` },
+            { role: 'ai', content: `Erreur lors du téléchargement : ${result.error || "Erreur inconnue"}. Veuillez réessayer.` }
+          ]);
+          setFile(null);
+        }
+      } catch (error) {
         setIsProcessing(false);
         setChatMessages(prev => [
           ...prev,
-          { role: 'user', content: `Document téléchargé : ${droppedFile.name}` },
-          { role: 'ai', content: `J'ai analysé "${droppedFile.name}". Il semble s'agir d'un appel d'offres pour un projet de bâtiment commercial. \n\nPoints clés :\n- Date limite : 15 oct. 2026\n- Budget estimé : 2,4 M$\n- Exigences principales : Matériaux durables, achèvement en 12 mois.\n\nSouhaitez-vous que je rédige un plan de proposition basé sur vos précédentes offres gagnantes ?` }
+          { role: 'user', content: `Tentative de téléchargement : ${droppedFile.name}` },
+          { role: 'ai', content: `Erreur de connexion au serveur. Assurez-vous que le backend est en cours d'exécution sur http://localhost:3000` }
         ]);
-      }, 3000);
+        setFile(null);
+      }
     }
   }, []);
 

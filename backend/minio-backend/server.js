@@ -1,7 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const multer = require("multer");
 const Minio = require("minio");
 const cors = require("cors");
+const { createClient } = require("@supabase/supabase-js");
 
 const app = express();
 app.use(cors());
@@ -13,12 +15,27 @@ const upload = multer({
 
 // MinIO client
 const minioClient = new Minio.Client({
-  endPoint: "localhost",
-  port: 9000,
-  useSSL: false,
-  accessKey: "minioadmin",
-  secretKey: "minioadmin",
+  endPoint: process.env.MINIO_ENDPOINT || "localhost",
+  port: parseInt(process.env.MINIO_PORT) || 9000,
+  useSSL: process.env.MINIO_USE_SSL === "true",
+  accessKey: process.env.MINIO_ACCESS_KEY || "minioadmin",
+  secretKey: process.env.MINIO_SECRET_KEY || "minioadmin",
 });
+
+// Supabase client
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
+  console.error("ERROR: SUPABASE_URL and SUPABASE_KEY environment variables are required");
+  console.error("Please create a .env file based on .env.example");
+  process.exit(1);
+}
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
+
+const BUCKET_NAME = process.env.MINIO_BUCKET || "pdf-storage";
+const DEFAULT_TENANT_ID = process.env.DEFAULT_TENANT_ID || "00000000-0000-0000-0000-000000000000";
 
 // Upload endpoint
 app.post("/upload", upload.single("file"), async (req, res) => {
@@ -32,25 +49,58 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     }
 
     const fileName = `${Date.now()}-${req.file.originalname}`;
+    const storagePath = fileName;
 
+    // Upload to MinIO
     await minioClient.putObject(
-      "pdf-storage",
+      BUCKET_NAME,
       fileName,
       req.file.buffer,
       req.file.size,
       { "Content-Type": "application/pdf" }
     );
 
+    // Insert metadata into PostgreSQL via Supabase
+    // Status set to 'uploaded' to indicate file is in storage and ready for processing
+    // (differs from schema default 'pending' which is for records not yet uploaded)
+    const { data, error } = await supabase
+      .from("documents")
+      .insert({
+        tenant_id: DEFAULT_TENANT_ID,
+        filename: req.file.originalname,
+        storage_path: storagePath,
+        file_size: req.file.size,
+        mime_type: req.file.mimetype,
+        status: "uploaded",
+        metadata: {
+          bucket: BUCKET_NAME,
+          uploaded_at: new Date().toISOString(),
+        },
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Database error:", error);
+      return res.status(500).json({ 
+        error: "Failed to save document metadata",
+        details: error.message 
+      });
+    }
+
     res.json({
       message: "PDF uploaded successfully",
       fileName,
+      documentId: data.id,
+      storagePath,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Upload failed" });
+    res.status(500).json({ error: "Upload failed", details: err.message });
   }
 });
 
-app.listen(3000, () => {
-  console.log("Backend running on http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Backend running on http://localhost:${PORT}`);
 });
