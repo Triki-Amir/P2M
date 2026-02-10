@@ -1,6 +1,6 @@
 from ollama import chat
 
-path = 'contact bus.png'
+path = 'avis.jpg'
 prompt = (
 "ACT AS AN OCR EXPERT. Accurately transcribe all visible text from the provided image (English, French, and Arabic)."
 "STEP 1: Transcribe the text word-for-word with maximum accuracy, preserving paragraphs and tables."
