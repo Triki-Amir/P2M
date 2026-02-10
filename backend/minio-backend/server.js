@@ -3,7 +3,7 @@ const express = require("express");
 const multer = require("multer");
 const Minio = require("minio");
 const cors = require("cors");
-const { createClient } = require("@supabase/supabase-js");
+const { Pool } = require("pg");
 
 const app = express();
 app.use(cors());
@@ -22,17 +22,21 @@ const minioClient = new Minio.Client({
   secretKey: process.env.MINIO_SECRET_KEY || "minioadmin",
 });
 
-// Supabase client
-if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
-  console.error("ERROR: SUPABASE_URL and SUPABASE_KEY environment variables are required");
+// PostgreSQL client
+if (!process.env.DATABASE_URL && !process.env.PGHOST) {
+  console.error("ERROR: DATABASE_URL or PostgreSQL connection parameters are required");
   console.error("Please create a .env file based on .env.example");
   process.exit(1);
 }
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  host: process.env.PGHOST,
+  port: process.env.PGPORT || 5432,
+  database: process.env.PGDATABASE,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+});
 
 const BUCKET_NAME = process.env.MINIO_BUCKET || "pdf-storage";
 const DEFAULT_TENANT_ID = process.env.DEFAULT_TENANT_ID || "00000000-0000-0000-0000-000000000000";
@@ -60,31 +64,36 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       { "Content-Type": "application/pdf" }
     );
 
-    // Insert metadata into PostgreSQL via Supabase
+    // Insert metadata into PostgreSQL
     // Status set to 'uploaded' to indicate file is in storage and ready for processing
     // (differs from schema default 'pending' which is for records not yet uploaded)
-    const { data, error } = await supabase
-      .from("documents")
-      .insert({
-        tenant_id: DEFAULT_TENANT_ID,
-        filename: req.file.originalname,
-        storage_path: storagePath,
-        file_size: req.file.size,
-        mime_type: req.file.mimetype,
-        status: "uploaded",
-        metadata: {
-          bucket: BUCKET_NAME,
-          uploaded_at: new Date().toISOString(),
-        },
+    const query = `
+      INSERT INTO documents (tenant_id, filename, storage_path, file_size, mime_type, status, metadata)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING id, tenant_id, filename, storage_path, file_size, mime_type, status, metadata, created_at
+    `;
+    
+    const values = [
+      DEFAULT_TENANT_ID,
+      req.file.originalname,
+      storagePath,
+      req.file.size,
+      req.file.mimetype,
+      'uploaded',
+      JSON.stringify({
+        bucket: BUCKET_NAME,
+        uploaded_at: new Date().toISOString(),
       })
-      .select()
-      .single();
+    ];
 
-    if (error) {
-      console.error("Database error:", error);
+    const result = await pool.query(query, values);
+    const data = result.rows[0];
+
+    if (!data) {
+      console.error("Database error: No data returned");
       return res.status(500).json({ 
         error: "Failed to save document metadata",
-        details: error.message 
+        details: "No data returned from database" 
       });
     }
 

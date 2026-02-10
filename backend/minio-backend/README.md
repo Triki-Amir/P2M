@@ -6,7 +6,7 @@ This document explains the database integration for the Agent AI tab's PDF uploa
 
 The Agent AI tab now includes a complete database system that:
 1. Stores PDF files in MinIO object storage
-2. Saves document metadata in a PostgreSQL database (via Supabase)
+2. Saves document metadata in a PostgreSQL database (direct connection)
 3. Provides a seamless upload experience in the frontend
 
 ## Architecture
@@ -18,18 +18,31 @@ Backend (server.js)
     ↓ (Store file)
 MinIO Server
     ↓ (Save metadata)
-PostgreSQL/Supabase (documents table)
+PostgreSQL (documents table)
 ```
 
 ## Setup Instructions
 
 ### 1. Database Setup
 
-First, apply the database migration:
+First, set up your local PostgreSQL database and apply the migration:
 
-1. Open your Supabase project: https://iscswsczvtjwwmwrlnxz.supabase.co
-2. Go to SQL Editor
-3. Run the migration file: `backend/minio-backend/migrations/001_create_documents_table.sql`
+**Using psql:**
+```bash
+# Create database (if not exists)
+createdb p2m_database
+
+# Or connect to an existing database
+psql -d your_database_name
+
+# Run the migration
+psql -d p2m_database -f backend/minio-backend/migrations/001_create_documents_table.sql
+```
+
+**Using a GUI tool (pgAdmin, DBeaver, etc.):**
+1. Connect to your local PostgreSQL server
+2. Create a new database (e.g., `p2m_database`)
+3. Open and execute the SQL file: `backend/minio-backend/migrations/001_create_documents_table.sql`
 
 ### 2. Backend Setup
 
@@ -41,6 +54,10 @@ npm install
 
 # Configure environment (copy and edit .env)
 cp .env.example .env
+# Edit .env with your PostgreSQL connection details:
+# - DATABASE_URL=postgresql://username:password@localhost:5432/p2m_database
+# OR
+# - PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD
 
 # Start the backend server
 node server.js
@@ -84,7 +101,7 @@ npm run dev
 Edit `backend/minio-backend/.env` to configure:
 
 - **MinIO Settings**: Endpoint, port, access keys, bucket name
-- **Supabase Settings**: URL and API key
+- **PostgreSQL Settings**: Connection URL or individual connection parameters (host, port, database, user, password)
 - **Server Settings**: Port number
 - **Tenant Settings**: Default tenant ID for multi-tenant support
 
@@ -143,14 +160,17 @@ Uploads a PDF file to MinIO and saves metadata to PostgreSQL.
 3. Navigate to the Agent AI tab
 4. Drag and drop a PDF file
 5. Check the database to verify the record was created:
-   - Open Supabase Dashboard → Table Editor → documents
+   - Connect to your PostgreSQL database using psql or a GUI tool
+   - Query the documents table: `SELECT * FROM documents ORDER BY created_at DESC LIMIT 5;`
    - You should see the new record
 
 ## Troubleshooting
 
 ### Backend not connecting to database
-- Verify Supabase URL and key in `.env`
-- Check that the documents table exists in Supabase
+- Verify PostgreSQL connection parameters in `.env`
+- Ensure PostgreSQL is running: `pg_isready` or check service status
+- Check that the documents table exists in your database
+- Test connection: `psql -d your_database_name -c "SELECT 1;"`
 
 ### MinIO upload fails
 - Ensure MinIO is running on localhost:9000
