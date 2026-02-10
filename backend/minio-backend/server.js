@@ -4,9 +4,19 @@ const multer = require("multer");
 const Minio = require("minio");
 const cors = require("cors");
 const { Pool } = require("pg");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 app.use(cors());
+
+// Rate limiting for upload endpoint - 10 uploads per 15 minutes per IP
+const uploadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 requests per windowMs
+  message: { error: "Too many upload requests, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // Store files in memory before sending to MinIO
 const upload = multer({
@@ -46,7 +56,7 @@ const BUCKET_NAME = process.env.MINIO_BUCKET || "pdf-storage";
 const DEFAULT_TENANT_ID = process.env.DEFAULT_TENANT_ID || "00000000-0000-0000-0000-000000000000";
 
 // Upload endpoint
-app.post("/upload", upload.single("file"), async (req, res) => {
+app.post("/upload", uploadLimiter, upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
