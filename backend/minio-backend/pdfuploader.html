@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>PDF Upload</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f5f5f5;
+    }
+    #drop-zone {
+      width: 400px;
+      height: 200px;
+      border: 2px dashed #333;
+      margin: 100px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      cursor: pointer;
+    }
+    #drop-zone.dragover {
+      background: #e0f0ff;
+      border-color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+<div id="drop-zone">Drag & drop a PDF here</div>
+
+<script>
+const dropZone = document.getElementById("drop-zone");
+
+dropZone.addEventListener("dragover", e => {
+  e.preventDefault();
+  dropZone.classList.add("dragover");
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("dragover");
+});
+
+dropZone.addEventListener("drop", async e => {
+  e.preventDefault();
+  dropZone.classList.remove("dragover");
+
+  const file = e.dataTransfer.files[0];
+
+  if (!file || file.type !== "application/pdf") {
+    alert("Only PDF files allowed");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch("http://localhost:3000/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const result = await response.json();
+  alert(result.message || result.error);
+});
+</script>
+
+</body>
+</html>
