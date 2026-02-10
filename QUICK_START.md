@@ -181,5 +181,8 @@ rm -rf node_modules  # Remove dependencies
 ```
 
 ---
+# Minio Activate server
+minio.exe server C:\MinIO\data
+
 
 **Happy coding! 🚀**
