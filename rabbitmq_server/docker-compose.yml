@@ -1,0 +1,17 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: rabbitmq-server
+    restart: always
+    hostname: my-rabbit  # Important for data persistence
+    ports:
+      - "5672:5672"   # Standard AMQP port (for your apps)
+      - "15672:15672" # Management UI (for you)
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=secretpassword
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  rabbitmq_data:

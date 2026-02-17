@@ -9,7 +9,7 @@ prompt = (
 "Do NOT use sample or placeholder text. Use only text present in the image."
 )
 response = chat(
-    model='qwen2.5vl:7b',
+    model='glm-ocr:latest',
     messages=[
         {
             'role': 'user',
@@ -17,10 +17,6 @@ response = chat(
             'images': [path],
         }
     ],
-    options={
-        'temperature': 0.1,  # Low temperature is better for OCR accuracy
-        'num_ctx': 4096      # Gives the model more "thinking space" for long docs
-    }
 )
 
 print(response.message.content)
