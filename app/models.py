@@ -30,7 +30,8 @@ class Document(Base):
     language: Mapped[Optional[str]] = mapped_column(String(10), index=True)
    
     status: Mapped[str] = mapped_column(String(50), nullable=False, server_default="pending", index=True)
-    metadata_json: Mapped[dict] = mapped_column(JSONB, server_default=text("'{}'::jsonb"))
+    doc_metadata: Mapped[Optional[dict]] = mapped_column("metadata", JSONB, server_default=text("'{}'::jsonb"))
+    processing_notes: Mapped[Optional[str]] = mapped_column(String(1000), nullable=True)
     is_deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
    
     created_at: Mapped[datetime] = mapped_column(

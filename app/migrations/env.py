@@ -1,18 +1,44 @@
 from logging.config import fileConfig
 import sys
 from os.path import abspath, dirname
-# This allows Alembic to find your models.py file
-sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
-from database import Base
-from models import Document  # Import models to register them with Base
+# Add the project root (c:\P2M) to sys.path so the 'app' package is importable
+sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
+
+from app.database import Base
+from app.models import Document  # Import models to register them with Base
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+import os
+import re
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+
+def process_revision_directives(context, revision, directives):
+    """Generate sequential revision IDs: 0001, 0002, 0003, ..."""
+    if not directives:
+        return
+
+    # Get the versions directory
+    migration_script = directives[0]
+    versions_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "versions"
+    )
+
+    # Find the highest existing revision number
+    max_rev = 0
+    if os.path.isdir(versions_dir):
+        for fname in os.listdir(versions_dir):
+            match = re.match(r"^(\d+)_", fname)
+            if match:
+                max_rev = max(max_rev, int(match.group(1)))
+
+    # Assign next sequential revision ID
+    migration_script.rev_id = f"{max_rev + 1:04d}"
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -49,6 +75,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        process_revision_directives=process_revision_directives,
     )
 
     with context.begin_transaction():
@@ -70,7 +97,8 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection, target_metadata=target_metadata,
+            process_revision_directives=process_revision_directives,
         )
 
         with context.begin_transaction():
