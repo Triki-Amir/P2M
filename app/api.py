@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 
 from app.database import get_db, engine, Base
 from app.models import Document
+from rabbitmq_server.Producers.ingestion import trigger_ingestion
 
 load_dotenv()
 
@@ -93,12 +94,30 @@ async def upload_document(
             mime_type=file.content_type,
             language=language,
             status="uploaded",
-            processing_notes=None,
             doc_metadata={}
         )
         db.add(new_doc)
         db.commit()
         db.refresh(new_doc)
+        
+        # 5. Trigger OCR Processing via RabbitMQ
+        try:
+            # Construct MinIO URL for the uploaded file
+            minio_endpoint = os.getenv("MINIO_ENDPOINT", "localhost:9000")
+            file_url = f"http://{minio_endpoint}/{MINIO_BUCKET}/{storage_filename}"
+            
+            # Trigger ingestion to RabbitMQ queue
+            trigger_ingestion(doc_id=str(new_doc.id), file_url=file_url)
+            
+            # Update status to processing
+            new_doc.status = "processing"
+            db.commit()
+            db.refresh(new_doc)
+        except Exception as mq_error:
+            # Log the error but don't fail the upload
+            print(f"Warning: Failed to trigger OCR processing: {mq_error}")
+            # Document is uploaded but not queued for processing
+        
         return new_doc  # FastAPI automatically serializes the model to JSON
     except Exception as e:
         db.rollback()

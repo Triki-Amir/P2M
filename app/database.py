@@ -35,3 +35,16 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+# Session generator for non-FastAPI contexts (e.g., background workers)
+def get_db_session():
+    """
+    Get a database session for use outside of FastAPI.
+    Yields a database session that should be closed by the caller.
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
