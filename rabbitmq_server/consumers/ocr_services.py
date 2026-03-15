@@ -1,8 +1,6 @@
 """
 OCR Consumer Service
-Listens to RabbitMQ queue and processes OCR jobs for uploaded documents.
-Downloads PDFs from MinIO, extracts text (Arabic / French / English)
-using Tesseract, and stores the results in PostgreSQL.
+Listens to RabbitMQ queue and processes OCR jobs for uploaded documents
 """
 import pika
 import json
@@ -16,71 +14,71 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from sqlalchemy.orm import Session
 from app.database import get_db_session
 from app.models import Document
-from app.ocr_utils import run_ocr_on_document
 import uuid
 
 
 def process_ocr_job(message_data: dict):
     """
-    Process OCR job for a document.
-
-    1. Fetch the document record from PostgreSQL.
-    2. Download the PDF from MinIO via storage_path.
-    3. Convert to images and run Tesseract OCR (ara+fra+eng).
-    4. Store extracted text in the doc_metadata JSONB column.
-
+    Process OCR job for a document
+    
     Args:
         message_data: Dictionary containing doc_id, url, and source
     """
     doc_id = message_data.get('doc_id')
     file_url = message_data.get('url')
     source = message_data.get('source')
-
+    
     print(f"\n[OCR] Processing document: {doc_id}")
     print(f"      URL: {file_url}")
     print(f"      Source: {source}")
-
+    
     # Get database session
     db = next(get_db_session())
-
+    
     try:
         # Find the document in database
         document = db.query(Document).filter(Document.id == uuid.UUID(doc_id)).first()
-
+        
         if not document:
             print(f"[ERROR] Document {doc_id} not found in database")
             return False
-
+        
         # Update status to processing
         document.status = "processing"
         document.updated_at = datetime.now(timezone.utc)
         db.commit()
-
-        print(f"[OCR] Running OCR on {document.filename} (storage: {document.storage_path}) ...")
-
-        # Run the real OCR pipeline (MinIO → images → Tesseract)
-        ocr_result = run_ocr_on_document(
-            storage_path=document.storage_path,
-            language_hint=document.language,
-        )
-
-        # Enrich result with processing metadata
-        ocr_result["processed_at"] = datetime.now(timezone.utc).isoformat()
-        ocr_result["text_extracted"] = ocr_result.pop("full_text", "")
-
+        
+        # TODO: Implement actual OCR processing here
+        # This is where you would:
+        # 1. Download the file from MinIO using file_url
+        # 2. Run OCR engine (Tesseract, AWS Textract, etc.)
+        # 3. Extract text and metadata
+        # 4. Store results
+        
+        # For now, simulate processing
+        print(f"[OCR] Simulating OCR processing for {document.filename}...")
+        import time
+        time.sleep(2)  # Simulate work
+        
+        # Update document with results
+        ocr_result = {
+            "text_extracted": "Sample OCR text content",
+            "page_count": 1,
+            "processed_at": datetime.now(timezone.utc).isoformat(),
+            "language_detected": document.language or "en"
+        }
+        
         document.doc_metadata = ocr_result
         document.status = "completed"
         document.updated_at = datetime.now(timezone.utc)
         db.commit()
-
-        extracted_len = len(ocr_result.get("text_extracted", ""))
-        print(f"[OCR] ✓ Successfully processed document {doc_id} "
-              f"({ocr_result['page_count']} pages, {extracted_len} chars extracted)")
+        
+        print(f"[OCR] ✓ Successfully processed document {doc_id}")
         return True
-
+        
     except Exception as e:
         print(f"[ERROR] OCR processing failed for {doc_id}: {str(e)}")
-
+        
         # Update status to failed
         try:
             document.status = "failed"
@@ -89,11 +87,11 @@ def process_ocr_job(message_data: dict):
                 "failed_at": datetime.now(timezone.utc).isoformat()
             }
             db.commit()
-        except Exception as update_err:
-            print(f"[ERROR] Failed to update document status to 'failed': {update_err}")
-
+        except:
+            pass
+        
         return False
-
+    
     finally:
         db.close()
 
