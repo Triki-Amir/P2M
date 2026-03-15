@@ -1,11 +1,15 @@
 """
 Database configuration and session management.
 """
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-# Database URL
-DATABASE_URL = "postgresql://postgres:123456789@localhost:5432/postgres"
+# Database URL (configurable via environment variable)
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://postgres:123456789@localhost:5432/postgres",
+)
 
 # Create engine
 engine = create_engine(
