@@ -34,16 +34,24 @@ def download_pdf_from_minio(storage_path: str, bucket: str = None) -> bytes:
 
     Returns:
         The raw PDF bytes.
+
+    Raises:
+        RuntimeError: If the file cannot be downloaded from MinIO.
     """
     bucket = bucket or os.getenv("MINIO_BUCKET", "pdf-storage")
     client = get_minio_client()
 
-    response = client.get_object(bucket, storage_path)
     try:
-        pdf_bytes = response.read()
-    finally:
-        response.close()
-        response.release_conn()
+        response = client.get_object(bucket, storage_path)
+        try:
+            pdf_bytes = response.read()
+        finally:
+            response.close()
+            response.release_conn()
+    except S3Error as exc:
+        raise RuntimeError(
+            f"Failed to download '{storage_path}' from bucket '{bucket}': {exc}"
+        ) from exc
 
     return pdf_bytes
 
@@ -105,7 +113,10 @@ def run_ocr_on_document(storage_path: str, language_hint: str = None) -> dict:
     # Build Tesseract language string
     default_langs = ["ara", "fra", "eng"]
     if language_hint and language_hint not in default_langs:
-        default_langs.insert(0, language_hint)
+        # Validate that language_hint looks like a valid Tesseract lang code
+        # (2-3 lowercase ASCII letters, e.g. "deu", "spa")
+        if language_hint.isalpha() and 2 <= len(language_hint) <= 3:
+            default_langs.insert(0, language_hint)
     lang_str = "+".join(default_langs)
 
     # 1. Download PDF from MinIO

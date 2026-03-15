@@ -89,8 +89,8 @@ def process_ocr_job(message_data: dict):
                 "failed_at": datetime.now(timezone.utc).isoformat()
             }
             db.commit()
-        except Exception:
-            pass
+        except Exception as update_err:
+            print(f"[ERROR] Failed to update document status to 'failed': {update_err}")
 
         return False
 
