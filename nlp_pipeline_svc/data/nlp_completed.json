@@ -1,0 +1,40 @@
+{
+  "doc_id": "test_tender.pdf",
+  "source_lang": "fr",
+  "chunks": [
+    {
+      "chunk_id": "4ee54bc8b78425e747d4771bb9a2052c",
+      "page_index": 0,
+      "block_index": 0,
+      "chunk_index": 0,
+      "block_type": "heading",
+      "source_lang": "en",
+      "text_original": "Appel d'offres pour services de nettoyage",
+      "text_en": "Appel d'offres pour services de nettoyage",
+      "metadata": {},
+      "bbox": [
+        10.0,
+        10.0,
+        100.0,
+        30.0
+      ]
+    },
+    {
+      "chunk_id": "ddd7b4c90f4bacf6f53ea5babbd01368",
+      "page_index": 0,
+      "block_index": 1,
+      "chunk_index": 0,
+      "block_type": "paragraph",
+      "source_lang": "fr",
+      "text_original": "Le présent marché a pour objet la prestation de services de nettoyage pour nos bureaux à Paris.",
+      "text_en": "The purpose of this contract is to provide cleaning services for our offices in Paris.",
+      "metadata": {},
+      "bbox": [
+        10.0,
+        40.0,
+        200.0,
+        80.0
+      ]
+    }
+  ]
+}
