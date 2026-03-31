@@ -1,0 +1,156 @@
+{
+  "doc_id": "test1.1.pdf",
+  "source_lang": null,
+  "pages": [
+    {
+      "page_index": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "II. METHODOLOGY",
+          "bbox": [
+            887.0,
+            53.0,
+            1504.0,
+            128.0
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "The sample document images consist of normal text lines, headings, a wide range of tables, equations, header, footer and page numbers with different font sizes and styles. The background is white and grey coloured. The assumptions we made here are as follows:",
+          "bbox": [
+            299.0,
+            156.0,
+            2133.0,
+            568.0
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "- There are no graphics and watermarks in the document images.",
+          "bbox": [
+            303.0,
+            613.0,
+            2130.0,
+            777.0
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "The minimum height of a table is equal to or greater than 3 regular text lines. With this assumption, most of the heading and equation parts can be eliminated from being detected as tables.",
+          "bbox": [
+            303.0,
+            789.0,
+            2136.0,
+            1115.0
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "- In a standard full lengthy text line, there would be more number of characters compared to other text lines.",
+          "bbox": [
+            302.0,
+            1126.0,
+            2129.0,
+            1294.0
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "The document image is single column layout and for a professional document, there is no text or image portion on left or right side of a table (that is, tables are in line with text).",
+          "bbox": [
+            304.0,
+            1304.0,
+            2132.0,
+            1640.0
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "The methodology as presented in Figure 1 follows a number of stages and they are: 1) data collection and pre-processing of the scanned documents; 2) threshold computation for word space and line height; and 3) extraction of the table with and without rule lines. Let us look at details of each stage in the rest of this section.",
+          "bbox": [
+            299.0,
+            1711.0,
+            2131.0,
+            2204.0
+          ]
+        },
+        {
+          "type": "figure_caption",
+          "text": "Fig. 1: System modules",
+          "bbox": [
+            412.0,
+            3391.0,
+            993.0,
+            3464.0
+          ]
+        }
+      ]
+    },
+    {
+      "page_index": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "IV. RESULTS AND DISCUSSION",
+          "bbox": [
+            644.0,
+            99.0,
+            1734.0,
+            192.0
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "The categorized tables presented in the last section are tested with the proposed algorithm.",
+          "bbox": [
+            138.0,
+            233.0,
+            2286.0,
+            417.0
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Table I illustrates that the different type of table detection from tables with fully and partially bounding lines to tables without ruling lines. Category A shows the highest percentage of detection whereas table with parallel line shows lower performance in detection.",
+          "bbox": [
+            137.0,
+            422.0,
+            2293.0,
+            899.0
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "From Figure 8, it can be seen that all tables produce accuracy of detection better than 67%. Tables with fully or partially bounding lines show higher accuracy with 82.7% of detection compared to the others. These type of tables can be extracted easily as it is bounded with at least single vertical line and we compare their line height with the threshold to eliminate big headings. Therefore, they yield higher accuracy due to the vertical rule line information.",
+          "bbox": [
+            133.0,
+            940.0,
+            2293.0,
+            1704.0
+          ]
+        },
+        {
+          "type": "figure_caption",
+          "text": "TABLE I EXPERIMENTAL RESULT OF SCANNED DOCUMENTS",
+          "bbox": [
+            274.0,
+            1844.0,
+            2158.0,
+            1924.0
+          ]
+        },
+        {
+          "type": "table",
+          "text": "Category of Tables\tTotal Number of Scanned Documents\tCorrectly Detected Tables\nTable with fully and partially bounding lines (Type A)\t110\t91\nTable with parallel lines (Type B)\t135\t91\nTable without ruling lines (Type C)\t53\t40",
+          "bbox": [
+            147.0,
+            1967.0,
+            2281.0,
+            2711.0
+          ]
+        }
+      ]
+    }
+  ]
+}
