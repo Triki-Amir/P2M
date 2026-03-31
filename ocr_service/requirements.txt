@@ -1,0 +1,7 @@
+# ocr_service/requirements.txt
+# Install with: pip install -r ocr_service/requirements.txt
+
+pymupdf>=1.24.0
+paddleocr>=2.9.0
+beautifulsoup4>=4.12.0
+pydantic>=2.0.0
