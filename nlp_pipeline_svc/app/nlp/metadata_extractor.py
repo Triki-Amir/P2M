@@ -177,6 +177,51 @@ _CURRENCY_RE = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
+_FOR_ORG_RE = re.compile(
+    r"(?im)^\s*(?:for|pour)\s+(.+?)\s*$"
+)
+
+_GENERIC_ORG_NOISE = {
+    "unit",
+    "quantity",
+    "description",
+    "description of item",
+    "item",
+    "results",
+    "methodology",
+    "instructions",
+    "important instructions",
+}
+
+_ORG_TRAILING_NOISE_RE = re.compile(
+    r"(?i)\s*(sd\s*/?\s*-?|signature|sign|signed|asstt\.|assistant|general manager).*$"
+)
+
+_ORG_ENTITY_MARKERS = {
+    "limited",
+    "ltd",
+    "llc",
+    "inc",
+    "corp",
+    "corporation",
+    "company",
+    "entreprise",
+    "societe",
+    "société",
+    "ministry",
+    "ministere",
+    "ministère",
+    "office",
+    "agency",
+    "agence",
+    "authority",
+    "autorite",
+    "autorité",
+    "direction",
+    "department",
+    "administration",
+}
+
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 
 
@@ -260,6 +305,73 @@ def _ner_entities(text: str, label: str) -> List[str]:
     except Exception as exc:
         logger.debug("[metadata_extractor] NER (%s) failed: %s", label, exc)
         return []
+
+
+def _clean_org_candidate(text: str) -> str:
+    """Normalize spacing and remove common signature suffixes from org candidates."""
+    cleaned = _ORG_TRAILING_NOISE_RE.sub("", text).strip(" -:;,.\t\n")
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    return cleaned
+
+
+def _is_bad_org_candidate(text: str) -> bool:
+    """Reject obvious non-organization text fragments produced by OCR/NER noise."""
+    if not text:
+        return True
+
+    candidate = _clean_org_candidate(text)
+    if not candidate or len(candidate) < 4:
+        return True
+
+    if "\t" in candidate or "\n" in candidate:
+        return True
+
+    # Avoid table/header fragments such as "Unit Quantity".
+    norm = _normalize(candidate)
+    if norm in _GENERIC_ORG_NOISE:
+        return True
+
+    words = [w for w in re.split(r"\W+", norm) if w]
+    if words and all(w in _GENERIC_ORG_NOISE for w in words):
+        return True
+
+    # Short alnum noise with almost no letters is rarely a valid organization.
+    alpha_count = sum(1 for c in candidate if c.isalpha())
+    if alpha_count == 0:
+        return True
+    if alpha_count / max(len(candidate), 1) < 0.35:
+        return True
+
+    return False
+
+
+def _looks_like_org_entity(text: str) -> bool:
+    """Return True when the candidate resembles an institution/company name."""
+    candidate = _clean_org_candidate(text)
+    if _is_bad_org_candidate(candidate):
+        return False
+
+    norm = _normalize(candidate)
+    if any(marker in norm for marker in _ORG_ENTITY_MARKERS):
+        return True
+
+    # Fallback: dense uppercase names (e.g. CENTRAL ELECTRONICS LIMITED).
+    tokens = [t for t in re.split(r"\W+", candidate) if t]
+    uppercase_tokens = [t for t in tokens if t.isupper() and len(t) > 2]
+    return len(uppercase_tokens) >= 2 and len(candidate) <= 90
+
+
+def _extract_signature_org(text: str) -> Optional[str]:
+    """Extract organization from signature lines like 'For CENTRAL ELECTRONICS LIMITED'."""
+    for line in text.splitlines() or [text]:
+        match = _FOR_ORG_RE.search(line)
+        if not match:
+            continue
+
+        candidate = _clean_org_candidate(match.group(1))
+        if _looks_like_org_entity(candidate):
+            return candidate
+    return None
 
 
 # ─── Individual extractors ────────────────────────────────────────────────────
@@ -391,6 +503,12 @@ def _extract_org_like(ocr_doc: OcrDocument, keywords: List[str]) -> Optional[str
             score = 0
             strong_signal = False
             text_norm = _normalize(text)
+            block_type = getattr(block, "type", "")
+            kw_hit = False
+
+            # Tables commonly contain headers that NER mislabels as organizations.
+            if block_type == "table":
+                score -= 2
 
             if page_index == 0:
                 score += 1
@@ -405,9 +523,19 @@ def _extract_org_like(ocr_doc: OcrDocument, keywords: List[str]) -> Optional[str
                 if _keyword_in(kw, text_norm, allow_fuzzy=False):
                     score += 2
                     strong_signal = True
+                    kw_hit = True
                     break
 
-            orgs = _ner_entities(text, "ORG")
+            # Ignore table rows unless they explicitly contain organization keywords.
+            if block_type == "table" and not kw_hit:
+                continue
+
+            sig_org = _extract_signature_org(text) if block_type != "table" else None
+            if sig_org:
+                score += 4
+                strong_signal = True
+
+            orgs = [o for o in _ner_entities(text, "ORG") if not _is_bad_org_candidate(o)]
             if orgs:
                 score += 2
                 strong_signal = True
@@ -415,9 +543,14 @@ def _extract_org_like(ocr_doc: OcrDocument, keywords: List[str]) -> Optional[str
             if not strong_signal:
                 continue
 
+            candidate = sig_org or (orgs[0] if orgs else text)
+            candidate = _clean_org_candidate(candidate)
+            if _is_bad_org_candidate(candidate):
+                continue
+
             if score > best_score:
                 best_score = score
-                best_text = orgs[0] if orgs else text
+                best_text = candidate
 
     return best_text
 
@@ -496,6 +629,12 @@ def extract_metadata(ocr_doc: OcrDocument) -> dict:
 
     if organization is None:
         organization = owner or client
+
+    # Keep legacy fields populated when only one organization-like signal exists.
+    if owner is None:
+        owner = organization or client
+    if client is None:
+        client = organization or owner
 
     result = {
         "title": title,
