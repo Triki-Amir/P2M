@@ -6,3 +6,7 @@ transformers
 sentencepiece
 sacremoses
 langdetect>=1.0.9
+# Metadata extraction
+spacy>=3.0.0
+dateparser>=1.1.0
+rapidfuzz>=3.0.0

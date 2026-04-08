@@ -100,3 +100,10 @@ class NlpDocument(BaseModel):
     doc_id: str
     source_lang: Optional[str] = None
     chunks: list[NlpChunk]
+    doc_metadata: dict = Field(
+        default_factory=dict,
+        description=(
+            "Document-level metadata extracted before chunking. "
+            "Keys: title, deadline (ISO 8601), organization, budget."
+        ),
+    )
