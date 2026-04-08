@@ -3,8 +3,8 @@ from pathlib import Path
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 
-# Root of the whole project (two levels up from this file)
-PROJECT_ROOT = Path(__file__).parent.parent
+# Root of the whole project (three levels up from this file)
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 # Shared data folder where event JSON files are read/written
 DATA_DIR = PROJECT_ROOT / "data"
@@ -15,9 +15,9 @@ DATA_DIR = PROJECT_ROOT / "data"
 TARGET_LANG: str = os.getenv("NLP_TARGET_LANG", "en")
 
 # Chunking settings
-MAX_CHUNK_SIZE: int = int(os.getenv("NLP_MAX_CHUNK_SIZE", "500"))
-CHUNK_OVERLAP: int = int(os.getenv("NLP_CHUNK_OVERLAP", "50"))
-
+# config.py  — replace old names with new ones
+MAX_CHUNK_CHARS = 1200   # was MAX_CHUNK_SIZE
+CHUNK_OVERLAP   = 100    # unchanged, but now maps to fallback_overlap
 # ── Event names ───────────────────────────────────────────────────────────────
 
 INPUT_EVENT: str = "ocr_completed"

@@ -6,15 +6,49 @@ import pika
 import json
 import os
 import sys
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from datetime import datetime, timezone
+from urllib.parse import urlparse, unquote
 
 # Add parent directory to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
-from sqlalchemy.orm import Session
+from minio import Minio
 from app.database import get_db_session
 from app.models import Document
+from ocr_service.main import run as run_ocr
+from nlp_pipeline_svc.app.main import run_consumer as run_nlp
+from indexer_svc.app.main import run_indexer
 import uuid
+
+
+def _parse_bucket_and_object(file_url: str) -> tuple[str, str]:
+    parsed = urlparse(file_url)
+    path_parts = parsed.path.lstrip('/').split('/', 1)
+    if len(path_parts) != 2 or not all(path_parts):
+        raise ValueError(f"Invalid MinIO URL path: {file_url}")
+    return path_parts[0], unquote(path_parts[1])
+
+
+def _build_minio_client(file_url: str) -> Minio:
+    parsed = urlparse(file_url)
+    endpoint = parsed.netloc or os.getenv('MINIO_ENDPOINT', 'localhost:9000')
+    secure = parsed.scheme == 'https'
+    return Minio(
+        endpoint,
+        access_key=os.getenv('MINIO_ACCESS_KEY', 'admin'),
+        secret_key=os.getenv('MINIO_SECRET_KEY', 'password123'),
+        secure=secure,
+    )
+
+
+def _download_pdf_from_minio(file_url: str, destination: Path) -> Path:
+    bucket, object_name = _parse_bucket_and_object(file_url)
+    client = _build_minio_client(file_url)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    client.fget_object(bucket, object_name, str(destination))
+    return destination
 
 
 def process_ocr_job(message_data: dict):
@@ -27,6 +61,10 @@ def process_ocr_job(message_data: dict):
     doc_id = message_data.get('doc_id')
     file_url = message_data.get('url')
     source = message_data.get('source')
+
+    if not doc_id or not file_url:
+        print(f"[ERROR] Missing required fields in message: {message_data}")
+        return False
     
     print(f"\n[OCR] Processing document: {doc_id}")
     print(f"      URL: {file_url}")
@@ -47,28 +85,41 @@ def process_ocr_job(message_data: dict):
         document.status = "processing"
         document.updated_at = datetime.now(timezone.utc)
         db.commit()
-        
-        # TODO: Implement actual OCR processing here
-        # This is where you would:
-        # 1. Download the file from MinIO using file_url
-        # 2. Run OCR engine (Tesseract, AWS Textract, etc.)
-        # 3. Extract text and metadata
-        # 4. Store results
-        
-        # For now, simulate processing
-        print(f"[OCR] Simulating OCR processing for {document.filename}...")
-        import time
-        time.sleep(2)  # Simulate work
-        
-        # Update document with results
-        ocr_result = {
-            "text_extracted": "Sample OCR text content",
-            "page_count": 1,
-            "processed_at": datetime.now(timezone.utc).isoformat(),
-            "language_detected": document.language or "en"
+
+        # Real processing path: download PDF from MinIO and run OCR -> NLP -> Indexer
+        with TemporaryDirectory(prefix="p2m_") as tmp_dir:
+            local_pdf = Path(tmp_dir) / Path(document.filename or f"{doc_id}.pdf").name
+            print(f"[OCR] Downloading from MinIO to {local_pdf}...")
+            _download_pdf_from_minio(file_url, local_pdf)
+
+            print(f"[OCR] Running OCR for {document.filename}...")
+            run_ocr(local_pdf)
+
+            document.status = "ocr_completed"
+            document.updated_at = datetime.now(timezone.utc)
+            db.commit()
+
+            print("[NLP] Running NLP pipeline...")
+            nlp_doc = run_nlp()
+            if nlp_doc is None:
+                raise RuntimeError("NLP pipeline failed or produced no output")
+
+            document.status = "nlp_completed"
+            document.updated_at = datetime.now(timezone.utc)
+            db.commit()
+
+            print("[INDEXER] Running indexer...")
+            indexed_count = run_indexer()
+
+        document.doc_metadata = {
+            **(document.doc_metadata or {}),
+            "pipeline": {
+                "source": source,
+                "file_url": file_url,
+                "indexed_chunks": indexed_count,
+                "completed_at": datetime.now(timezone.utc).isoformat(),
+            }
         }
-        
-        document.doc_metadata = ocr_result
         document.status = "completed"
         document.updated_at = datetime.now(timezone.utc)
         db.commit()
@@ -81,13 +132,15 @@ def process_ocr_job(message_data: dict):
         
         # Update status to failed
         try:
-            document.status = "failed"
-            document.doc_metadata = {
-                "error": str(e),
-                "failed_at": datetime.now(timezone.utc).isoformat()
-            }
-            db.commit()
-        except:
+            if 'document' in locals() and document is not None:
+                document.status = "failed"
+                document.doc_metadata = {
+                    **(document.doc_metadata or {}),
+                    "error": str(e),
+                    "failed_at": datetime.now(timezone.utc).isoformat()
+                }
+                db.commit()
+        except Exception:
             pass
         
         return False

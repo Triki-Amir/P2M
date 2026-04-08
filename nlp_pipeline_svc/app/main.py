@@ -6,12 +6,14 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
+from typing import Optional
+
 from shared import event_bus
 from shared.models import OcrDocument
 from nlp_pipeline_svc.app.pipeline import NlpOrcestrator
 from nlp_pipeline_svc.app import config
 
-def run_consumer():
+def run_consumer() -> Optional[object]:
     """
     Main loop for the NLP service.
     Consumes ocr_completed event, runs the pipeline, and publishes nlp_completed.
@@ -22,8 +24,8 @@ def run_consumer():
     
     # ── Orchestrator ───────────────────────────
     orchestrator = NlpOrcestrator(
-        max_chunk_size=config.MAX_CHUNK_SIZE,
-        chunk_overlap=config.CHUNK_OVERLAP
+        max_chunk_chars=config.MAX_CHUNK_CHARS,
+        fallback_overlap=config.CHUNK_OVERLAP,
     )
 
     try:
@@ -41,12 +43,15 @@ def run_consumer():
         event_bus.publish(config.OUTPUT_EVENT, nlp_doc, config.DATA_DIR)
         
         print("[nlp_service] DONE.")
+        return nlp_doc
 
     except FileNotFoundError:
         print(f"[nlp_service] Error: {config.INPUT_EVENT}.json not found in {config.DATA_DIR}.")
         print("[nlp_service] Ensure the OCR service runs first.")
+        return None
     except Exception as e:
         print(f"[nlp_service] Error during processing: {e}")
+        return None
 
 if __name__ == "__main__":
     run_consumer()

@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:16-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.pgvector
     container_name: postgres_db
     restart: always
     environment:
@@ -13,3 +15,7 @@ services:
       - "5432:5432"
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+      # Mount the whole init/ folder — scripts run in alphabetical order:
+      #   01_documents.sql  → creates documents table (existing schema)
+      #   02_chunks.sql     → creates chunks table + vector indexes
+      - ./init:/docker-entrypoint-initdb.d

@@ -15,8 +15,12 @@ from pydantic import BaseModel, Field
 
 class OcrBlock(BaseModel):
     """One detected layout block from a single PDF page."""
+
     type: str = Field(
-        description="Semantic type: heading | paragraph | table | figure_caption"
+        description=(
+            "Semantic type: heading | sub_heading | paragraph | "
+            "table | table_caption"
+        )
     )
     text: str = Field(
         description="Cleaned text content of the block"
@@ -24,6 +28,22 @@ class OcrBlock(BaseModel):
     bbox: Optional[list[float]] = Field(
         default=None,
         description="Bounding box [x1, y1, x2, y2] in original image pixels"
+    )
+    section_title: Optional[str] = Field(
+        default=None,
+        description=(
+            "Breadcrumb of the nearest heading(s) above this block on the page. "
+            "Format: 'Heading > Sub-heading'. "
+            "The NLP service prepends this to every chunk for retrieval context."
+        )
+    )
+    context: Optional[str] = Field(
+        default=None,
+        description=(
+            "For table blocks only: plain text of the paragraph or table_caption "
+            "immediately preceding this table. Lets the LLM understand what the "
+            "table describes without fetching the adjacent chunk."
+        )
     )
 
 
@@ -63,7 +83,11 @@ class NlpChunk(BaseModel):
     text_en: str = Field(description="English text used for embedding")
     metadata: dict = Field(
         default_factory=dict,
-        description="Extracted fields: dates, budgets, orgs, locations, etc."
+        description=(
+            "Extracted fields: dates, budgets, orgs, locations, etc. "
+            "The NLP service also promotes section_title and context from "
+            "OcrBlock into this dict so they are queryable at retrieval time."
+        )
     )
     bbox: Optional[list[float]] = None
 

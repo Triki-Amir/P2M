@@ -10,39 +10,42 @@ from pathlib import Path
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 
-# Root of the whole project (two levels up from this file)
 PROJECT_ROOT = Path(__file__).parent.parent
-
-# Shared data folder where event JSON files are read/written
-DATA_DIR = PROJECT_ROOT / "data"
-
-# Temp folder for page images during processing (cleaned up after each run)
-TEMP_DIR = PROJECT_ROOT / "temp"
+DATA_DIR     = PROJECT_ROOT / "data"
+TEMP_DIR     = PROJECT_ROOT / "temp"
 
 # ── PDF rendering ─────────────────────────────────────────────────────────────
 
-# DPI used when rasterising PDF pages to PNG.
-# 300 gives good OCR accuracy; lower (150) is faster for large documents.
 PDF_DPI: int = int(os.getenv("OCR_PDF_DPI", "300"))
 
 # ── Layout / label filtering ──────────────────────────────────────────────────
 
 # PaddleOCR VL block labels we want to keep.
-# Everything else (header, footer, page numbers, watermarks) is discarded.
+# Dropped intentionally:
+#   figure_title  → figures are not useful for AO text retrieval
+#   header/footer → navigation artefacts, not content
+#   page_number   → noise
 ALLOWED_LABELS: set[str] = {
-    "paragraph_title",
-    "text",
-    "table",
-    "figure_title",
+    "paragraph_title",   # section / article heading  (H1-level)
+    "sub_heading",       # sub-section heading        (H2/H3-level)
+    "text",              # body paragraph
+    "table",             # tabular data  (PaddleOCR returns HTML; we convert to TSV)
+    "table_title",       # caption above/below a table → injected as table.context
 }
 
-# Mapping from PaddleOCR internal labels → our semantic type enum.
+# Mapping from PaddleOCR internal labels → our normalised semantic type.
+# The NLP service reads these types to decide chunking strategy.
 LABEL_MAP: dict[str, str] = {
     "paragraph_title": "heading",
+    "sub_heading":     "sub_heading",
     "text":            "paragraph",
     "table":           "table",
-    "figure_title":    "figure_caption",
+    "table_title":     "table_caption",   # kept for context injection, not stored standalone
 }
+
+# Block types that can supply context text to the table that follows them.
+# Used by the context-injection pass in paddle_ocr.py.
+TABLE_CONTEXT_TYPES: set[str] = {"paragraph", "table_caption"}
 
 # ── Event names ───────────────────────────────────────────────────────────────
 

@@ -1,154 +1,177 @@
 {
-  "doc_id": "test1.1.pdf",
+  "doc_id": "subo.pdf",
   "source_lang": null,
   "pages": [
     {
       "page_index": 0,
       "blocks": [
         {
-          "type": "heading",
-          "text": "II. METHODOLOGY",
+          "type": "paragraph",
+          "text": "ملحق",
           "bbox": [
-            887.0,
-            53.0,
-            1504.0,
-            128.0
-          ]
+            1117.0,
+            540.0,
+            1316.0,
+            631.0
+          ],
+          "section_title": null,
+          "context": null
         },
         {
           "type": "paragraph",
-          "text": "The sample document images consist of normal text lines, headings, a wide range of tables, equations, header, footer and page numbers with different font sizes and styles. The background is white and grey coloured. The assumptions we made here are as follows:",
+          "text": "لاعلان طلب عروض عن 2021/01 دد الصادر بتاريخ 15 مارس 2021 لإسناد لزمات لغرض تمويل وتصميم وانجاز واستغلال وصيانة بالملك العمومي المينائي بموانى الصيد البحري",
           "bbox": [
-            299.0,
-            156.0,
-            2133.0,
-            568.0
-          ]
+            344.0,
+            637.0,
+            2079.0,
+            887.0
+          ],
+          "section_title": null,
+          "context": null
         },
         {
           "type": "paragraph",
-          "text": "- There are no graphics and watermarks in the document images.",
+          "text": "تم اجراء تعديلات على نظام طلب العروض، كمايلي : تضاف فقرة خامست للفصل 3 المتعلق بشروط المشاركت، كما يلي：“ لا يمكن إسناد نفس المشارك إلا مقسم واحد بالنسبة لنفس النشاط وينفس المبناء",
           "bbox": [
-            303.0,
-            613.0,
-            2130.0,
-            777.0
-          ]
+            203.0,
+            931.0,
+            2221.0,
+            1133.0
+          ],
+          "section_title": null,
+          "context": null
         },
         {
           "type": "paragraph",
-          "text": "The minimum height of a table is equal to or greater than 3 regular text lines. With this assumption, most of the heading and equation parts can be eliminated from being detected as tables.",
+          "text": "تغيير موقع المقسم عدد 14 مع المحافظة على المساحة المسندة والغاء المقسم عدد 19 طبقا للملحق عدد 11. www.apip.nat.tn كما يمكن تعميل ملف طلب العروض من موقع واب الوكالت) حذف الجملة التالية، كما يمكن تعميل ملف طلب العروض من موقع واب الوكالت) من الفقرة الأولى من الفصل 5 المتعلق بسحب ملف طلب العروض وشروط تقديمه. إضافت خانة جديدة تحت عدد 12 بالجدول المتعلق بالوثائق الإدارية، كما يلي",
           "bbox": [
-            303.0,
-            789.0,
-            2136.0,
-            1115.0
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "- In a standard full lengthy text line, there would be more number of characters compared to other text lines.",
-          "bbox": [
-            302.0,
-            1126.0,
-            2129.0,
-            1294.0
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "The document image is single column layout and for a professional document, there is no text or image portion on left or right side of a table (that is, tables are in line with text).",
-          "bbox": [
-            304.0,
-            1304.0,
-            2132.0,
-            1640.0
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "The methodology as presented in Figure 1 follows a number of stages and they are: 1) data collection and pre-processing of the scanned documents; 2) threshold computation for word space and line height; and 3) extraction of the table with and without rule lines. Let us look at details of each stage in the rest of this section.",
-          "bbox": [
-            299.0,
-            1711.0,
-            2131.0,
-            2204.0
-          ]
-        },
-        {
-          "type": "figure_caption",
-          "text": "Fig. 1: System modules",
-          "bbox": [
-            412.0,
-            3391.0,
-            993.0,
-            3464.0
-          ]
-        }
-      ]
-    },
-    {
-      "page_index": 1,
-      "blocks": [
-        {
-          "type": "heading",
-          "text": "IV. RESULTS AND DISCUSSION",
-          "bbox": [
-            644.0,
-            99.0,
-            1734.0,
-            192.0
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "The categorized tables presented in the last section are tested with the proposed algorithm.",
-          "bbox": [
-            138.0,
-            233.0,
-            2286.0,
-            417.0
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Table I illustrates that the different type of table detection from tables with fully and partially bounding lines to tables without ruling lines. Category A shows the highest percentage of detection whereas table with parallel line shows lower performance in detection.",
-          "bbox": [
-            137.0,
-            422.0,
-            2293.0,
-            899.0
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "From Figure 8, it can be seen that all tables produce accuracy of detection better than 67%. Tables with fully or partially bounding lines show higher accuracy with 82.7% of detection compared to the others. These type of tables can be extracted easily as it is bounded with at least single vertical line and we compare their line height with the threshold to eliminate big headings. Therefore, they yield higher accuracy due to the vertical rule line information.",
-          "bbox": [
-            133.0,
-            940.0,
-            2293.0,
-            1704.0
-          ]
-        },
-        {
-          "type": "figure_caption",
-          "text": "TABLE I EXPERIMENTAL RESULT OF SCANNED DOCUMENTS",
-          "bbox": [
-            274.0,
-            1844.0,
-            2158.0,
-            1924.0
-          ]
+            199.0,
+            1141.0,
+            2228.0,
+            1420.0
+          ],
+          "section_title": null,
+          "context": null
         },
         {
           "type": "table",
-          "text": "Category of Tables\tTotal Number of Scanned Documents\tCorrectly Detected Tables\nTable with fully and partially bounding lines (Type A)\t110\t91\nTable with parallel lines (Type B)\t135\t91\nTable without ruling lines (Type C)\t53\t40",
+          "text": "الإدلاع بنسخة مطابقة للأصل مسلمة ومختومة من قبل الإدارة العامة للصيد البحري وتربيت الأسماك\tصالحت في تاريخ اخر أجل لارسال العروض\tترخيص في الاستغلال المتعلق بانشطت تربيت الأسماك بالأقفاص العائمت\t12",
           "bbox": [
-            147.0,
-            1967.0,
-            2281.0,
-            2711.0
-          ]
+            223.0,
+            1434.0,
+            2207.0,
+            1688.0
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "- ينفج الفصل 10 المتعلق بحالات الاقصاء الألي للعروض، كما يلي :",
+          "bbox": [
+            1017.0,
+            1696.0,
+            2220.0,
+            1762.0
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "تعديل المطن الخامس، كما يلي",
+          "bbox": [
+            1444.0,
+            1773.0,
+            2160.0,
+            1835.0
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "العروض التي لم تتضمن وثيقت الجدول التقديري لرقم المعاملات بلدة خمس سنوات طبقا للملحق عدد 07.",
+          "bbox": [
+            399.0,
+            1841.0,
+            2223.0,
+            1942.0
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "تقصي اللجنة القارة لمشاريع اللزمات كمل عرض لا يقدم ترخيص في الاستغلال المتعلق بانشطت تربيت الأسماك بالأفقاص العانمت من طرف الجادرة العامة للصيد البحري وتربيت الأسماك.",
+          "bbox": [
+            198.0,
+            1973.0,
+            2221.0,
+            2108.0
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "- تضاف للفصل 5.12 المتعلق بالتقييم الإجمالي للعروض فقرة اخيرة، كما يلي：“ في صورة حصول نفس العارض وبنفس الميناء على الترتيب الأول في أكثر من مقسم، يتم المرور إلى التفاوض مع العارض الذي يليه في الترتيب لتحسين عرضه المالي",
+          "bbox": [
+            199.0,
+            2114.0,
+            2219.0,
+            2299.0
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "تضاف فقرة اخيرة للفصل 13 المتعلق باقتراح إسناد اللزمت، كما يلي : تحتفظ اللجنت القارة لمشاريع اللزمات بحقها في اللجوء إلى اليت التفاوض قبل إقرار إسناد اللزمت",
+          "bbox": [
+            207.0,
+            2319.0,
+            2221.0,
+            2457.0
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "ملاحظة:",
+          "bbox": [
+            2021.0,
+            2514.0,
+            2219.0,
+            2575.0
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "يتعين على كافت المشاركين الراغبين في الحصول على نسخة معدلت من ملف طلب العروض، تقديم مطلب بودكابى (بودكابى) في الغرض عبر البريد الالكتروني يتم ارساله إلى الوكالت عبر الرابط التالي: ويتضمن المطلب اسم المشارك و البريد الالكتروني الخاص به، والهاتف. يجب أن تحتوي العروض المرسلت إلى الوكالت على النسخة المعدلت من ملف طلب العروض. تبقى بقيت الفصول على حالها.",
+          "bbox": [
+            200.0,
+            2592.0,
+            2149.0,
+            2798.0
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Siège Social : Port de pêche de la goulette -2060 Tunis - B.P.N° : 64. Téléphone : (00 216) 71 738 300 (6 lignes groupées): الهاتف - Fax: (00216) 71 735 396 : الفاكس Site Web : www.apip.nat.tn Messagerie : bocapip@apip.com.tn R.C.: B191761998 : السجل التجاري I.F. 429957 ZN/N/000 : المعرف الجباني",
+          "bbox": [
+            149.0,
+            3291.0,
+            2320.0,
+            3483.0
+          ],
+          "section_title": null,
+          "context": null
         }
       ]
     }
