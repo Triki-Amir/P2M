@@ -124,7 +124,7 @@ class NlpOrchestrator:
                 )
 
                 # 5. Build NlpChunk objects ───────────────────────────────
-                base_metadata = self._build_metadata(block, translation_failed)
+                base_metadata = self._build_metadata(block, translation_failed, doc_meta)
 
                 for chunk_index, chunk in enumerate(text_chunks):
                     nlp_chunks.append(
@@ -165,11 +165,22 @@ class NlpOrchestrator:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _build_metadata(block: OcrBlock, translation_failed: bool = False) -> dict:
+    def _build_metadata(
+        block: OcrBlock,
+        translation_failed: bool = False,
+        doc_meta: Optional[dict] = None,
+    ) -> dict:
+        doc_meta = doc_meta or {}
         return {
             "section_title": block.section_title,   # None when absent — expected
             "context": block.context,
             "translation_failed": translation_failed,
+            "title": doc_meta.get("title"),
+            "deadline": doc_meta.get("deadline"),
+            "owner": doc_meta.get("owner"),
+            "client": doc_meta.get("client"),
+            "organization": doc_meta.get("organization"),
+            "budget": doc_meta.get("budget"),
         }
 
     @staticmethod

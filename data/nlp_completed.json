@@ -1,6 +1,6 @@
 {
   "doc_id": "test1.1.pdf",
-  "source_lang": "fr",
+  "source_lang": "en",
   "chunks": [
     {
       "chunk_id": "fcc99c62bddae431195f5ae7b358a456",
@@ -14,7 +14,13 @@
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         887.0,
@@ -24,18 +30,24 @@
       ]
     },
     {
-      "chunk_id": "d75f4a53ad1027d7a546ce51aed7e081",
+      "chunk_id": "fb03d5913345942f29cb7b486592474e",
       "page_index": 0,
       "block_index": 1,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "fr",
+      "source_lang": "en",
       "text_original": "The sample document images consist of normal text lines, headings, a wide range of tables, equations, header, footer and page numbers with different font sizes and styles. The background is white and grey coloured. The assumptions we made here are as follows:",
-      "text_en": "The sample document images consist of normal text lines, headers, a wide range of tables, equations, header, footer and page numbers with different font sizes and styles. The background is white and grey coated. The assumption we made here are as followss:",
+      "text_en": "The sample document images consist of normal text lines, headings, a wide range of tables, equations, header, footer and page numbers with different font sizes and styles. The background is white and grey coloured. The assumptions we made here are as follows:",
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         299.0,
@@ -56,7 +68,13 @@
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         303.0,
@@ -71,13 +89,19 @@
       "block_index": 3,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "fr",
+      "source_lang": "en",
       "text_original": "The minimum height of a table is equal to or greater than 3 regular text lines. With this assumption, most of the heading and equation parts can be eliminated from being detected as tables.",
       "text_en": "The minimum height of a table is equal to or greater than 3 regular text lines. With this assumption, most of the heading and equation parts can be eliminated from being detected as tables.",
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": true
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         303.0,
@@ -98,7 +122,13 @@
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         302.0,
@@ -113,13 +143,19 @@
       "block_index": 5,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "fr",
+      "source_lang": "en",
       "text_original": "The document image is single column layout and for a professional document, there is no text or image portion on left or right side of a table (that is, tables are in line with text).",
       "text_en": "The document image is single column layout and for a professional document, there is no text or image portion on left or right side of a table (that is, tables are in line with text).",
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": true
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         304.0,
@@ -129,18 +165,24 @@
       ]
     },
     {
-      "chunk_id": "4f1ccdac5e6beacc54bd1aaeb5a86322",
+      "chunk_id": "a216e2c6b90f40721ef84ef7a295c166",
       "page_index": 0,
       "block_index": 6,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "fr",
+      "source_lang": "en",
       "text_original": "The methodology as presented in Figure 1 follows a number of stages and they are: 1) data collection and pre-processing of the scanned documents; 2) threshold computation for word space and line height; and 3) extraction of the table with and without rule lines. Let us look at details of each stage in the rest of this section.",
-      "text_en": "The methodology as presented in Figure 1 follows a number of stages and they are: 1) data collection and pre-processing of the scanned documents; 2) three calculations for word space and line height; and 3) extraction of the table with and without rule lines. Let us look at details of each stage in the rest of this section.",
+      "text_en": "The methodology as presented in Figure 1 follows a number of stages and they are: 1) data collection and pre-processing of the scanned documents; 2) threshold computation for word space and line height; and 3) extraction of the table with and without rule lines. Let us look at details of each stage in the rest of this section.",
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         299.0,
@@ -161,7 +203,13 @@
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         644.0,
@@ -171,18 +219,24 @@
       ]
     },
     {
-      "chunk_id": "e65828b1c5f99be7b4e107d90f17abac",
+      "chunk_id": "9e479f8d61d217c3c66c01647f94d5ed",
       "page_index": 1,
       "block_index": 1,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "fr",
+      "source_lang": "en",
       "text_original": "The categorized tables presented in the last section are tested with the proposed algorithm.",
-      "text_en": "The catalogued tables presented in the last section are tested with the proposed algorithm.",
+      "text_en": "The categorized tables presented in the last section are tested with the proposed algorithm.",
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         138.0,
@@ -192,18 +246,24 @@
       ]
     },
     {
-      "chunk_id": "8fcd97518b089428018f146091aa332e",
+      "chunk_id": "4c05573bd993485ad52933ffcfe469d7",
       "page_index": 1,
       "block_index": 2,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "fr",
+      "source_lang": "en",
       "text_original": "Table I illustrates that the different type of table detection from tables with fully and partially bounding lines to tables without ruling lines. Category A shows the highest percentage of detection whereas table with parallel line shows lower performance in detection.",
-      "text_en": "Table I illustrates that the different type of table detection from tables with full and partially bunding lines to tables without ruling lines. Category A shows the highest percentage of detection whereas table with parallel line shows lower performance in detection.",
+      "text_en": "Table I illustrates that the different type of table detection from tables with fully and partially bounding lines to tables without ruling lines. Category A shows the highest percentage of detection whereas table with parallel line shows lower performance in detection.",
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         137.0,
@@ -213,18 +273,24 @@
       ]
     },
     {
-      "chunk_id": "bee66cf1f75abb681d58b32e0aca1418",
+      "chunk_id": "e8e6894b45eda843ca9e6b067dd3500d",
       "page_index": 1,
       "block_index": 3,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "fr",
+      "source_lang": "en",
       "text_original": "From Figure 8, it can be seen that all tables produce accuracy of detection better than 67%. Tables with fully or partially bounding lines show higher accuracy with 82.7% of detection compared to the others. These type of tables can be extracted easily as it is bounded with at least single vertical line and we compare their line height with the threshold to eliminate big headings. Therefore, they yield higher accuracy due to the vertical rule line information.",
-      "text_en": "From Figure 8, it can be seen that all tables produce accuracy of detection better than 67%. Tables with full or partially bounding lines show higher accuracy with 82.7% of detection compared to the others. These type of tables can be extracted easily as it is bounded with at least single vertical line and we compare their line height with the threefold to eliminate big heads.",
+      "text_en": "From Figure 8, it can be seen that all tables produce accuracy of detection better than 67%. Tables with fully or partially bounding lines show higher accuracy with 82.7% of detection compared to the others. These type of tables can be extracted easily as it is bounded with at least single vertical line and we compare their line height with the threshold to eliminate big headings.",
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         133.0,
@@ -234,18 +300,51 @@
       ]
     },
     {
-      "chunk_id": "02044cf848a27119c30d254e29cc22b5",
+      "chunk_id": "ce41760a92e3764b499bf075a227534d",
+      "page_index": 1,
+      "block_index": 3,
+      "chunk_index": 1,
+      "block_type": "paragraph",
+      "source_lang": "en",
+      "text_original": "From Figure 8, it can be seen that all tables produce accuracy of detection better than 67%. Tables with fully or partially bounding lines show higher accuracy with 82.7% of detection compared to the others. These type of tables can be extracted easily as it is bounded with at least single vertical line and we compare their line height with the threshold to eliminate big headings. Therefore, they yield higher accuracy due to the vertical rule line information.",
+      "text_en": "Therefore, they yield higher accuracy due to the vertical rule line information.",
+      "metadata": {
+        "section_title": null,
+        "context": null,
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
+      },
+      "bbox": [
+        133.0,
+        940.0,
+        2293.0,
+        1704.0
+      ]
+    },
+    {
+      "chunk_id": "c53ea1fcbfe8a93f57d633a7f1e45f52",
       "page_index": 1,
       "block_index": 4,
       "chunk_index": 0,
       "block_type": "table",
-      "source_lang": "fr",
+      "source_lang": "en",
       "text_original": "Category of Tables\tTotal Number of Scanned Documents\tCorrectly Detected Tables\nTable with fully and partially bounding lines (Type A)\t110\t91\nTable with parallel lines (Type B)\t135\t91\nTable without ruling lines (Type C)\t53\t40",
-      "text_en": "Category of Tables Total Number of Scanned Documents Correctly Detected Tables Table with full and partially bounding lines (Type A) 110 91 Table with parallel lines (Type B) 135 91 Table without ruling lines (Type C) 53 40",
+      "text_en": "Category of Tables\tTotal Number of Scanned Documents\tCorrectly Detected Tables\nTable with fully and partially bounding lines (Type A)\t110\t91\nTable with parallel lines (Type B)\t135\t91\nTable without ruling lines (Type C)\t53\t40",
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": false,
+        "title": "II. METHODOLOGY",
+        "deadline": null,
+        "owner": "RESULTS",
+        "client": "RESULTS",
+        "organization": "RESULTS",
+        "budget": null
       },
       "bbox": [
         147.0,
@@ -254,5 +353,13 @@
         2711.0
       ]
     }
-  ]
+  ],
+  "doc_metadata": {
+    "title": "II. METHODOLOGY",
+    "deadline": null,
+    "owner": "RESULTS",
+    "client": "RESULTS",
+    "organization": "RESULTS",
+    "budget": null
+  }
 }
