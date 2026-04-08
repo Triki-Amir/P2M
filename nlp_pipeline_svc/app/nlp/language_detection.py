@@ -42,8 +42,15 @@ _FR_MARKERS = [
 
 # Attempt to import langdetect once at module load time.
 try:
+    import threading
     from langdetect import detect as _ld_detect, DetectorFactory, LangDetectException
-    DetectorFactory.seed = 42  # make results deterministic
+
+    # Set the seed once under a lock so concurrent imports in multi-threaded
+    # environments cannot interleave with this initialization.
+    _seed_lock = threading.Lock()
+    with _seed_lock:
+        DetectorFactory.seed = 42  # make results deterministic
+
     _LANGDETECT_AVAILABLE = True
 except ImportError:
     _LANGDETECT_AVAILABLE = False
@@ -109,7 +116,7 @@ def detect_language(text: str) -> str:
                 detected,
             )
             return "en"
-        except Exception as exc:  # LangDetectException or any other error
+        except LangDetectException as exc:
             logger.debug(
                 "[language_detection] langdetect failed (%s); using rule-based fallback",
                 exc,
