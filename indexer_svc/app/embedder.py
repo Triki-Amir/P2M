@@ -12,6 +12,7 @@ Output per chunk
 from __future__ import annotations
 
 import logging
+import sys
 from dataclasses import dataclass
 from typing import List, Dict
 
@@ -105,8 +106,26 @@ class Embedder:
                     use_fp16=True,
                 )
                 logger.info("[embedder] Model ready.")
-            except ImportError as exc:
+            except ModuleNotFoundError as exc:
+                if (exc.name or "").startswith("FlagEmbedding"):
+                    raise RuntimeError(
+                        "FlagEmbedding is not installed in the Python interpreter running the indexer. "
+                        f"Interpreter: {sys.executable}. "
+                        "Install with: "
+                        f"{sys.executable} -m pip install FlagEmbedding"
+                    ) from exc
+
                 raise RuntimeError(
-                    "FlagEmbedding not installed — run: pip install FlagEmbedding"
+                    "FlagEmbedding import failed because a dependency is missing. "
+                    f"Missing module: {exc.name}. "
+                    f"Interpreter: {sys.executable}. "
+                    "Install indexer dependencies with: "
+                    f"{sys.executable} -m pip install -r indexer_svc/requirements.txt"
+                ) from exc
+            except Exception as exc:
+                raise RuntimeError(
+                    "BGEM3FlagModel initialization failed. "
+                    f"Interpreter: {sys.executable}. "
+                    f"Original error: {type(exc).__name__}: {exc}"
                 ) from exc
         return self._model
