@@ -5,3 +5,4 @@ torch
 transformers
 sentencepiece
 sacremoses
+langdetect>=1.0.9
