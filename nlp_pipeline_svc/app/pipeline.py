@@ -26,6 +26,7 @@ from nlp_pipeline_svc.app.nlp.cleaning import clean_text
 from nlp_pipeline_svc.app.nlp.chunker import chunk_block, ChunkConfig
 from nlp_pipeline_svc.app.nlp.language_detection import detect_language
 from nlp_pipeline_svc.app.nlp.translation import translate_to_en
+from nlp_pipeline_svc.app.nlp.metadata_extractor import extract_metadata
 
 logger = logging.getLogger(__name__)
 
@@ -82,6 +83,9 @@ class NlpOrchestrator:
         """
         nlp_chunks: List[NlpChunk] = []
         lang_votes: List[str] = []
+
+        # Extract document-level metadata BEFORE chunking
+        doc_meta = extract_metadata(ocr_doc)
 
         for page in ocr_doc.pages:
             for block_index, block in enumerate(page.blocks):
@@ -153,6 +157,7 @@ class NlpOrchestrator:
             doc_id=ocr_doc.doc_id,
             source_lang=doc_lang,
             chunks=nlp_chunks,
+            doc_metadata=doc_meta,
         )
 
     # ------------------------------------------------------------------
