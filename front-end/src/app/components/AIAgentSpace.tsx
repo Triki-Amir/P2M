@@ -4,6 +4,7 @@ import { Bot, Upload, FileText, CheckCircle2, Loader2, Sparkles, MessageSquare, 
 import { motion, AnimatePresence } from 'motion/react';
 
 export const AIAgentSpace: React.FC = () => {
+  const uploadApiBase = import.meta.env.VITE_UPLOAD_API_URL ?? 'http://localhost:8000';
   const [isProcessing, setIsProcessing] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [chatMessages, setChatMessages] = useState<{ role: 'ai' | 'user'; content: string }[]>([
@@ -22,12 +23,14 @@ export const AIAgentSpace: React.FC = () => {
         const formData = new FormData();
         formData.append("file", droppedFile);
 
-        const response = await fetch("http://localhost:3000/upload", {
+        const response = await fetch(`${uploadApiBase}/upload`, {
           method: "POST",
           body: formData
         });
 
         const result = await response.json();
+        const documentId = result.documentId ?? result.id;
+        const storagePath = result.storagePath ?? result.storage_path;
         
         setIsProcessing(false);
         
@@ -35,7 +38,7 @@ export const AIAgentSpace: React.FC = () => {
           setChatMessages(prev => [
             ...prev,
             { role: 'user', content: `Document téléchargé : ${droppedFile.name}` },
-            { role: 'ai', content: `J'ai analysé "${droppedFile.name}". Le document a été enregistré avec succès dans la base de données.\n\nID du document : ${result.documentId}\nChemin de stockage : ${result.storagePath}\n\nJe peux maintenant vous aider à analyser ce document. Que souhaitez-vous savoir ?` }
+            { role: 'ai', content: `J'ai analysé "${droppedFile.name}". Le document a été enregistré avec succès dans la base de données.\n\nID du document : ${documentId}\nChemin de stockage : ${storagePath}\n\nJe peux maintenant vous aider à analyser ce document. Que souhaitez-vous savoir ?` }
           ]);
         } else {
           setChatMessages(prev => [
@@ -50,7 +53,7 @@ export const AIAgentSpace: React.FC = () => {
         setChatMessages(prev => [
           ...prev,
           { role: 'user', content: `Tentative de téléchargement : ${droppedFile.name}` },
-          { role: 'ai', content: `Erreur de connexion au serveur. Assurez-vous que le backend est en cours d'exécution sur http://localhost:3000` }
+          { role: 'ai', content: `Erreur de connexion au serveur. Assurez-vous que le backend est en cours d'exécution sur ${uploadApiBase}` }
         ]);
         setFile(null);
       }

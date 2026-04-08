@@ -1,320 +1,257 @@
 {
-  "doc_id": "subo.pdf",
-  "source_lang": "ar",
+  "doc_id": "test1.1.pdf",
+  "source_lang": "fr",
   "chunks": [
     {
-      "chunk_id": "32cdc6d1d455f6491ac81a5ddd4bc004",
+      "chunk_id": "fcc99c62bddae431195f5ae7b358a456",
       "page_index": 0,
       "block_index": 0,
       "chunk_index": 0,
-      "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "ملحق",
-      "text_en": "Annex",
+      "block_type": "heading",
+      "source_lang": "en",
+      "text_original": "II. METHODOLOGY",
+      "text_en": "II. METHODOLOGY",
       "metadata": {
         "section_title": null,
         "context": null,
         "translation_failed": false
       },
       "bbox": [
-        1117.0,
-        540.0,
-        1316.0,
-        631.0
+        887.0,
+        53.0,
+        1504.0,
+        128.0
       ]
     },
     {
-      "chunk_id": "6771966c2f96ac279c1b7bb24712c236",
+      "chunk_id": "d75f4a53ad1027d7a546ce51aed7e081",
       "page_index": 0,
       "block_index": 1,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "لاعلان طلب عروض عن 2021/01 دد الصادر بتاريخ 15 مارس 2021 لإسناد لزمات لغرض تمويل وتصميم وانجاز واستغلال وصيانة بالملك العمومي المينائي بموانى الصيد البحري",
-      "text_en": "To announce a request for proposals for 2021/01 Dd of 15 March 2021 for the purpose of financing, designing, carrying out, exploiting and maintaining the public port property of the fishing vessels.",
+      "source_lang": "fr",
+      "text_original": "The sample document images consist of normal text lines, headings, a wide range of tables, equations, header, footer and page numbers with different font sizes and styles. The background is white and grey coloured. The assumptions we made here are as follows:",
+      "text_en": "The sample document images consist of normal text lines, headers, a wide range of tables, equations, header, footer and page numbers with different font sizes and styles. The background is white and grey coated. The assumption we made here are as followss:",
       "metadata": {
         "section_title": null,
         "context": null,
         "translation_failed": false
       },
       "bbox": [
-        344.0,
-        637.0,
-        2079.0,
-        887.0
+        299.0,
+        156.0,
+        2133.0,
+        568.0
       ]
     },
     {
-      "chunk_id": "85d71d5162c37690c61bcff209274e6a",
+      "chunk_id": "623a6e05167db66f84bb07883428d4d5",
       "page_index": 0,
       "block_index": 2,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "تم اجراء تعديلات على نظام طلب العروض، كمايلي : تضاف فقرة خامست للفصل 3 المتعلق بشروط المشاركت، كما يلي：“ لا يمكن إسناد نفس المشارك إلا مقسم واحد بالنسبة لنفس النشاط وينفس المبناء",
-      "text_en": "Amendments were made to the request for proposals system, as follows: add a fifth paragraph to chapter 3 on conditions for participation, as follows: the same participant can only be assigned one division for the same activity and breathe the building",
+      "source_lang": "en",
+      "text_original": "- There are no graphics and watermarks in the document images.",
+      "text_en": "- There are no graphics and watermarks in the document images.",
       "metadata": {
         "section_title": null,
         "context": null,
         "translation_failed": false
       },
       "bbox": [
-        203.0,
-        931.0,
-        2221.0,
-        1133.0
+        303.0,
+        613.0,
+        2130.0,
+        777.0
       ]
     },
     {
-      "chunk_id": "d13d9f00bbdcc0d48183dde0cffbd35b",
+      "chunk_id": "6f1859aa6e10b66ff6525549b776532f",
       "page_index": 0,
       "block_index": 3,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "تغيير موقع المقسم عدد 14 مع المحافظة على المساحة المسندة والغاء المقسم عدد 19 طبقا للملحق عدد 11. www.apip.nat.tn كما يمكن تعميل ملف طلب العروض من موقع واب الوكالت) حذف الجملة التالية، كما يمكن تعميل ملف طلب العروض من موقع واب الوكالت) من الفقرة الأولى من الفصل 5 المتعلق بسحب ملف طلب العروض وشروط تقديمه. إضافت خانة جديدة تحت عدد 12 بالجدول المتعلق بالوثائق الإدارية، كما يلي",
-      "text_en": "Alteration of the location of the distribution number 14, while maintaining the assigned area and elimination of the divided number number 19, in accordance with the annex number 11. www.apip.nat.tn. The request for proposals file from the Waip-a-Alkalt site can also be activated.",
+      "source_lang": "fr",
+      "text_original": "The minimum height of a table is equal to or greater than 3 regular text lines. With this assumption, most of the heading and equation parts can be eliminated from being detected as tables.",
+      "text_en": "The minimum height of a table is equal to or greater than 3 regular text lines. With this assumption, most of the heading and equation parts can be eliminated from being detected as tables.",
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": true
       },
       "bbox": [
-        199.0,
-        1141.0,
-        2228.0,
-        1420.0
+        303.0,
+        789.0,
+        2136.0,
+        1115.0
       ]
     },
     {
-      "chunk_id": "258fe409ae16c49587f015fe4778edb4",
-      "page_index": 0,
-      "block_index": 3,
-      "chunk_index": 1,
-      "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "تغيير موقع المقسم عدد 14 مع المحافظة على المساحة المسندة والغاء المقسم عدد 19 طبقا للملحق عدد 11. www.apip.nat.tn كما يمكن تعميل ملف طلب العروض من موقع واب الوكالت) حذف الجملة التالية، كما يمكن تعميل ملف طلب العروض من موقع واب الوكالت) من الفقرة الأولى من الفصل 5 المتعلق بسحب ملف طلب العروض وشروط تقديمه. إضافت خانة جديدة تحت عدد 12 بالجدول المتعلق بالوثائق الإدارية، كما يلي",
-      "text_en": "The following sentence can be deleted. The request for proposals file from the Wab-a-Alkalt site can also be downloaded from the first paragraph of chapter 5 on the withdrawal of the request for proposals file and the conditions for submission. A new entry has been added under number 12 of the table on administrative documents, as follows:",
-      "metadata": {
-        "section_title": null,
-        "context": null,
-        "translation_failed": false
-      },
-      "bbox": [
-        199.0,
-        1141.0,
-        2228.0,
-        1420.0
-      ]
-    },
-    {
-      "chunk_id": "4bca84b0afa244da973cf1cb2c37c8e7",
+      "chunk_id": "63232a7828aab55275a199b3440046ed",
       "page_index": 0,
       "block_index": 4,
       "chunk_index": 0,
-      "block_type": "table",
-      "source_lang": "ar",
-      "text_original": "الإدلاع بنسخة مطابقة للأصل مسلمة ومختومة من قبل الإدارة العامة للصيد البحري وتربيت الأسماك\tصالحت في تاريخ اخر أجل لارسال العروض\tترخيص في الاستغلال المتعلق بانشطت تربيت الأسماك بالأقفاص العائمت\t12",
-      "text_en": "The launch of a copy of the original is a Muslim and sealed version by the Directorate General of Marine Fishing and fish breeding was valid in another date for the submission of offers, a licence for exploitation related to the activities of floating cages fish breeding.",
+      "block_type": "paragraph",
+      "source_lang": "en",
+      "text_original": "- In a standard full lengthy text line, there would be more number of characters compared to other text lines.",
+      "text_en": "- In a standard full lengthy text line, there would be more number of characters compared to other text lines.",
       "metadata": {
         "section_title": null,
         "context": null,
         "translation_failed": false
       },
       "bbox": [
-        223.0,
-        1434.0,
-        2207.0,
-        1688.0
+        302.0,
+        1126.0,
+        2129.0,
+        1294.0
       ]
     },
     {
-      "chunk_id": "845e68a394e5578093a6359ade86a0f5",
+      "chunk_id": "cc3ca2b215db1ace37b2cb8a329a9862",
       "page_index": 0,
       "block_index": 5,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "- ينفج الفصل 10 المتعلق بحالات الاقصاء الألي للعروض، كما يلي :",
-      "text_en": "Chapter 10 on automatic exclusions of offers reads as follows:",
+      "source_lang": "fr",
+      "text_original": "The document image is single column layout and for a professional document, there is no text or image portion on left or right side of a table (that is, tables are in line with text).",
+      "text_en": "The document image is single column layout and for a professional document, there is no text or image portion on left or right side of a table (that is, tables are in line with text).",
       "metadata": {
         "section_title": null,
         "context": null,
-        "translation_failed": false
+        "translation_failed": true
       },
       "bbox": [
-        1017.0,
-        1696.0,
-        2220.0,
-        1762.0
+        304.0,
+        1304.0,
+        2132.0,
+        1640.0
       ]
     },
     {
-      "chunk_id": "89e278b692a0f69e5d17fb15090f6934",
+      "chunk_id": "4f1ccdac5e6beacc54bd1aaeb5a86322",
       "page_index": 0,
       "block_index": 6,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "تعديل المطن الخامس، كما يلي",
-      "text_en": "Modified fifth hull, as follows:",
+      "source_lang": "fr",
+      "text_original": "The methodology as presented in Figure 1 follows a number of stages and they are: 1) data collection and pre-processing of the scanned documents; 2) threshold computation for word space and line height; and 3) extraction of the table with and without rule lines. Let us look at details of each stage in the rest of this section.",
+      "text_en": "The methodology as presented in Figure 1 follows a number of stages and they are: 1) data collection and pre-processing of the scanned documents; 2) three calculations for word space and line height; and 3) extraction of the table with and without rule lines. Let us look at details of each stage in the rest of this section.",
       "metadata": {
         "section_title": null,
         "context": null,
         "translation_failed": false
       },
       "bbox": [
-        1444.0,
-        1773.0,
-        2160.0,
-        1835.0
+        299.0,
+        1711.0,
+        2131.0,
+        2204.0
       ]
     },
     {
-      "chunk_id": "70c6b2cdb2656a05a77eb72f59d0f716",
-      "page_index": 0,
-      "block_index": 7,
+      "chunk_id": "babae318ee59bbae853dc5fa8b2b559c",
+      "page_index": 1,
+      "block_index": 0,
       "chunk_index": 0,
-      "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "العروض التي لم تتضمن وثيقت الجدول التقديري لرقم المعاملات بلدة خمس سنوات طبقا للملحق عدد 07.",
-      "text_en": "Presentations which, according to Supplement No. 07, did not include the estimated schedule of transactions number are five years old.",
+      "block_type": "heading",
+      "source_lang": "en",
+      "text_original": "IV. RESULTS AND DISCUSSION",
+      "text_en": "IV. RESULTS AND DISCUSSION",
       "metadata": {
         "section_title": null,
         "context": null,
         "translation_failed": false
       },
       "bbox": [
-        399.0,
-        1841.0,
-        2223.0,
-        1942.0
+        644.0,
+        99.0,
+        1734.0,
+        192.0
       ]
     },
     {
-      "chunk_id": "099e0a9c89fdaea98e2b1c4044bb4c80",
-      "page_index": 0,
-      "block_index": 8,
+      "chunk_id": "e65828b1c5f99be7b4e107d90f17abac",
+      "page_index": 1,
+      "block_index": 1,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "تقصي اللجنة القارة لمشاريع اللزمات كمل عرض لا يقدم ترخيص في الاستغلال المتعلق بانشطت تربيت الأسماك بالأفقاص العانمت من طرف الجادرة العامة للصيد البحري وتربيت الأسماك.",
-      "text_en": "The Commission explores the continent &apos; s fellowship projects as an offer that does not provide a licence in the exploitation of activities related to the breeding of fish by the glooms of the overall fishing and fish breeding capacity.",
+      "source_lang": "fr",
+      "text_original": "The categorized tables presented in the last section are tested with the proposed algorithm.",
+      "text_en": "The catalogued tables presented in the last section are tested with the proposed algorithm.",
       "metadata": {
         "section_title": null,
         "context": null,
         "translation_failed": false
       },
       "bbox": [
-        198.0,
-        1973.0,
-        2221.0,
-        2108.0
+        138.0,
+        233.0,
+        2286.0,
+        417.0
       ]
     },
     {
-      "chunk_id": "034c9c920d379fe996877cf719ffc199",
-      "page_index": 0,
-      "block_index": 9,
+      "chunk_id": "8fcd97518b089428018f146091aa332e",
+      "page_index": 1,
+      "block_index": 2,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "- تضاف للفصل 5.12 المتعلق بالتقييم الإجمالي للعروض فقرة اخيرة، كما يلي：“ في صورة حصول نفس العارض وبنفس الميناء على الترتيب الأول في أكثر من مقسم، يتم المرور إلى التفاوض مع العارض الذي يليه في الترتيب لتحسين عرضه المالي",
-      "text_en": "- Chapter 5.12 on the overall evaluation of offers should be added a final paragraph, as follows: in the event that the same exhibit and the same port receive the first order in more than one division, the next model will be negotiated to improve its financial supply.",
+      "source_lang": "fr",
+      "text_original": "Table I illustrates that the different type of table detection from tables with fully and partially bounding lines to tables without ruling lines. Category A shows the highest percentage of detection whereas table with parallel line shows lower performance in detection.",
+      "text_en": "Table I illustrates that the different type of table detection from tables with full and partially bunding lines to tables without ruling lines. Category A shows the highest percentage of detection whereas table with parallel line shows lower performance in detection.",
       "metadata": {
         "section_title": null,
         "context": null,
         "translation_failed": false
       },
       "bbox": [
-        199.0,
-        2114.0,
-        2219.0,
-        2299.0
+        137.0,
+        422.0,
+        2293.0,
+        899.0
       ]
     },
     {
-      "chunk_id": "88b9c1e999924e6721cec9b118c5a1cc",
-      "page_index": 0,
-      "block_index": 10,
+      "chunk_id": "bee66cf1f75abb681d58b32e0aca1418",
+      "page_index": 1,
+      "block_index": 3,
       "chunk_index": 0,
       "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "تضاف فقرة اخيرة للفصل 13 المتعلق باقتراح إسناد اللزمت، كما يلي : تحتفظ اللجنت القارة لمشاريع اللزمات بحقها في اللجوء إلى اليت التفاوض قبل إقرار إسناد اللزمت",
-      "text_en": "Add a final paragraph to chapter 13 on the proposal for the assignment of time, as follows: The Commission reserves the right of the continent to resort to the negotiating mechanism before establishing the assignment of time.",
+      "source_lang": "fr",
+      "text_original": "From Figure 8, it can be seen that all tables produce accuracy of detection better than 67%. Tables with fully or partially bounding lines show higher accuracy with 82.7% of detection compared to the others. These type of tables can be extracted easily as it is bounded with at least single vertical line and we compare their line height with the threshold to eliminate big headings. Therefore, they yield higher accuracy due to the vertical rule line information.",
+      "text_en": "From Figure 8, it can be seen that all tables produce accuracy of detection better than 67%. Tables with full or partially bounding lines show higher accuracy with 82.7% of detection compared to the others. These type of tables can be extracted easily as it is bounded with at least single vertical line and we compare their line height with the threefold to eliminate big heads.",
       "metadata": {
         "section_title": null,
         "context": null,
         "translation_failed": false
       },
       "bbox": [
-        207.0,
-        2319.0,
-        2221.0,
-        2457.0
+        133.0,
+        940.0,
+        2293.0,
+        1704.0
       ]
     },
     {
-      "chunk_id": "63b7651498df288742eba3505d115dc9",
-      "page_index": 0,
-      "block_index": 11,
+      "chunk_id": "02044cf848a27119c30d254e29cc22b5",
+      "page_index": 1,
+      "block_index": 4,
       "chunk_index": 0,
-      "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "ملاحظة:",
-      "text_en": "Note:",
+      "block_type": "table",
+      "source_lang": "fr",
+      "text_original": "Category of Tables\tTotal Number of Scanned Documents\tCorrectly Detected Tables\nTable with fully and partially bounding lines (Type A)\t110\t91\nTable with parallel lines (Type B)\t135\t91\nTable without ruling lines (Type C)\t53\t40",
+      "text_en": "Category of Tables Total Number of Scanned Documents Correctly Detected Tables Table with full and partially bounding lines (Type A) 110 91 Table with parallel lines (Type B) 135 91 Table without ruling lines (Type C) 53 40",
       "metadata": {
         "section_title": null,
         "context": null,
         "translation_failed": false
       },
       "bbox": [
-        2021.0,
-        2514.0,
-        2219.0,
-        2575.0
-      ]
-    },
-    {
-      "chunk_id": "d5ea1acb998f5d72da3e80c1133841fe",
-      "page_index": 0,
-      "block_index": 12,
-      "chunk_index": 0,
-      "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "يتعين على كافت المشاركين الراغبين في الحصول على نسخة معدلت من ملف طلب العروض، تقديم مطلب بودكابى (بودكابى) في الغرض عبر البريد الالكتروني يتم ارساله إلى الوكالت عبر الرابط التالي: ويتضمن المطلب اسم المشارك و البريد الالكتروني الخاص به، والهاتف. يجب أن تحتوي العروض المرسلت إلى الوكالت على النسخة المعدلت من ملف طلب العروض. تبقى بقيت الفصول على حالها.",
-      "text_en": "All participants wishing to obtain a modified copy of the request for proposals file must submit a Bodkabe application for the purpose via e-mail, which is sent to the Agency via the following link: the participant's name and e-mail, and the telephone. The offers sent to the Agency must contain the modified version of the request for proposals file. The chapters remain the same.",
-      "metadata": {
-        "section_title": null,
-        "context": null,
-        "translation_failed": false
-      },
-      "bbox": [
-        200.0,
-        2592.0,
-        2149.0,
-        2798.0
-      ]
-    },
-    {
-      "chunk_id": "023ed96b5359316802cc04b3bb74b104",
-      "page_index": 0,
-      "block_index": 13,
-      "chunk_index": 0,
-      "block_type": "paragraph",
-      "source_lang": "ar",
-      "text_original": "Siège Social : Port de pêche de la goulette -2060 Tunis - B.P.N° : 64. Téléphone : (00 216) 71 738 300 (6 lignes groupées): الهاتف - Fax: (00216) 71 735 396 : الفاكس Site Web : www.apip.nat.tn Messagerie : bocapip@apip.com.tn R.C.: B191761998 : السجل التجاري I.F. 429957 ZN/N/000 : المعرف الجباني",
-      "text_en": "Siège Social: Port de pêche de la goulte - 2060 Tunis - B.P.N°: 64. Téléphone: (00 216) 71 738 300 (6 lignes groupées): telephone - Fax: (00216) 71 735 396: Fax Site Web: www.apip.nat.tn Messagerie: bocapip@ap.com.tn R.C.: B197698: Commercial Record I.F. 429957 ZN/N/000: Cosmological Knowledge",
-      "metadata": {
-        "section_title": null,
-        "context": null,
-        "translation_failed": false
-      },
-      "bbox": [
-        149.0,
-        3291.0,
-        2320.0,
-        3483.0
+        147.0,
+        1967.0,
+        2281.0,
+        2711.0
       ]
     }
   ]

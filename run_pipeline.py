@@ -13,6 +13,7 @@ Each service stays completely identical.
 
 import sys
 from pathlib import Path
+from indexer_svc.app.main import run_indexer
 from ocr_service.main import run as run_ocr
 from nlp_pipeline_svc.app.main import run_consumer as run_nlp
 # from indexer_service.main import run as run_indexer  # uncomment when built
@@ -25,7 +26,7 @@ def main(pdf_path: str) -> None:
 
     run_ocr(pdf_path)
     run_nlp()           # reads data/ocr_completed.json automatically
-    # run_indexer()       # reads data/nlp_completed.json automatically
+    run_indexer()       # reads data/nlp_completed.json automatically
 
     print("=" * 60)
     print("  Pipeline complete")

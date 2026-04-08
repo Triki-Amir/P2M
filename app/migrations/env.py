@@ -6,15 +6,13 @@ from os.path import abspath, dirname
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
 from app.database import Base
-from app.models import Document  # Import models to register them with Base
+from app.models import Document, Chunk, PGVector, PGSparseVector  # ← added PGVector, PGSparseVector
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
 import os
 import re
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
 config = context.config
 
 
@@ -23,13 +21,11 @@ def process_revision_directives(context, revision, directives):
     if not directives:
         return
 
-    # Get the versions directory
     migration_script = directives[0]
     versions_dir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "versions"
     )
 
-    # Find the highest existing revision number
     max_rev = 0
     if os.path.isdir(versions_dir):
         for fname in os.listdir(versions_dir):
@@ -37,38 +33,27 @@ def process_revision_directives(context, revision, directives):
             if match:
                 max_rev = max(max_rev, int(match.group(1)))
 
-    # Assign next sequential revision ID
     migration_script.rev_id = f"{max_rev + 1:04d}"
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
+
+def render_item(type_, obj, autogen_context):
+    """Tell Alembic how to render custom PostgreSQL types in migration files."""
+    if isinstance(obj, PGVector):
+        autogen_context.imports.add("from app.models import PGVector")
+        return repr(obj)  # renders as PGVector(1024)
+    if isinstance(obj, PGSparseVector):
+        autogen_context.imports.add("from app.models import PGSparseVector")
+        return repr(obj)  # renders as PGSparseVector(250002)
+    return False  # fall back to default rendering for all other types
+
+
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
 
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
-
-    This configures the context with just a URL
-    and not an Engine, though an Engine is acceptable
-    here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
-
-    Calls to context.execute() here emit the given string to the
-    script output.
-
-    """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
@@ -76,6 +61,7 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         process_revision_directives=process_revision_directives,
+        render_item=render_item,  # ← added
     )
 
     with context.begin_transaction():
@@ -83,12 +69,6 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in 'online' mode.
-
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
-
-    """
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
@@ -97,8 +77,10 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata,
+            connection=connection,
+            target_metadata=target_metadata,
             process_revision_directives=process_revision_directives,
+            render_item=render_item,  # ← added
         )
 
         with context.begin_transaction():
