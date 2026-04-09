@@ -10,7 +10,8 @@ When you move to microservices, this file becomes the only thing
 that changes: replace direct function calls with HTTP/queue triggers.
 Each service stays completely identical.
 """
-
+import os
+os.environ["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True"
 import sys
 from pathlib import Path
 from indexer_svc.app.main import run_indexer

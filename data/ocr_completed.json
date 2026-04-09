@@ -1,91 +1,77 @@
 {
-  "doc_id": "test1.1.pdf",
+  "doc_id": "tender.pdf",
   "source_lang": null,
   "pages": [
     {
       "page_index": 0,
       "blocks": [
         {
-          "type":  "heading",
-          "text": "II. METHODOLOGY",
-          "bbox": [
-            887.0,
-            53.0,
-            1504.0,
-            128.0
-          ],
+          "type": "heading",
+          "text": "NOTICE OF TENDER AND INSTRUCTIONS TO TENDERERS",
+          "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The sample document images consist of normal text lines, headings, a wide range of tables, equations, header, footer and page numbers with different font sizes and styles. The background is white and grey coloured. The assumptions we made here are as follows:",
-          "bbox": [
-            299.0,
-            156.0,
-            2133.0,
-            568.0
-          ],
+          "text": "Name of Work: Construction of ROB on Diva-Panvel Railway line at Kalamboli Warehousing, second access to Taloja MIDC, at Km. 61/10-11.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "1. 0 TENDER DOCUMENTS",
+          "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "- There are no graphics and watermarks in the document images.",
-          "bbox": [
-            303.0,
-            613.0,
-            2130.0,
-            777.0
-          ],
+          "text": "1.1 The tenderer should attach scanned copies of attested documents in PDF format for \"ON-LINE\" submission.",
+          "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The minimum height of a table is equal to or greater than 3 regular text lines. With this assumption, most of the heading and equation parts can be eliminated from being detected as tables.",
-          "bbox": [
-            303.0,
-            789.0,
-            2136.0,
-            1115.0
-          ],
+          "text": "1.2 Information and particulars of tenderers are to be attached on-line along with a declaration and an undertaking to execute the works within the time, as detailed in the form given in appendix ‘A’ to tender notice with requisite Annexures.",
+          "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "- In a standard full lengthy text line, there would be more number of characters compared to other text lines.",
-          "bbox": [
-            302.0,
-            1126.0,
-            2129.0,
-            1294.0
-          ],
+          "text": "Note : Submission / enclosure of any documents mentioned henceforth in the tender means uploading of scanned copies of the attested documents unless and otherwise specifically mentioned.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "2. 0 DOWNLOAD OF BLANK TENDER FORM",
+          "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The document image is single column layout and for a professional document, there is no text or image portion on left or right side of a table (that is, tables are in line with text).",
-          "bbox": [
-            304.0,
-            1304.0,
-            2132.0,
-            1640.0
-          ],
+          "text": "Contractors intending to download tender for the work shall first get pre-qualified for the work by applying on-line for prequalification and attach all relevant documents required by the Employer. Only those contractors short listed / pre-qualified shall be able to download the tender document. The right to decide whether a contractor/firm fulfils the requirements for downloading tender forms, rests entirely with the tender issuing authority of the Employer.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "3. 0 EARNEST MONEY",
+          "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The methodology as presented in Figure 1 follows a number of stages and they are: 1) data collection and pre-processing of the scanned documents; 2) threshold computation for word space and line height; and 3) extraction of the table with and without rule lines. Let us look at details of each stage in the rest of this section.",
-          "bbox": [
-            299.0,
-            1711.0,
-            2131.0,
-            2204.0
-          ],
+          "text": "The tenderer shall deposit and keep deposited (for the period specified hereafter) with CIDCO a sum as shown in this tender notice as the Earnest money. The Earnest Money shall be deposited in one of the following forms.",
+          "bbox": null,
           "section_title": null,
           "context": null
         }
@@ -95,62 +81,633 @@
       "page_index": 1,
       "blocks": [
         {
+          "type": "paragraph",
+          "text": "(i) By Demand draft in favour of CIDCO Limited payable at Mumbai.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "(ii) By an irrevocable and unconditional Bank Guarantee executed by a Nationalised/Scheduled Bank approved by CIDCO located either in Mumbai or Navi Mumbai in the form prescribed and valid for 180 days from the last date prescribed for submission of tender.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Tenderers are required to submit the tender fee of Rs.30,000/-(Rupees Thirty Thousand only) (Non-Refundable) by way of separate demand draft drawn in favour of “CIDCO Ltd.” payable at Mumbai / Navi Mumbai and the same should necessarily be scanned and uploaded in PDF format for downloading the on-line tender document. The Demand Draft shall be submitted in the Envelope along with E.M.D. separately before opening of the financial bid as mentioned below.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The scanned copy of the valid E.M.D. documents of appropriate amount in PDF format shall be uploaded along with submission of on-line tender. The original copy of the valid E.M.D. documents of appropriate amount and original demand draft towards tender fee shall be submitted in the office of Additional Chief Engineer (RP) in the time period mentioned in the tendering programme in a separate Envelope. The tender submitted by the tenderer on-line will not be opened till the original Demand Draft towards tender fee and original valid E.M.D. documents of appropriate amount are submitted to the tender opening authority within the prescribed time limit.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The tenders submitted without E.M.D. will be summarily rejected. E.M.D. carries no interest. The tenderers should specifically super scribe “Down loaded from the website” on the top left corner of the Envelope. In no case, the tender fee should be mixed with E.M.D.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 2,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "amount. The tenders shall be liable to be rejected summarily upon failure to follow procedure prescribed in the tender document.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The tenderer shall also submit the hard copy of the proforma of submission of tender duly filled in the Envelope along with the Demand Draft towards tender fee and E.M.D. documents.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "E.M.D. in the form of irrevocable, unconditional Bank Guarantee will be accepted only if, E.M.D. amount payable is equal or more than Rs.1.00 lac i.e. in the cases where estimated cost put to tender is equal or more than Rs.100.00 lacs.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "FIXED EMD : The agencies eligible on the basis of CIDCO's registration & having fixed EMD with CIDCO will have to enclose a copy of the valid EMD exemption certificate of appropriate amount issued by CIDCO and submit the same to the tender issuing authority. In remaining cases the eligible contractor has to pay full EMD.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "3.1 The failure or omission to deposit or keep deposited the Earnest Money shall disqualify the tender and CIDCO shall exclude from its consideration such disqualified tender.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "3.2 No interest shall be payable by CIDCO in respect of such deposited Earnest Money.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "3.3 The Earnest Money of an unsuccessful tenderer shall be refunded after the final decision on the tenders or on expiry of the validity period whichever is earlier on presenting receipt thereof.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 3,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "3.4 a) Invitation by CIDCO to submit the tender on-line shall be a proposal and the on-line submission of a tender by the tenderer shall be an acceptance of such proposal to win the contract. The tenderer shall not revoke his offer or vary its terms and conditions without the consent of CIDCO during the period of 120 days counted from the last day appointed by CIDCO for submission of tenders on-line. If the tenderer shall revoke the tender or vary its terms or conditions contrary to his promise to abide by this condition, the Earnest Money Deposited by him shall stand forfeited to CIDCO without prejudice to its other rights and remedies. Without prejudice to the foregoing clause, the tenderer shall be disentitled to submit a tender to CIDCO for execution of any civil work during the next 24 months effective from the date of such revocation or variations of the terms and conditions of the tender.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "b) Successful tenderer shall submit to CIDCO downloaded tender document duly signed by him on each page within 7 (seven) working days immediately after opening of tenders.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "3.5 If CIDCO shall accept the tender and signify such acceptance to the tenderer, the earnest Money so deposited with CIDCO by Demand Draft shall be appropriated towards Performance Security payable by the contractor in accordance with Condition No.10.1 of the General Conditions of Contract.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "3.6 If the tenderer has deposited the Earnest Money by a Bank Guarantee and he has been communicated the acceptance of his tender by CIDCO and if he fails or omits to furnish the Contract Deposit within 15 days in accordance with condition No.10.1.1 of the General Conditions of Contract, CIDCO shall be entitled to encash the Bank Guarantee.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 4,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "3.7 In case of the successful tenderer, on payment of the required amount of the Contract Deposit, the Earnest Money Deposited in the form of Bank Guarantee/Demand Draft/pay order shall be refundable to the tenderer in the event of CIDCO deciding the award of the contract.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "3.8 The contractor who are eligible to quote the tenders based on CIDCO Registration and availing the facility of EMD exemption by depositing requisite amount with CIDCO Ltd., are required to pay the difference in amount of EMD fixed for the present tender and amount already deposited with CIDCO Ltd., for availing the facility of EMD exemption. The contractor shall also submit attested copy of valid EMD exemption certificate issued by Executive Engineer (NM), CIDCO Ltd. to the tender issuing authority prior to opening of financial bids.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
           "type": "heading",
-          "text": "IV. RESULTS AND DISCUSSION",
-          "bbox": [
-            644.0,
-            99.0,
-            1734.0,
-            192.0
-          ],
+          "text": "3.9 The E.M.D. of the successful tenderers shall be forfeited if –",
+          "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The categorized tables presented in the last section are tested with the proposed algorithm.",
-          "bbox": [
-            138.0,
-            233.0,
-            2286.0,
-            417.0
-          ],
+          "text": "3.9.1 After submitting the tender, the contractor withdraws/revokes his offer or modifies/changes the same during the validity of the tender, or if after the acceptance of his tender, the contractor fails or neglects to furnish the balance Contract Deposit within 15 days.",
+          "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "Table I illustrates that the different type of table detection from tables with fully and partially bounding lines to tables without ruling lines. Category A shows the highest percentage of detection whereas table with parallel line shows lower performance in detection.",
-          "bbox": [
-            137.0,
-            422.0,
-            2293.0,
-            899.0
-          ],
+          "text": "3.9.2 Fails to execute contract agreement within 15 days from the date of issue of Work Order.",
+          "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "From Figure 8, it can be seen that all tables produce accuracy of detection better than 67%. Tables with fully or partially bounding lines show higher accuracy with 82.7% of detection compared to the others. These type of tables can be extracted easily as it is bounded with at least single vertical line and we compare their line height with the threshold to eliminate big headings. Therefore, they yield higher accuracy due to the vertical rule line information.",
-          "bbox": [
-            133.0,
-            940.0,
-            2293.0,
-            1704.0
-          ],
+          "text": "3.9.3 Fails to commence; the work within 30 days from the date of issue of Letter of Acceptance.",
+          "bbox": null,
           "section_title": null,
           "context": null
         },
         {
-          "type": "table",
-          "text": "Category of Tables\tTotal Number of Scanned Documents\tCorrectly Detected Tables\nTable with fully and partially bounding lines (Type A)\t110\t91\nTable with parallel lines (Type B)\t135\t91\nTable without ruling lines (Type C)\t53\t40",
-          "bbox": [
-            147.0,
-            1967.0,
-            2281.0,
-            2711.0
-          ],
+          "type": "paragraph",
+          "text": "3.9.4 The tenderers may also be dis-qualified for tendering for further works in CIDCO as provided in foregoing Clause No.3.4 on Sl.Pg.No.11.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 5,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "4. 0 VISIT TO SITE BY TENDERER",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The tenderer shall be deemed to have studied all plans, specifications, terms and conditions of tender and visited the site of work and made himself acquainted with the site conditions, availability of labour, basic materials, water, electricity, approach road to the site etc., before on-line submission of tender, whether the tenderer inspects them or not.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The tenderer shall be deemed to have made independent enquiries about probable taxes leviable by the local civic authority or the Government. The ignorance about probable taxes to be paid either to the local civic authority or to the government shall not be considered as an excuse. The percentage quoted by tenderer shall be deemed to include all the taxes, octroi, duties, royalties etc., payable under the rules to local civic authority, and/or Government/Statutory body.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "On-line submission of tender implies that tenderer has read these conditions and other contract documents of the tender as well as the conditions of the tender and has made himself aware of the same as also about the conditions and other factors having bearing on the execution of the order.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "In case of difference of opinion or dispute regarding the interpretation of tender conditions, the interpretation of any of the conditions by Chief Engineer & General Manager (Tech.) of CIDCO Limited shall be final and binding on the tenderer.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "5. 0 BLANK TENDER FORM",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Blank tender form shall be downloaded from the website. Any other additional information and/or clarification can be had from the office of Executive Engineer (PP&Q), CIDCO Ltd., 6 $ ^{th} $ Floor, South Wing,",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 6,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "CIDCO Bhavan, CBD-Belapur, Navi Mumbai on all working days during the office hours.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "6. 0 METHOD OF SUBMISSION OF TENDER",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The complete tender submission, “ON-LINE” on the website www.cidco.maharashtra.etenders.in, can be made only after payment of requisite fees through payment gateway of the service provider by pre-qualified tenderers.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "6.1 Tender should be submitted through website http://www.cidco.maharashtra.etenders.in and on-line only. The EMD as required in the tender documents should invariably be submitted before the last date and time of tender submission.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "6.2 To prepare and submit the tender / offer online, all bidders are required to have e-token based digital certificate. The digital certificate required for signing can be obtained from Nextenders (India) Pvt. Ltd. (email – sandip.ghamandi@nextenders.com) (Phone No. +91 9819139090) or saurabh.ghamandi@nextenders.com (Phone No. +91 9867804847)",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "6.3 $ \\underline{\\text{Late tender offers}} $ : Late tender on any account shall be rejected summarily Delay due to internet, electricity or any other reason will not be considered.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "6.4 Submission of a on-line tender by tenderer implies that he has read this notice and all other contract documents and has made himself aware of (i) Scope and specifications of the work to be done and (ii) local conditions and other factors having any bearing whatsoever in execution of works.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 7,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "6.5 The tenderers shall submit the tender on-line which satisfies each and every condition laid down in this notice, failing which the tender will be liable to be rejected. Method of submission of tender is given in Appendix 'A'.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "6.6 The tender shall be submitted along with the following scanned documents in PDF format.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "a] Covering letter.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "b] All the details / documents as per Appendix \"A\".",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "c] Demand Draft towards tender document fee.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "d] Bank guarantee towards Earnest Money Deposit.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "e] Attested copy of the valid registration certificate.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "f] Sales tax / MVAT registration certificate in original or attested copy from the sales tax officer of the concerned Circle valid up to the last date of receipt of tender.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "g] List of machinery and plant immediately available with the tenderer for use on this work and list of machinery proposed to be utilised on this work but not immediately available and the manner in which it is proposed to be procured.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "h] Details of personnel such as Engineers, Supervisors, Stores and Account Clerks on the roll of the tenderer and proposed to be deployed on this work.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "i] Details of other works tendered for and those in hand with the value of work un-finished on the date of submission of tender.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The Certificates from the Heads of the offices under whom the works are in progress should be enclosed.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "j] Attested copy of licenses having registered with the Asst. Commissioner of Labour as per contract labour (R. & A.) Act, 1970 & Maharashtra Contract Labour (Regulation & Abolition) Rules 1971.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 8,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "k] Power of Attorney authorising the person to sign the tender document.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "[1] Statement showing the average annual turnover, the balance cost of works in hand and the spare capacity for tendering as required by clause of Notice of tender and instructions to Tenderers alongwith the affidavit.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "7. 0 METHOD OF OPENING OF TENDER",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "On the date and time specified in the tender programme, the tenders will be opened in the presence of tenderers / their representative through etendering procedure in the office of the Additional Chief Engineer (RP), CIDCO Ltd., 6 $ ^{th} $ Floor, South Wing, CIDCO Bhavan, CBD-Belapur, Navi Mumbai.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "CIDCO reserves the right to reject any or all offers. CIDCO is not bound to give any reason for not considering such offers.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "8. 0 VALIDITY OF TENDER",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Validity of the tender shall be 120 days from the specified date of receipt of tender by CIDCO and there after until it is withdrawn by notice in writing duly addressed to the authority opening the tender. Such withdrawal by CIDCO will be effective from the date of receipt of notice by the tender opening authority.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "9. 0 IMPORTANT POINTS TO BE NOTED BY THE TENDERER",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "a] The on-line submission of tender document should be done on website by the eligible contractors as per tender programme. The tenderer has to quote only the percentage in figures. The percentage in words as also the total quoted amount in figures is worked out automatically on the web page.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 9,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "b] The price-bid (percentage) shall be inclusive of all taxes, octroi, levies, duties etc. to be paid by the tenderer for the work and claim for extra payment on any such account shall not be entertained.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "c] Tenderer shall deemed to have studied all plans, specifications, terms and made himself/themselves acquainted with the site and availability etc. before submitting the tender.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "d] At any time prior to the deadline for sale of tender, the Employer may amend the tender documents by issuing Corrigendum.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "e) Any corrigendum as well as clarification thus issued shall be a part of the tender documents and it will be assumed that the information contained in the amendment have been taken into account by the tenderer while submitting the tender.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "f) To give prospective tenderers reasonable time in which to take the amendment into account in preparing their tenders, the Employer shall extend, at its discretion, the deadline for submission of tenders, in which case, the Employer will notify all tenderers by placing it on website of the extended deadline and the same will be binding on them.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "g] The Employer is not bound to accept the lowest or any tender. The Employer reserves the right to reject any or all tenders received without assigning any reasons whatsoever.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "h] This detailed tender notice shall form part of tender documents.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "i] Income Tax as applicable on gross bill at percentage that will be in force from time to time will be recovered from the contractor's bills, for all payment including advances.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "j] The successful tenderer is required to execute an agreement on stamp paper of appropriate value in duplicate in the proforma attached with the tender documents. The agreement shall be signed within a period of 30 days from date of acceptance of the tender.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 10,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "10. 0 ACCEPTANCE OF TENDER",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Acceptance of tender on behalf of the Employer shall be done by an officer to whom the powers are delegated by the Management",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "11. 0 EXECUTION OF CONTRACT AGREEMENT",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The successful tenderer is required to execute a contract agreement in duplicate in the form attached with the tender documents on stamp paper of proper value. The proper value at present is Rs.100/-. The contract agreement should be signed within 30 days from the date of acceptance of the tender.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "12.0 The successful tenderer will be required to produce to the satisfaction of the Chief Engineer & General Manager (Tech), a valid contract labour license issued in his favour under the provision of the contract labour (Regulation and Abolition) Act, 1970, before starting the work. On failure to do so, the acceptance of the tender is liable to be withdrawn and also the earnest money is liable to be forfeited.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "13.0 The Contractor shall pay the Contract Sales Tax and turnover tax etc. directly to the Government. CIDCO shall not take any responsibility for any kind of tax payment to the Government at any point of time.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "13.1 Under Inter-state Migrant Workmen Act and /or Contract Labour Act, the Contractor should obtain requisite license / registration Certificate under the Act while engaging the migrant labour from other State.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "14.0 Wherever the tender is silent about the specifications, the work shall be executed as per the Standard Specifications from PWD, Indian Standard Specifications (Latest Version) for relevant items and specifications of the Ministry of Road Transport & Highways and all specifications of materials and workmanship.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 11,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "15. 0  $ \\underline{\\text{SPLITTING OF WORK}} $",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "CIDCO reserves the right to suitably increase/reduce the scope of work put to this tender. The right to split up the work in two or more parts is reserved by the Employer and also the right to award the work to more than one agency is reserved. The contractor shall have no claims whatsoever on this account.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "16. 0 SPARE CAPACITY OF WORK FOR TENDERING",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The tenderer shall be eligible to submit the tender to CIDCO subject to the essential condition that the price tendered by him together with the value of the outstanding works under execution by him for CIDCO or any other employer shall not be more than four times the value of the average annual turnover of works executed during the preceding three financial years.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "16.1 The tenderer shall furnish truly & faithfully the foregoing information by an Affidavit on a Non-Judicial stamp paper of Rs.100/-. If any information so furnished shall be found to be untrue or false, the tender shall be liable to be dis-qualified and the Earnest Money / Performance Security as the case may be accompanying such tender shall stand forfeited to CIDCO. If the information so furnished shall be found to untrue or false during the currency of the contract, the tenderer shall be held to be in default and the contract if any awarded to him shall be liable to be terminated with its consequences.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "17.0 Notice of tender and these instructions shall form part of the contract.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Date :",
+          "bbox": null,
           "section_title": null,
           "context": null
         }

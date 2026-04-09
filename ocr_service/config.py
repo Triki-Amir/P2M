@@ -16,7 +16,7 @@ TEMP_DIR     = PROJECT_ROOT / "temp"
 
 # ── PDF rendering ─────────────────────────────────────────────────────────────
 
-PDF_DPI: int = int(os.getenv("OCR_PDF_DPI", "300"))
+PDF_DPI: int = int(os.getenv("OCR_PDF_DPI", "96"))
 
 # ── Layout / label filtering ──────────────────────────────────────────────────
 

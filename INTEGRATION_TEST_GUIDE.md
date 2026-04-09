@@ -32,7 +32,8 @@ This guide shows how to test the complete workflow:
 
 ### 1. Install Required Packages
 ```powershell
-pip install pika python-dotenv fastapi sqlalchemy minio psycopg2-binary alembic
+cd C:\P2M
+pip install -r requirements.txt
 ```
 
 ### 2. Start All Services

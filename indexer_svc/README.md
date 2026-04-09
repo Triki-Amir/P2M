@@ -267,6 +267,7 @@ chunks (
 ### 1. Install dependencies
 
 ```bash
+cd C:/P2M
 pip install -r requirements.txt
 ```
 

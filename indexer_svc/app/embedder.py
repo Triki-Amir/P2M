@@ -120,7 +120,7 @@ class Embedder:
                     f"Missing module: {exc.name}. "
                     f"Interpreter: {sys.executable}. "
                     "Install indexer dependencies with: "
-                    f"{sys.executable} -m pip install -r indexer_svc/requirements.txt"
+                    f"{sys.executable} -m pip install -r requirements.txt"
                 ) from exc
             except Exception as exc:
                 raise RuntimeError(

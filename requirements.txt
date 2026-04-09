@@ -1,0 +1,16 @@
+# Root Python dependencies for the full P2M workspace.
+# Create one virtual environment at repository root, then install this file.
+
+-r ocr_service/requirements.txt
+-r nlp_pipeline_svc/requirements.txt
+-r indexer_svc/requirements.txt
+
+# FastAPI backend + integration stack
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+sqlalchemy>=2.0.0
+alembic>=1.13.0
+python-dotenv>=1.0.0
+minio>=7.2.0
+pika>=1.3.0
+requests>=2.31.0

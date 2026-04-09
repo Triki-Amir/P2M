@@ -1,5 +1,5 @@
 # ocr_service/requirements.txt
-# Install with: pip install -r ocr_service/requirements.txt
+# Install from project root with: pip install -r requirements.txt
 
 pymupdf>=1.24.0
 paddleocr>=2.9.0

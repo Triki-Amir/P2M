@@ -19,6 +19,7 @@ docker-compose up -d
 ```bash
 cd C:\P2M
 .venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
 ### 3. Start API Server
