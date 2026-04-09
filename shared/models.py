@@ -104,6 +104,6 @@ class NlpDocument(BaseModel):
         default_factory=dict,
         description=(
             "Document-level metadata extracted before chunking. "
-            "Keys: title, deadline (ISO 8601), organization, budget."
+            "Keys: title, deadline (ISO 8601), owner, client, organization, budget."
         ),
     )

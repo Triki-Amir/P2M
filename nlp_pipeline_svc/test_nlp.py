@@ -72,6 +72,8 @@ def test_metadata_extractor(mock_doc: OcrDocument):
         print(f"  {status}  {key}: {value!r}")
     assert meta["title"] is not None, "title should be extracted"
     assert meta["deadline"] is not None, "deadline should be extracted"
+    assert meta["owner"] is not None, "owner should be extracted"
+    assert meta["client"] is not None, "client should be extracted"
     assert meta["organization"] is not None, "organization should be extracted"
     assert meta["budget"] is not None, "budget should be extracted"
     print("[test_nlp] Metadata assertions passed.")

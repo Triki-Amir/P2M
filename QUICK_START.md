@@ -152,6 +152,17 @@ Database: Supabase (configured)
 - Backend API on: http://localhost:3000
 - MinIO Console: http://localhost:9001
 
+### Gradio Demo
+
+To launch the OCR metadata demo:
+
+```bash
+cd P2M
+python gradio_demo.py
+```
+
+Then open the local Gradio URL shown in the terminal.
+
 ### For Production
 1. Update `.env` with production credentials
 2. Set proper CORS restrictions in `server.js`

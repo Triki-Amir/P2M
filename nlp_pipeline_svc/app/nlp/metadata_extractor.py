@@ -5,10 +5,12 @@ Extracts structured tender metadata from an OcrDocument *before* chunking.
 
 Metadata extracted
 ------------------
-- title        (Objet de l'AO / Tender title)
-- deadline     (Date limite de remise des offres)
-- organization (Maître d'ouvrage / Client)
-- budget       (Budget / Montant estimé)
+- title         (Objet de l'AO / Tender title)
+- deadline      (Date limite de remise des offres)
+- owner         (Owner / Maître d'ouvrage)
+- client        (Client / beneficiary)
+- organization  (Backward-compatible alias: owner or client)
+- budget        (Budget / Montant estimé)
 
 Strategy
 --------
@@ -39,7 +41,7 @@ from __future__ import annotations
 import logging
 import re
 import unicodedata
-from typing import List, Optional
+from typing import Iterable, List, Optional
 
 from shared.models import OcrDocument
 
@@ -70,13 +72,17 @@ except ImportError:
 # ─── spaCy lazy loader ───────────────────────────────────────────────────────
 
 _nlp = None  # loaded on first call
+_nlp_load_attempted = False
 
 
 def _get_nlp():
     """Lazily load a spaCy NLP model.  Returns None when unavailable."""
-    global _nlp
+    global _nlp, _nlp_load_attempted
     if _nlp is not None:
         return _nlp
+    if _nlp_load_attempted:
+        return None
+    _nlp_load_attempted = True
     if not _SPACY_AVAILABLE:
         return None
     for model_name in ("xx_ent_wiki_sm", "fr_core_news_sm", "en_core_web_sm"):
@@ -119,6 +125,18 @@ _ORG_KEYWORDS: List[str] = [
     "وزارة", "شركة", "مديرية", "إدارة",  # Arabic
 ]
 
+_OWNER_KEYWORDS: List[str] = [
+    "maitre d'ouvrage", "maitre d'oeuvre", "proprietaire du projet",
+    "project owner", "procuring entity", "contracting authority",
+    "صاحب المشروع", "الجهة المالكة", "الجهة المتعاقدة",
+]
+
+_CLIENT_KEYWORDS: List[str] = [
+    "client", "beneficiaire", "beneficiary", "demandeur",
+    "societe", "ministere", "office", "agence", "direction",
+    "العميل", "الحريف", "المستفيد", "شركة", "وزارة", "إدارة",
+]
+
 _BUDGET_KEYWORDS: List[str] = [
     "budget", "montant", "enveloppe financière", "coût estimé",
     "montant estimé", "budget prévisionnel", "estimation",
@@ -146,6 +164,8 @@ _DATE_RE = re.compile(
     re.VERBOSE,
 )
 
+_SENTENCE_SPLIT_RE = re.compile(r"(?<=[\.!\?؟])\s+|\n+")
+
 _CURRENCY_RE = re.compile(
     r"""
     (?:
@@ -157,6 +177,51 @@ _CURRENCY_RE = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
+_FOR_ORG_RE = re.compile(
+    r"(?im)^\s*(?:for|pour)\s+(.+?)\s*$"
+)
+
+_GENERIC_ORG_NOISE = {
+    "unit",
+    "quantity",
+    "description",
+    "description of item",
+    "item",
+    "results",
+    "methodology",
+    "instructions",
+    "important instructions",
+}
+
+_ORG_TRAILING_NOISE_RE = re.compile(
+    r"(?i)\s*(sd\s*/?\s*-?|signature|sign|signed|asstt\.|assistant|general manager).*$"
+)
+
+_ORG_ENTITY_MARKERS = {
+    "limited",
+    "ltd",
+    "llc",
+    "inc",
+    "corp",
+    "corporation",
+    "company",
+    "entreprise",
+    "societe",
+    "société",
+    "ministry",
+    "ministere",
+    "ministère",
+    "office",
+    "agency",
+    "agence",
+    "authority",
+    "autorite",
+    "autorité",
+    "direction",
+    "department",
+    "administration",
+}
+
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 
 
@@ -166,7 +231,7 @@ def _normalize(text: str) -> str:
     return "".join(c for c in nfkd if not unicodedata.combining(c))
 
 
-def _keyword_in(keyword: str, text_norm: str) -> bool:
+def _keyword_in(keyword: str, text_norm: str, allow_fuzzy: bool = True) -> bool:
     """
     Return True if *keyword* appears in *text_norm*.
     Falls back to fuzzy matching (≥85 % partial ratio) when rapidfuzz is
@@ -175,7 +240,7 @@ def _keyword_in(keyword: str, text_norm: str) -> bool:
     kw_norm = _normalize(keyword)
     if kw_norm in text_norm:
         return True
-    if _RAPIDFUZZ_AVAILABLE:
+    if allow_fuzzy and _RAPIDFUZZ_AVAILABLE:
         return _fuzz.partial_ratio(kw_norm, text_norm) >= _FUZZY_MATCH_THRESHOLD
     return False
 
@@ -183,6 +248,26 @@ def _keyword_in(keyword: str, text_norm: str) -> bool:
 def _extract_raw_dates(text: str) -> List[str]:
     """Return all date-like strings found in *text* via regex."""
     return _DATE_RE.findall(text)
+
+
+def _iter_blocks(ocr_doc: OcrDocument) -> Iterable[tuple[int, int, object]]:
+    """Yield (page_index, global_block_index_1_based, block) in reading order."""
+    block_count = 0
+    for page in ocr_doc.pages:
+        for block in page.blocks:
+            block_count += 1
+            yield page.page_index, block_count, block
+
+
+def _is_top_block(block: object, y_threshold: float = 350.0) -> bool:
+    """Return True when block bbox starts near top of page."""
+    bbox = getattr(block, "bbox", None)
+    if not bbox or len(bbox) < 2:
+        return False
+    try:
+        return float(bbox[1]) <= y_threshold
+    except (TypeError, ValueError):
+        return False
 
 
 def _parse_date(raw: str, languages: Optional[List[str]] = None) -> str:
@@ -222,6 +307,73 @@ def _ner_entities(text: str, label: str) -> List[str]:
         return []
 
 
+def _clean_org_candidate(text: str) -> str:
+    """Normalize spacing and remove common signature suffixes from org candidates."""
+    cleaned = _ORG_TRAILING_NOISE_RE.sub("", text).strip(" -:;,.\t\n")
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    return cleaned
+
+
+def _is_bad_org_candidate(text: str) -> bool:
+    """Reject obvious non-organization text fragments produced by OCR/NER noise."""
+    if not text:
+        return True
+
+    candidate = _clean_org_candidate(text)
+    if not candidate or len(candidate) < 4:
+        return True
+
+    if "\t" in candidate or "\n" in candidate:
+        return True
+
+    # Avoid table/header fragments such as "Unit Quantity".
+    norm = _normalize(candidate)
+    if norm in _GENERIC_ORG_NOISE:
+        return True
+
+    words = [w for w in re.split(r"\W+", norm) if w]
+    if words and all(w in _GENERIC_ORG_NOISE for w in words):
+        return True
+
+    # Short alnum noise with almost no letters is rarely a valid organization.
+    alpha_count = sum(1 for c in candidate if c.isalpha())
+    if alpha_count == 0:
+        return True
+    if alpha_count / max(len(candidate), 1) < 0.35:
+        return True
+
+    return False
+
+
+def _looks_like_org_entity(text: str) -> bool:
+    """Return True when the candidate resembles an institution/company name."""
+    candidate = _clean_org_candidate(text)
+    if _is_bad_org_candidate(candidate):
+        return False
+
+    norm = _normalize(candidate)
+    if any(marker in norm for marker in _ORG_ENTITY_MARKERS):
+        return True
+
+    # Fallback: dense uppercase names (e.g. CENTRAL ELECTRONICS LIMITED).
+    tokens = [t for t in re.split(r"\W+", candidate) if t]
+    uppercase_tokens = [t for t in tokens if t.isupper() and len(t) > 2]
+    return len(uppercase_tokens) >= 2 and len(candidate) <= 90
+
+
+def _extract_signature_org(text: str) -> Optional[str]:
+    """Extract organization from signature lines like 'For CENTRAL ELECTRONICS LIMITED'."""
+    for line in text.splitlines() or [text]:
+        match = _FOR_ORG_RE.search(line)
+        if not match:
+            continue
+
+        candidate = _clean_org_candidate(match.group(1))
+        if _looks_like_org_entity(candidate):
+            return candidate
+    return None
+
+
 # ─── Individual extractors ────────────────────────────────────────────────────
 
 
@@ -242,7 +394,7 @@ def extract_title(ocr_doc: OcrDocument) -> Optional[str]:
 
     for page in ocr_doc.pages:
         if page.page_index > 0:
-            break  # title is always on the first page
+            break
         for block in page.blocks:
             text = block.text.strip()
             if not text:
@@ -251,16 +403,19 @@ def extract_title(ocr_doc: OcrDocument) -> Optional[str]:
             score = 0
             text_norm = _normalize(text)
 
-            score += 1  # page 0 bonus
+            score += 1
 
             if block.type in ("heading", "sub_heading"):
+                score += 1
+
+            if _is_top_block(block):
                 score += 1
 
             if len(text) < 200:
                 score += 1
 
             for kw in _TITLE_KEYWORDS:
-                if _keyword_in(kw, text_norm):
+                if _keyword_in(kw, text_norm, allow_fuzzy=False):
                     score += 2
                     break
 
@@ -281,29 +436,49 @@ def extract_deadline(ocr_doc: OcrDocument) -> Optional[str]:
       3. Fall back to spaCy DATE entities when regex finds nothing.
       4. Normalise the raw date to ISO 8601 with dateparser.
     """
+    best_raw_date: Optional[str] = None
+    best_score = -1
+
     for page in ocr_doc.pages:
         for block in page.blocks:
             text = block.text.strip()
             if not text:
                 continue
 
-            text_norm = _normalize(text)
+            sentences = [s.strip() for s in _SENTENCE_SPLIT_RE.split(text) if s.strip()]
+            if not sentences:
+                sentences = [text]
 
-            for kw in _DEADLINE_KEYWORDS:
-                if _keyword_in(kw, text_norm):
-                    # Try regex first (most reliable for structured dates)
-                    raw_dates = _extract_raw_dates(text)
-                    if raw_dates:
-                        return _parse_date(raw_dates[0], languages=["fr", "ar", "en"])
+            for sentence in sentences:
+                sent_norm = _normalize(sentence)
+                kw_hits = sum(1 for kw in _DEADLINE_KEYWORDS if _keyword_in(kw, sent_norm, allow_fuzzy=True))
+                if kw_hits == 0:
+                    continue
 
-                    # Fallback: NER DATE entities
-                    ner_dates = _ner_entities(text, "DATE")
+                score = kw_hits * 2
+                if page.page_index == 0:
+                    score += 1
+                if _is_top_block(block):
+                    score += 1
+
+                raw_dates = _extract_raw_dates(sentence) or _extract_raw_dates(text)
+                candidate: Optional[str] = raw_dates[0] if raw_dates else None
+
+                if candidate is None:
+                    ner_dates = _ner_entities(sentence, "DATE") or _ner_entities(text, "DATE")
                     if ner_dates:
-                        return _parse_date(ner_dates[0], languages=["fr", "ar", "en"])
+                        candidate = ner_dates[0]
+
+                if candidate and score > best_score:
+                    best_score = score
+                    best_raw_date = candidate
+
+    if best_raw_date:
+        return _parse_date(best_raw_date, languages=["fr", "ar", "en"])
     return None
 
 
-def extract_organization(ocr_doc: OcrDocument) -> Optional[str]:
+def _extract_org_like(ocr_doc: OcrDocument, keywords: List[str]) -> Optional[str]:
     """
     Extract the client / maître d'ouvrage.
 
@@ -318,40 +493,83 @@ def extract_organization(ocr_doc: OcrDocument) -> Optional[str]:
     full block text.
     """
     best_text: Optional[str] = None
-    best_score: int = 1  # threshold
+    best_score: int = 1
 
-    block_count = 0
-
-    for page in ocr_doc.pages:
-        for block in page.blocks:
+    for page_index, block_count, block in _iter_blocks(ocr_doc):
             text = block.text.strip()
             if not text:
                 continue
 
-            block_count += 1
             score = 0
+            strong_signal = False
             text_norm = _normalize(text)
+            block_type = getattr(block, "type", "")
+            kw_hit = False
 
-            if page.page_index == 0:
+            # Tables commonly contain headers that NER mislabels as organizations.
+            if block_type == "table":
+                score -= 2
+
+            if page_index == 0:
                 score += 1
 
             if block_count <= 10:
                 score += 1
 
-            for kw in _ORG_KEYWORDS:
-                if _keyword_in(kw, text_norm):
+            if _is_top_block(block):
+                score += 1
+
+            for kw in keywords:
+                if _keyword_in(kw, text_norm, allow_fuzzy=False):
                     score += 2
+                    strong_signal = True
+                    kw_hit = True
                     break
 
-            orgs = _ner_entities(text, "ORG")
+            # Ignore table rows unless they explicitly contain organization keywords.
+            if block_type == "table" and not kw_hit:
+                continue
+
+            sig_org = _extract_signature_org(text) if block_type != "table" else None
+            if sig_org:
+                score += 4
+                strong_signal = True
+
+            orgs = [o for o in _ner_entities(text, "ORG") if not _is_bad_org_candidate(o)]
             if orgs:
                 score += 2
+                strong_signal = True
+
+            if not strong_signal:
+                continue
+
+            candidate = sig_org or (orgs[0] if orgs else text)
+            candidate = _clean_org_candidate(candidate)
+            if _is_bad_org_candidate(candidate):
+                continue
 
             if score > best_score:
                 best_score = score
-                best_text = orgs[0] if orgs else text
+                best_text = candidate
 
     return best_text
+
+
+def extract_owner(ocr_doc: OcrDocument) -> Optional[str]:
+    """Extract owner / maître d'ouvrage using dedicated and generic org keywords."""
+    owner = _extract_org_like(ocr_doc, _OWNER_KEYWORDS + _ORG_KEYWORDS)
+    return owner
+
+
+def extract_client(ocr_doc: OcrDocument) -> Optional[str]:
+    """Extract client / beneficiary using dedicated and generic org keywords."""
+    client = _extract_org_like(ocr_doc, _CLIENT_KEYWORDS + _ORG_KEYWORDS)
+    return client
+
+
+def extract_organization(ocr_doc: OcrDocument) -> Optional[str]:
+    """Backward-compatible organization extractor."""
+    return _extract_org_like(ocr_doc, _ORG_KEYWORDS)
 
 
 def extract_budget(ocr_doc: OcrDocument) -> Optional[str]:
@@ -372,7 +590,7 @@ def extract_budget(ocr_doc: OcrDocument) -> Optional[str]:
             text_norm = _normalize(text)
 
             for kw in _BUDGET_KEYWORDS:
-                if _keyword_in(kw, text_norm):
+                if _keyword_in(kw, text_norm, allow_fuzzy=True):
                     matches = _CURRENCY_RE.findall(text)
                     if matches:
                         return matches[0].strip()
@@ -393,7 +611,9 @@ def extract_metadata(ocr_doc: OcrDocument) -> dict:
         {
             "title":        str | None,
             "deadline":     str | None,   # ISO 8601 when dateparser available
-            "organization": str | None,
+            "owner":        str | None,
+            "client":       str | None,
+            "organization": str | None,  # backward-compatibility
             "budget":       str | None,
         }
 
@@ -402,19 +622,32 @@ def extract_metadata(ocr_doc: OcrDocument) -> dict:
     """
     title = extract_title(ocr_doc)
     deadline = extract_deadline(ocr_doc)
+    owner = extract_owner(ocr_doc)
+    client = extract_client(ocr_doc)
     organization = extract_organization(ocr_doc)
     budget = extract_budget(ocr_doc)
+
+    if organization is None:
+        organization = owner or client
+
+    # Keep legacy fields populated when only one organization-like signal exists.
+    if owner is None:
+        owner = organization or client
+    if client is None:
+        client = organization or owner
 
     result = {
         "title": title,
         "deadline": deadline,
+        "owner": owner,
+        "client": client,
         "organization": organization,
         "budget": budget,
     }
 
     logger.info(
-        "[metadata_extractor] %s → title=%r  deadline=%r  org=%r  budget=%r",
-        ocr_doc.doc_id, title, deadline, organization, budget,
+        "[metadata_extractor] %s → title=%r deadline=%r owner=%r client=%r org=%r budget=%r",
+        ocr_doc.doc_id, title, deadline, owner, client, organization, budget,
     )
 
     return result
