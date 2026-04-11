@@ -1,76 +1,104 @@
 {
-  "doc_id": "tender.pdf",
+  "doc_id": "Tender_2.pdf",
   "source_lang": null,
   "pages": [
     {
       "page_index": 0,
       "blocks": [
         {
-          "type": "heading",
-          "text": "NOTICE OF TENDER AND INSTRUCTIONS TO TENDERERS",
+          "type": "paragraph",
+          "text": "<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_145_143_345_300.jpg\" alt=\"Image\" width=\"16%\" /></div>",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "Name of Work: Construction of ROB on Diva-Panvel Railway line at Kalamboli Warehousing, second access to Taloja MIDC, at Km. 61/10-11.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "heading",
-          "text": "1. 0 TENDER DOCUMENTS",
+          "text": "इंजीनियरింग प्रोजेक्ट्स (इंडिया) लि.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "1.1 The tenderer should attach scanned copies of attested documents in PDF format for \"ON-LINE\" submission.",
+          "text": "(भारत सरकार का उद्यम)",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "1.2 Information and particulars of tenderers are to be attached on-line along with a declaration and an undertaking to execute the works within the time, as detailed in the form given in appendix ‘A’ to tender notice with requisite Annexures.",
+          "text": "ENGINEERING PROJECTS (INDIA) LTD.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "Note : Submission / enclosure of any documents mentioned henceforth in the tender means uploading of scanned copies of the attested documents unless and otherwise specifically mentioned.",
+          "text": "(A Government of India Enterprise)",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "heading",
-          "text": "2. 0 DOWNLOAD OF BLANK TENDER FORM",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "Contractors intending to download tender for the work shall first get pre-qualified for the work by applying on-line for prequalification and attach all relevant documents required by the Employer. Only those contractors short listed / pre-qualified shall be able to download the tender document. The right to decide whether a contractor/firm fulfils the requirements for downloading tender forms, rests entirely with the tender issuing authority of the Employer.",
+          "text": "AN ISO 9001 & 14001 COMPANY",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "heading",
-          "text": "3. 0 EARNEST MONEY",
+          "text": "TENDER DOCUMENT",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "NIT No: PCO/BBSR/953/144",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The tenderer shall deposit and keep deposited (for the period specified hereafter) with CIDCO a sum as shown in this tender notice as the Earnest money. The Earnest Money shall be deposited in one of the following forms.",
+          "text": "FOR",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Tender for Construction of Block Primary Health Unit (BPHU)",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Building at Lahunipada in Sundergarh District, Odisha",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "EXECUTING AGENCY",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Engineering Projects (India) Limited",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "PCO, Bhubaneswar - Odisha",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -81,36 +109,15 @@
       "page_index": 1,
       "blocks": [
         {
-          "type": "paragraph",
-          "text": "(i) By Demand draft in favour of CIDCO Limited payable at Mumbai.",
+          "type": "heading",
+          "text": "INDEX",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "(ii) By an irrevocable and unconditional Bank Guarantee executed by a Nationalised/Scheduled Bank approved by CIDCO located either in Mumbai or Navi Mumbai in the form prescribed and valid for 180 days from the last date prescribed for submission of tender.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "Tenderers are required to submit the tender fee of Rs.30,000/-(Rupees Thirty Thousand only) (Non-Refundable) by way of separate demand draft drawn in favour of “CIDCO Ltd.” payable at Mumbai / Navi Mumbai and the same should necessarily be scanned and uploaded in PDF format for downloading the on-line tender document. The Demand Draft shall be submitted in the Envelope along with E.M.D. separately before opening of the financial bid as mentioned below.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "The scanned copy of the valid E.M.D. documents of appropriate amount in PDF format shall be uploaded along with submission of on-line tender. The original copy of the valid E.M.D. documents of appropriate amount and original demand draft towards tender fee shall be submitted in the office of Additional Chief Engineer (RP) in the time period mentioned in the tendering programme in a separate Envelope. The tender submitted by the tenderer on-line will not be opened till the original Demand Draft towards tender fee and original valid E.M.D. documents of appropriate amount are submitted to the tender opening authority within the prescribed time limit.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "The tenders submitted without E.M.D. will be summarily rejected. E.M.D. carries no interest. The tenderers should specifically super scribe “Down loaded from the website” on the top left corner of the Envelope. In no case, the tender fee should be mixed with E.M.D.",
+          "text": "<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Sr. No.</td><td style='text-align: center; word-wrap: break-word;'>Vol</td><td style='text-align: center; word-wrap: break-word;'>Description</td><td style='text-align: center; word-wrap: break-word;'>No. Of Pages</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1.</td><td rowspan=\"15\">VOL - I</td><td style='text-align: center; word-wrap: break-word;'>Cover Page (Volume - I)</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>2.</td><td style='text-align: center; word-wrap: break-word;'>Notice Inviting Tender (NIT)</td><td style='text-align: center; word-wrap: break-word;'>10</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>3.</td><td style='text-align: center; word-wrap: break-word;'>Affidavit for NIT (Annexure - A)</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>4.</td><td style='text-align: center; word-wrap: break-word;'>Letter of Undertaking</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>5.</td><td style='text-align: center; word-wrap: break-word;'>Form of Tender</td><td style='text-align: center; word-wrap: break-word;'>2</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>6.</td><td style='text-align: center; word-wrap: break-word;'>Memorandum</td><td style='text-align: center; word-wrap: break-word;'>2</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>7.</td><td style='text-align: center; word-wrap: break-word;'>Addendum To Instructions To Tenderers</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>8.</td><td style='text-align: center; word-wrap: break-word;'>Special Instructions To Bidders For E-Tendering</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>9.</td><td style='text-align: center; word-wrap: break-word;'>Bidder&#x27;s Information</td><td style='text-align: center; word-wrap: break-word;'>2</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>10.</td><td style='text-align: center; word-wrap: break-word;'>Site visit declaration (Annexure-B)</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>11.</td><td style='text-align: center; word-wrap: break-word;'>Undertaking (Annexure-C)</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>12.</td><td style='text-align: center; word-wrap: break-word;'>Local Content Declaration (Annexure-D)</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>13.</td><td style='text-align: center; word-wrap: break-word;'>EMD BG Format (Annexure-E)</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>14.</td><td style='text-align: center; word-wrap: break-word;'>Banker&#x27;s Certificate/ Net Worth Certificate (Annexure-F)</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>15.</td><td style='text-align: center; word-wrap: break-word;'>SDPBG Format (Annexure-G)</td><td style='text-align: center; word-wrap: break-word;'>3</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>16.</td><td rowspan=\"6\">VOL - II</td><td style='text-align: center; word-wrap: break-word;'>Cover Page (Volume - II)</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>17.</td><td style='text-align: center; word-wrap: break-word;'>Additional Conditions of Contract (ACC)</td><td style='text-align: center; word-wrap: break-word;'>12</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>18.</td><td style='text-align: center; word-wrap: break-word;'>General Contract Conditions (GCC)</td><td style='text-align: center; word-wrap: break-word;'>137</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>19.</td><td style='text-align: center; word-wrap: break-word;'>Appendix 1 and 2</td><td style='text-align: center; word-wrap: break-word;'>67</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>20.</td><td style='text-align: center; word-wrap: break-word;'>Technical Specification</td><td style='text-align: center; word-wrap: break-word;'>2</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>21.</td><td style='text-align: center; word-wrap: break-word;'>Approved Make List</td><td style='text-align: center; word-wrap: break-word;'>8</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>22.</td><td rowspan=\"2\">VOL - III</td><td style='text-align: center; word-wrap: break-word;'>Cover Page (Volume - III)</td><td style='text-align: center; word-wrap: break-word;'>1</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>23.</td><td style='text-align: center; word-wrap: break-word;'>Price Bid/Scope of Work</td><td style='text-align: center; word-wrap: break-word;'>24</td></tr></table>",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -122,49 +129,84 @@
       "blocks": [
         {
           "type": "paragraph",
-          "text": "amount. The tenders shall be liable to be rejected summarily upon failure to follow procedure prescribed in the tender document.",
+          "text": "<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_146_143_345_301.jpg\" alt=\"Image\" width=\"16%\" /></div>",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The tenderer shall also submit the hard copy of the proforma of submission of tender duly filled in the Envelope along with the Demand Draft towards tender fee and E.M.D. documents.",
+          "text": "इंजीनियरिंग प्रोजெक्ट्स (इंडिया) लि.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "E.M.D. in the form of irrevocable, unconditional Bank Guarantee will be accepted only if, E.M.D. amount payable is equal or more than Rs.1.00 lac i.e. in the cases where estimated cost put to tender is equal or more than Rs.100.00 lacs.",
+          "text": "(भारत सरकार का उधम)",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "FIXED EMD : The agencies eligible on the basis of CIDCO's registration & having fixed EMD with CIDCO will have to enclose a copy of the valid EMD exemption certificate of appropriate amount issued by CIDCO and submit the same to the tender issuing authority. In remaining cases the eligible contractor has to pay full EMD.",
+          "text": "ENGINEERING PROJECTS (INDIA) LTD.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "3.1 The failure or omission to deposit or keep deposited the Earnest Money shall disqualify the tender and CIDCO shall exclude from its consideration such disqualified tender.",
+          "text": "(A Government of India Enterprise)",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "AN ISO 9001 & 14001 COMPANY",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "TENDER DOCUMENT",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "NIT No: PCO/BBSR/953/144",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "3.2 No interest shall be payable by CIDCO in respect of such deposited Earnest Money.",
+          "text": "FOR",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "Tender for Construction of Block Primary Health Unit (BPHU) Building at Lahunipada in Sundergarh District, Odisha",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "3.3 The Earnest Money of an unsuccessful tenderer shall be refunded after the final decision on the tenders or on expiry of the validity period whichever is earlier on presenting receipt thereof.",
+          "text": "VOLUME - I",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "NIT, Addendum To Instructions To Tenderers, Special Instructions To Bidders For E-Tendering, Affidavit of NIT, Letter of Undertaking, Form of Tender, Memorandum, Bidder Information, Annexures",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -175,29 +217,85 @@
       "page_index": 3,
       "blocks": [
         {
-          "type": "paragraph",
-          "text": "3.4 a) Invitation by CIDCO to submit the tender on-line shall be a proposal and the on-line submission of a tender by the tenderer shall be an acceptance of such proposal to win the contract. The tenderer shall not revoke his offer or vary its terms and conditions without the consent of CIDCO during the period of 120 days counted from the last day appointed by CIDCO for submission of tenders on-line. If the tenderer shall revoke the tender or vary its terms or conditions contrary to his promise to abide by this condition, the Earnest Money Deposited by him shall stand forfeited to CIDCO without prejudice to its other rights and remedies. Without prejudice to the foregoing clause, the tenderer shall be disentitled to submit a tender to CIDCO for execution of any civil work during the next 24 months effective from the date of such revocation or variations of the terms and conditions of the tender.",
+          "type": "heading",
+          "text": "ENGINEERING PROJECTS (INDIA) LTD. (A. Govt. of India Enterprise) PCO-Bhubaneswar",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "NOTICE INVITING e- TENDER (NIT)",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "b) Successful tenderer shall submit to CIDCO downloaded tender document duly signed by him on each page within 7 (seven) working days immediately after opening of tenders.",
+          "text": "Tender for Construction of Block Primary Health Unit (BPHU) Building at Lahunipada in Sundergarh District, Odisha.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "3.5 If CIDCO shall accept the tender and signify such acceptance to the tenderer, the earnest Money so deposited with CIDCO by Demand Draft shall be appropriated towards Performance Security payable by the contractor in accordance with Condition No.10.1 of the General Conditions of Contract.",
+          "text": "1.0 Engineering Projects (India) Ltd. invites the online open e-Tenders on Percentage Rate Basis on behalf of “National Health Mission, Govt. of Odisha” through e-tendering from the eligible contractors/firms who fulfil the eligibility criteria as per the brief particulars of scope for the “Construction of Block Primary Health Unit (BPHU) Building at Lahunipada in Sundergarh District, Odisha.” In Single Stage two bid system (Techno-commercial bid & Price Bid) for the following works:",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "3.6 If the tenderer has deposited the Earnest Money by a Bank Guarantee and he has been communicated the acceptance of his tender by CIDCO and if he fails or omits to furnish the Contract Deposit within 15 days in accordance with condition No.10.1.1 of the General Conditions of Contract, CIDCO shall be entitled to encash the Bank Guarantee.",
+          "text": "<table border=1 style='margin: auto; word-wrap: break-word;'><tr><td style='text-align: center; word-wrap: break-word;'>Sr. No.</td><td style='text-align: center; word-wrap: break-word;'>Name of Work</td><td style='text-align: center; word-wrap: break-word;'>Tentative Estimated Cost (Excluding GST)</td><td style='text-align: center; word-wrap: break-word;'>Time of Completion</td><td style='text-align: center; word-wrap: break-word;'>Earnest Money Deposit</td><td style='text-align: center; word-wrap: break-word;'>Tender Fee</td></tr><tr><td style='text-align: center; word-wrap: break-word;'>1.</td><td style='text-align: center; word-wrap: break-word;'>Construction of Block Primary Health Unit (BPHU) Building at Lahunipada in Sundergarh District, Odisha</td><td style='text-align: center; word-wrap: break-word;'>Rs. 54,53,776/-</td><td style='text-align: center; word-wrap: break-word;'>03 months</td><td style='text-align: center; word-wrap: break-word;'>Rs. 1,09,076/- (Rupees One Lakh Nine Thousand Seventy-Six only)</td><td style='text-align: center; word-wrap: break-word;'>Rs.11,800/-</td></tr></table>",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "1.1 Brief Scope of Work:",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The brief scope of work included in this tender shall include Building work, Internal PH & External PH, Sanitary Works, Electrical, Fire Fighting etc.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "1.2 Time schedule of Tender activities:",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "(i) Start Date & Time for Downloading of tender documents: 28.11. 2023 from 06.00 PM",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "(ii) Date of Pre-bid Meeting: NA - Bidders are requested to send their queries after visiting the site through email upto 07 days prior to due date of submission of tender and reply will be given accordingly.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "(iii) Last Date & Time of submission of Tender (online):19.12.2023 up to 03.00 PM",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "(iv) Date & Time of online opening of tender (Techno-Commercial Bid): 20.12.2023 at 03:00PM",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -208,50 +306,92 @@
       "page_index": 4,
       "blocks": [
         {
-          "type": "paragraph",
-          "text": "3.7 In case of the successful tenderer, on payment of the required amount of the Contract Deposit, the Earnest Money Deposited in the form of Bank Guarantee/Demand Draft/pay order shall be refundable to the tenderer in the event of CIDCO deciding the award of the contract.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "3.8 The contractor who are eligible to quote the tenders based on CIDCO Registration and availing the facility of EMD exemption by depositing requisite amount with CIDCO Ltd., are required to pay the difference in amount of EMD fixed for the present tender and amount already deposited with CIDCO Ltd., for availing the facility of EMD exemption. The contractor shall also submit attested copy of valid EMD exemption certificate issued by Executive Engineer (NM), CIDCO Ltd. to the tender issuing authority prior to opening of financial bids.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
           "type": "heading",
-          "text": "3.9 The E.M.D. of the successful tenderers shall be forfeited if –",
+          "text": "2. 0 Pre-Qualification Criteria:",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "3.9.1 After submitting the tender, the contractor withdraws/revokes his offer or modifies/changes the same during the validity of the tender, or if after the acceptance of his tender, the contractor fails or neglects to furnish the balance Contract Deposit within 15 days.",
+          "text": "Contractors/Bidders who fulfill the following requirements are eligible to participate in this tender. The joint ventures/Consortium is not accepted.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "3.9.2 Fails to execute contract agreement within 15 days from the date of issue of Work Order.",
+          "text": "a) The bidders must have experience of having successfully completed following similar works during the last seven (7) years ending last day of the month previous to the one in which applications invited should be either of the following:",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "3.9.3 Fails to commence; the work within 30 days from the date of issue of Letter of Acceptance.",
+          "text": "Three similar works, each costing not less than the amount equal to FORTY PERCENT (40%) of estimated cost put to tender",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "3.9.4 The tenderers may also be dis-qualified for tendering for further works in CIDCO as provided in foregoing Clause No.3.4 on Sl.Pg.No.11.",
+          "text": "OR",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Two similar works, each costing not less than the amount equal to SIXTY PERCENT (60%) of estimated cost put to tender",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "One similar work of aggregate cost not less than the amount equal to EIGHTY PERCENT (80%) of estimated cost put to tender",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The “similar works” shall mean “Construction of any Non-Residential Building with Electrical, Plumbing works”.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Note- Bidder shall submit copies of Completion certificates along with LOA / LOI, Contract agreement clearly mentioning the detail scope of work, value of work, date of start, time period as per LOI and actual date of completion and actual value of work completed. The experience certificate in this regard should be issued by officer not below the rank of Executive Engineer / Project Manager / Unit Officer. In case of experience certificate issued by private firm it should be supported with Form 26AS duly certified by CA certificate. In case the verification of certificate will not be received within the stipulated time given by EPIL then the same will not be considered for evaluation of bidder.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "(i) For evaluation purpose, the completion cost of works mentioned in the Completion Certificate shall be enhanced by Seven Percent (7%) per annum till the end of month prior to date of NIT.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "(ii) The cost of free issue materials shall not be included in the completion cost of works.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "(iii) The experience certificates issued by any Government Organizations / Semi Government Organizations / Autonomous Bodies / Municipal Bodies / Public Limited Companies listed on BSE / NSE and private party shall be accepted for assessing the eligibility of the tenderer. In case of private party Income Tax Return File is to be submitted. However, the completion certificates issued must be supported by work order/Agreement & completion certificates.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "b) Should have an Average Annual financial Turn Over during the last three years, ending 31.03.2022, should be at least 50% of the estimated cost. Turnover certificate duly certified by a Chartered Accountant along with UDIN issued by ICAI is also to be submitted.",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -262,50 +402,71 @@
       "page_index": 5,
       "blocks": [
         {
+          "type": "paragraph",
+          "text": "c) Should not have incurred any losses in more than two years during the immediate last five consecutive financial years, ending 31.03.2022, Copies of Annual report/balance sheet and a No loss Certificate duly certified by a Chartered Accountant along with UDIN issued by ICAI is also to be submitted.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "d) Should have a Bankers Certificate from a Nationalized / Scheduled Bank of the amount equal to 40% of the estimated cost put to Tender. The Bankers certificate should not have been issued earlier than three months of last date of submission of the tender.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "OR",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Net worth certificate of minimum 10 % of the estimated cost put to tender issued by Certified Chartered Accountant with Unique Document Identification number (UDIN). The Net worth certificate shall be of the last financial year ending on 31st March 2022.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The Banker’s Certificate & Net worth Certificate shall be in the format prescribed in Annexure-F.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "e) Bidder has to submit undertaking regarding details of Constitution of firm/Company along with the details of its Directors as per enclosed Annexure-C. In case the bidder fails to submit Constitution of firms with the bid along with the details of its firm Directors as per Annexure-C their bid will be rejected.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "f) The Bidder should not have been currently (till the last date of bid submission of the tender or till the last date of extended tender) blacklisted or debarred in any State Govt./Municipal Corporations/Central Govt./any State Govt. Organizations, Urban Local Body and/or its Undertaking company. Bidder has to submit a notarized self-declaration with the bid in respect of the same that \"(.....Agency Name...) has not been currently (till the last date of bid submission of the tender or till the last date of extended tender) debarred/ black listed/banned/suspended/ declared ineligible by any of its client/ in any State Govt./Municipal Corporations/ Central Govt./ any State Govt. Organizations, Urban Local Body and/or its Undertaking company for poor performance, unprofessional/ slow work leading to cancellation of work\".",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Notwithstanding anything stated in tender, EPI reserves the right to assess the capabilities and capacity of the tenderer to perform the contract, in the overall interest of EPl. In case, tenderer's capabilities and capacities are not found satisfactory, EPI reserves the right to reject the tender The credentials of the Bidders with respect to Technical & Financial criteria shall be verified and inspection of the works, if required, to be carried out by EPl. If not found satisfactory by EPl, their bid will be considered non-responsive and rejected.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
           "type": "heading",
-          "text": "4. 0 VISIT TO SITE BY TENDERER",
+          "text": "2.1 Evaluation of the bidders:",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The tenderer shall be deemed to have studied all plans, specifications, terms and conditions of tender and visited the site of work and made himself acquainted with the site conditions, availability of labour, basic materials, water, electricity, approach road to the site etc., before on-line submission of tender, whether the tenderer inspects them or not.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "The tenderer shall be deemed to have made independent enquiries about probable taxes leviable by the local civic authority or the Government. The ignorance about probable taxes to be paid either to the local civic authority or to the government shall not be considered as an excuse. The percentage quoted by tenderer shall be deemed to include all the taxes, octroi, duties, royalties etc., payable under the rules to local civic authority, and/or Government/Statutory body.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "On-line submission of tender implies that tenderer has read these conditions and other contract documents of the tender as well as the conditions of the tender and has made himself aware of the same as also about the conditions and other factors having bearing on the execution of the order.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "In case of difference of opinion or dispute regarding the interpretation of tender conditions, the interpretation of any of the conditions by Chief Engineer & General Manager (Tech.) of CIDCO Limited shall be final and binding on the tenderer.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "heading",
-          "text": "5. 0 BLANK TENDER FORM",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "Blank tender form shall be downloaded from the website. Any other additional information and/or clarification can be had from the office of Executive Engineer (PP&Q), CIDCO Ltd., 6 $ ^{th} $ Floor, South Wing,",
+          "text": "Evaluation of the consultants shall be subject to through verification of their documents related with credentials and BG and inspection of similar consultancy works carried out / in progress by them, through a Technical Committee of experts to be constituted by EPIL. Price bids of all eligible bidders will be opened only after receiving the confirmations of Credentials & BG from the concerned Department/Bank.",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -317,49 +478,105 @@
       "blocks": [
         {
           "type": "paragraph",
-          "text": "CIDCO Bhavan, CBD-Belapur, Navi Mumbai on all working days during the office hours.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "heading",
-          "text": "6. 0 METHOD OF SUBMISSION OF TENDER",
+          "text": "(i) Notice Inviting Tender, Addendum to Instructions to Tenderers, Special instructions to Bidders for e-Tendering, Letter of Undertaking, Form of tender, Memorandum, Bidder Information, Affidavit for NIT (Annexure-A), Site Visit Declaration (Annexure-B), Letter of Undertaking for Constitution of Firm (Annexure-C), Declaration for local content (Annexure-D), BG format for EMD (Annexure-E), Net worth certificate or Banker's Certificate Format (Annexure-F), Format for SDPBG (Annexure-G) (Vol-I)",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The complete tender submission, “ON-LINE” on the website www.cidco.maharashtra.etenders.in, can be made only after payment of requisite fees through payment gateway of the service provider by pre-qualified tenderers.",
+          "text": "(ii) Additional Conditions of Contract, General Conditions of Contract and Technical Specifications, Approved Makes and Drawings (Vol-II)",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "6.1 Tender should be submitted through website http://www.cidco.maharashtra.etenders.in and on-line only. The EMD as required in the tender documents should invariably be submitted before the last date and time of tender submission.",
+          "text": "(iii) Price Bid & Bill of Quantities - (Vol-III)",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "6.2 To prepare and submit the tender / offer online, all bidders are required to have e-token based digital certificate. The digital certificate required for signing can be obtained from Nextenders (India) Pvt. Ltd. (email – sandip.ghamandi@nextenders.com) (Phone No. +91 9819139090) or saurabh.ghamandi@nextenders.com (Phone No. +91 9867804847)",
+          "text": "4.0 An attested copy of power of attorney/affidavit/Board. Resolution executed as under shall accompany the ‘Tender Documents’.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "6.3 $ \\underline{\\text{Late tender offers}} $ : Late tender on any account shall be rejected summarily Delay due to internet, electricity or any other reason will not be considered.",
+          "text": "a) In case of Sole Proprietorship, an affidavit of Sole Proprietorship and if the tender is signed by any other person Power of Attorney by the Sole Proprietor in favour of signatory.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "6.4 Submission of a on-line tender by tenderer implies that he has read this notice and all other contract documents and has made himself aware of (i) Scope and specifications of the work to be done and (ii) local conditions and other factors having any bearing whatsoever in execution of works.",
+          "text": "b) In case of Partnership, if document is not signed by all the partners, Power of Attorney in favour of the Partner/person signing the documents authorizing him to sign the documents. The person signing the documents should also have a specific authority to refer disputes with the partnership firm to arbitration.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "c) In case of Company, copy of the Board Resolution authorizing the signatory to sign on behalf of the Company.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "The tenderer shall furnish the name (s) and designation of relative (s) if any, employed by EPI.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "5.0 Interested bidders have to necessarily register themselves on the portal https://etenders.gov.in/eprocure/app to participate in the bidding under this invitation for bids. It shall be the sole responsibility of the interested bidders to get them registered at the aforesaid portal for which they are required to contact",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "For any technical related queries please call at 24 x 7 Help Desk Number 0120-4001 002, 0120-4001 005, 0120-6277 787",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "International Bidders are requested to prefix +91 as country code",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Technical - support-eproc@nic.in",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Policy Related - cppp-doe@nic.in",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "They may obtain further information regarding this tender from Deputy General Manager at the address given at Clause No. 23.0 below from 10:00 hours to 17:00 hours on all working days till the last date of online submission of Bidding Documents. No special character like! @, #, $, %, &, *, _ to be include while saving the file/uploading.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "For proper uploading of the bids on the portal namely https://etenders.gov.in/eprocure/app (hereinafter referred to as the 'portal'), it shall be",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -371,91 +588,91 @@
       "blocks": [
         {
           "type": "paragraph",
-          "text": "6.5 The tenderers shall submit the tender on-line which satisfies each and every condition laid down in this notice, failing which the tender will be liable to be rejected. Method of submission of tender is given in Appendix 'A'.",
+          "text": "the sole responsibility of the bidders to apprise themselves adequately regarding all the relevant procedures and provisions as detailed at the portal as well as by contacting M/s CPPP., directly, as and when required, for which contact details are mentioned above. The EPI in no case shall be responsible for any issues related to timely or properly uploading/submission of the bid in accordance with the relevant provisions of Section Instruction to Bidders of the Bidding Documents.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "6.6 The tender shall be submitted along with the following scanned documents in PDF format.",
+          "text": "6.0 Bidders can download the bid document from the portal without registering or paying document fees in advance, any time from 18:00 Hrs. on 28.11.2023; However, interested bidders have to pay tender fees for participating in the tendering and submitting the bid. For this purpose, the interested bidders shall be required to pay Rs. 10,000.00 plus GST @ 18% i.e. Rs. 11,800/- (Rupees Eleven Thousand Eight Hundred Only) is non-refundable document fees and The bidders have to submit, the scanned copy of Tender fee receipt after depositing the tender fee online in EPI's Bank Account (as mentioned Below) along with the online bid.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "a] Covering letter.",
+          "text": "Indian Overseas Bank:",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "b] All the details / documents as per Appendix \"A\".",
+          "text": "Name of Branch: IOB, Sahid Nagar",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "c] Demand Draft towards tender document fee.",
+          "text": "IFSC Code: IOBA0000873",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "d] Bank guarantee towards Earnest Money Deposit.",
+          "text": "Name of A/c Holder: EPI LTD",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "e] Attested copy of the valid registration certificate.",
+          "text": "A/C Number: 087302000001168",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "f] Sales tax / MVAT registration certificate in original or attested copy from the sales tax officer of the concerned Circle valid up to the last date of receipt of tender.",
+          "text": "Account Type: Current",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "g] List of machinery and plant immediately available with the tenderer for use on this work and list of machinery proposed to be utilised on this work but not immediately available and the manner in which it is proposed to be procured.",
+          "text": "It is to be noted that being a “Works Contract” MSME benefits are not applicable. Hence all bidders have to pay tender fees and EMD of requisite amount as specified in the tender. If the offer is received without requisite Tender Fee and EMD the Bid will be rejected.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "h] Details of personnel such as Engineers, Supervisors, Stores and Account Clerks on the roll of the tenderer and proposed to be deployed on this work.",
+          "text": "7.0 The bid must be accompanied by an Earnest Money Deposit (EMD) of Rs. 1,09,076/(Rupees One Lakh Nine Thousand Seventy-Six only). This can be either in the form of Insurance Surety Bond or Account Payee Demand Draft or Fixed Deposit Receipt or Banker's cheque or Bank Guarantee of any Nationalized Bank/Scheduled Bank/Commercial bank as per the enclosed format or payment online in an acceptable form for the full amount of EMD payable favouring \"Engineering Projects (India) Limited\" payable at Bhubaneswar. The EMD shall be valid for minimum period of 150 days (One hundred fifty) from the last day of submission of tender. The earnest money (if any) will be forfeited without any prejudice to any right or remedy, in case the Bidder withdraws his offer(s) during the validity period or in case he changes his offer to his benefits, which are not acceptable to EPI. The validity of offer(s) submitted by Tenderer shall be ninety (90) days from the last date of submission of the Tender. The validity period may be extended on mutual consent.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "i] Details of other works tendered for and those in hand with the value of work un-finished on the date of submission of tender.",
+          "text": "Note: BG should be submitted with Structured Finance Managing System (SFMS) issued by beneficiary bank.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "heading",
+          "text": "7.1 Return of EMD",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The Certificates from the Heads of the offices under whom the works are in progress should be enclosed.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "j] Attested copy of licenses having registered with the Asst. Commissioner of Labour as per contract labour (R. & A.) Act, 1970 & Maharashtra Contract Labour (Regulation & Abolition) Rules 1971.",
+          "text": "The earnest money given by all the bidders except the lowest bidder should be refunded immediately after the expiry of stipulated bid validity period or immediately after acceptance of the successful bidder, whichever is earlier. However, in case of two bid system, earnest",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -467,63 +684,63 @@
       "blocks": [
         {
           "type": "paragraph",
-          "text": "k] Power of Attorney authorising the person to sign the tender document.",
+          "text": "money deposit of bidders unsuccessful during technical bid evaluation etc. will be returned within 30 days of declaration of result of technical bid evaluation.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "[1] Statement showing the average annual turnover, the balance cost of works in hand and the spare capacity for tendering as required by clause of Notice of tender and instructions to Tenderers alongwith the affidavit.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "heading",
-          "text": "7. 0 METHOD OF OPENING OF TENDER",
+          "text": "8.0 No deviation shall be allowed from the terms and conditions stipulated in the ‘Tender Documents’ and tender containing deviations are liable to be rejected. In case of any unscheduled holiday falling on the last day of submission of tender, the next working day will be treated as scheduled day and time for opening of Tender.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "On the date and time specified in the tender programme, the tenders will be opened in the presence of tenderers / their representative through etendering procedure in the office of the Additional Chief Engineer (RP), CIDCO Ltd., 6 $ ^{th} $ Floor, South Wing, CIDCO Bhavan, CBD-Belapur, Navi Mumbai.",
+          "text": "9.0 The rates quoted by the bidder shall be firm and fixed for the entire period of completion and till handing over of the work. No revision to rates or any escalation shall be allowed on account of any increase in prices of materials, labour, POL and Overheads etc during the entire contract period or extended contract period.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "CIDCO reserves the right to reject any or all offers. CIDCO is not bound to give any reason for not considering such offers.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "heading",
-          "text": "8. 0 VALIDITY OF TENDER",
+          "text": "10.0 The corrigendum or addendum, extension, cancellation of this NIT, if any, shall be hosted on the EPI's website/CPP portal $ \\underline{\\text{https://etenders.gov.in/eprocure/app}} $ the bidders are required to check these websites regularly for this purpose, to take into account before uploading/submission of tender. All Corrigendum and addendum are to be uploaded duly signed & stamped with tender documents as bid Annexure.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "Validity of the tender shall be 120 days from the specified date of receipt of tender by CIDCO and there after until it is withdrawn by notice in writing duly addressed to the authority opening the tender. Such withdrawal by CIDCO will be effective from the date of receipt of notice by the tender opening authority.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "heading",
-          "text": "9. 0 IMPORTANT POINTS TO BE NOTED BY THE TENDERER",
+          "text": "11.0 The price bid of those bidders whose bid has been technically accepted on the basis of documents submitted and confirmations of Credentials & BGs are received from the concerned department/bank shall be opened with prior intimation to them. The offer of the L-1 bidders shall be accepted subject to the confirmation of authenticity of the PQ documents/BG from the concerned department/bank.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "a] The on-line submission of tender document should be done on website by the eligible contractors as per tender programme. The tenderer has to quote only the percentage in figures. The percentage in words as also the total quoted amount in figures is worked out automatically on the web page.",
+          "text": "12.0 EPI reserves the right to postpone the tender submission date and issue required amendment, if any or cancel the tender or accept any tender or reject any or all tenders or split the work of tender or annul this tendering process without assigning any reason and liability whatsoever or to re-invite tender at its sole discretion. There will be no public tender opening. However, selected tenderers may be called for discussions/ clarifications after the tenders have been scrutinized.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "13.0 a) In case of tie-tender, where two firms are bidding lowest, EPI reserves the right to split the work among these bidders and / or EPI will reserve the right to award the tender to any one of such bidder. Even after opening of tenders EPI may enter into agreement with more than one party or may enter into agreement for part of the total work included in the tender. In such an event, the contractor shall not be allowed to revise upward their quoted rates.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "b) EPI reserves the right to delete any item while awarding the work.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "14.0 Bidders to use as much as possible the material / services from MSME. Contractors to use as much as possible, the material/service from MSEs & Local suppliers/Manufacturers for promotion of Make in India. For Promotion of Public Procurement (Preference to Make In India) order 2017 (amended on 28.05.2018) GOI Guideline for procurement, the equivalent Indian makes of materials conforming to requisite quality in addition to List of Makes/Brands may be considered subject to approval of Client/Engineer.",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -535,63 +752,56 @@
       "blocks": [
         {
           "type": "paragraph",
-          "text": "b] The price-bid (percentage) shall be inclusive of all taxes, octroi, levies, duties etc. to be paid by the tenderer for the work and claim for extra payment on any such account shall not be entertained.",
+          "text": "All the bidders (Class –I local supplier, Class-II local Supplier, Non-Local Supplier) shall provide the percentage of local content in their bid as per Annexure-D irrespective of whether they are availing or not availing purchase preference under public procurement (Preference to Make in India) Policy.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "c] Tenderer shall deemed to have studied all plans, specifications, terms and made himself/themselves acquainted with the site and availability etc. before submitting the tender.",
+          "text": "15.0 In case of any discrepancy between the downloaded tender documents from the website and the uploaded copy by the tenderer, the tender documents appearing in the website being uploaded by EPI with the tender shall hold good for contractual as well as legal purposes. The tenderer shall furnish a declaration to this effect that “no addition/deletion/corrections have been made in the downloaded tender document being uploaded by him and it is identical to the tender document appearing on the Website. In case of any discrepancy between the downloaded tender documents from the website and the uploaded copy by me/us, the tender documents appearing in the website being uploaded by EPI with the tender shall hold good for contractual as well as legal purposes”.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "d] At any time prior to the deadline for sale of tender, the Employer may amend the tender documents by issuing Corrigendum.",
+          "text": "16.0 All prospective MSME bidders are requested to get themselves registered on TReDS platform (www.rxil.in) to avail payment benefits.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "e) Any corrigendum as well as clarification thus issued shall be a part of the tender documents and it will be assumed that the information contained in the amendment have been taken into account by the tenderer while submitting the tender.",
+          "text": "17.0 The tenderer must carefully inspect and examine the site and its surrounding and completely satisfy himself before submitting tender as to the nature of the ground, form and the nature of the site, over ground or underground utilities or services which may hinder the progress, means of access to the site, the accommodation he may require and in general shall himself obtain all necessary information to risks, contingencies and other circumstances which may influence or effect the tender. A tenderer shall be deemed to have full knowledge of the site whether he inspects it or not and also of the conditions and specifications. The bidder shall submit Site visit declaration (Annexure –B) for the same.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "f) To give prospective tenderers reasonable time in which to take the amendment into account in preparing their tenders, the Employer shall extend, at its discretion, the deadline for submission of tenders, in which case, the Employer will notify all tenderers by placing it on website of the extended deadline and the same will be binding on them.",
+          "text": "In case bidder decides not to visit site, Bidder has to submit a self-declaration with the bid in respect of the same declaring that \"they shall be responsible for all the consequences thereof\".",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "g] The Employer is not bound to accept the lowest or any tender. The Employer reserves the right to reject any or all tenders received without assigning any reasons whatsoever.",
+          "text": "18.0 Bidder must submit documentary evidence of having formally certified skilled workforce or commitment by the bidders/ service providers to the effect that they would ensure that all their workers would be skilled through Recognition of Prior Learning (RPL) within two months from the date of commencement of work under the project, at the cost of service provider/vendor.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "h] This detailed tender notice shall form part of tender documents.",
+          "text": "19.0 In the event of award of work, the successful tenderer must furnish Security Deposit/all Guarantees (wherever applicable) as specified in ‘Tender Documents’ within the time specified in the letter communicating acceptance of his offer failing which the Earnest Money Deposit will be forfeited.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "i] Income Tax as applicable on gross bill at percentage that will be in force from time to time will be recovered from the contractor's bills, for all payment including advances.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "paragraph",
-          "text": "j] The successful tenderer is required to execute an agreement on stamp paper of appropriate value in duplicate in the proforma attached with the tender documents. The agreement shall be signed within a period of 30 days from date of acceptance of the tender.",
+          "text": "20.0 Submission of a tender by the tenderer implies that he has read the complete contract documents and has made himself aware of the scope, terms & condition and specifications of the work to be done and of conditions at which stores, tools, plant etc. will be issued to him by EPI, if any, local conditions and political situations and other factors having bearing on",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -602,57 +812,85 @@
       "page_index": 10,
       "blocks": [
         {
-          "type": "heading",
-          "text": "10. 0 ACCEPTANCE OF TENDER",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
           "type": "paragraph",
-          "text": "Acceptance of tender on behalf of the Employer shall be done by an officer to whom the powers are delegated by the Management",
+          "text": "the execution of the works. No claim of contractor whatsoever, within the purview of this clause, shall be entertained at any stage of the project.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "heading",
-          "text": "11. 0 EXECUTION OF CONTRACT AGREEMENT",
+          "text": "21. 0 Disqualification",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The successful tenderer is required to execute a contract agreement in duplicate in the form attached with the tender documents on stamp paper of proper value. The proper value at present is Rs.100/-. The contract agreement should be signed within 30 days from the date of acceptance of the tender.",
+          "text": "The tenderers may note that they are liable to be disqualified and not considered for the opening of Price Bid if;",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "12.0 The successful tenderer will be required to produce to the satisfaction of the Chief Engineer & General Manager (Tech), a valid contract labour license issued in his favour under the provision of the contract labour (Regulation and Abolition) Act, 1970, before starting the work. On failure to do so, the acceptance of the tender is liable to be withdrawn and also the earnest money is liable to be forfeited.",
+          "text": "a) Representation in the forms, statements and attachments submitted in the pre-qualification document are proved to be incorrect, false and misleading.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "13.0 The Contractor shall pay the Contract Sales Tax and turnover tax etc. directly to the Government. CIDCO shall not take any responsibility for any kind of tax payment to the Government at any point of time.",
+          "text": "b) EPI reserves its right to take appropriate action including disqualification of tenderer(s) as may be deemed fit and proper by EPI at any time without giving any notice to the Bidder in this regard. The decision of EPI in the matter of disqualification shall be final and binding on the Bidders.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "13.1 Under Inter-state Migrant Workmen Act and /or Contract Labour Act, the Contractor should obtain requisite license / registration Certificate under the Act while engaging the migrant labour from other State.",
+          "text": "c) If bidder have submitted incompletely filled in formats without attaching certified supporting documents and credentials to establish their eligibility to participate in the Tender.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "14.0 Wherever the tender is silent about the specifications, the work shall be executed as per the Standard Specifications from PWD, Indian Standard Specifications (Latest Version) for relevant items and specifications of the Ministry of Road Transport & Highways and all specifications of materials and workmanship.",
+          "text": "d) If the tenderers attempt to influence any member of the committee. EPI reserves its right to take appropriate action including disqualification of tenderer(s) as may be deemed fit and proper by EPI at any time without giving any notice to the contractor in this regard. The decision of EPI in the matter of disqualification shall be final and binding on the Tenderers.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "e) If documents are not uploaded by the bidder as per instructions/due to special characters while saving files the files are unable to download the bids will be disqualified.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "f) The Bidder is expected to examine all instructions, forms, terms and specifications in the bidding documents. Failure to furnish all information required by the bidding documents or submission of a bid not substantially responsive to the bidding documents in every respect will be at the bidder’s risk and may result in the rejection of its bid.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "g) In case of existing contractors of EPI, if progress is not satisfactory in any of the project their bid will be rejected.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "h) The credentials of the Bidders with respect to Technical & Financial criteria shall be verified and inspection of the works, if required, to be carried out by EPI. If not found satisfactory by EPI, their bid will be considered non-responsive and rejected.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "i) Currently (till the last date of bid submission of the tender or till the last date of extended tender) they have record of poor performance such as abandoning the work, rescinding of contract for which the reasons are attributable to the non-performance of the contract, inordinate delay in completion, consistent history of litigation / arbitration awarded against the contractor or any of its constituents or financial failures due to bankruptcy etc. in their on-going / past projects.",
           "bbox": null,
           "section_title": null,
           "context": null
@@ -663,50 +901,286 @@
       "page_index": 11,
       "blocks": [
         {
-          "type": "heading",
-          "text": "15. 0  $ \\underline{\\text{SPLITTING OF WORK}} $",
+          "type": "paragraph",
+          "text": "j) In case, any document, information and/or certificate submitted by Tenderer is found to be incorrect/false/fabricated or the Tenderer has breached the terms and conditions of Integrity Pact, EPI at its discretion may disqualify /reject / terminate the Tenderer, forfeit the EMD and the Tenderer shall also be liable to be suspended/ debarred for a period which shall be not less than one year extending till maximum for a period of three years.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "CIDCO reserves the right to suitably increase/reduce the scope of work put to this tender. The right to split up the work in two or more parts is reserved by the Employer and also the right to award the work to more than one agency is reserved. The contractor shall have no claims whatsoever on this account.",
-          "bbox": null,
-          "section_title": null,
-          "context": null
-        },
-        {
-          "type": "heading",
-          "text": "16. 0 SPARE CAPACITY OF WORK FOR TENDERING",
+          "text": "Note: The tender shall remain open for acceptance for a period of 90 days from the due date for receiving the tender by EPI. If any tenderer withdraws his tender before the said period or makes any modifications in the terms and conditions of the tender which are not acceptable, Engineering Projects (India) Limited without prejudice to any other right or remedy shall be at liberty to forfeit the Earnest Money deposited.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "The tenderer shall be eligible to submit the tender to CIDCO subject to the essential condition that the price tendered by him together with the value of the outstanding works under execution by him for CIDCO or any other employer shall not be more than four times the value of the average annual turnover of works executed during the preceding three financial years.",
+          "text": "22.0 Bidder shall submit the following documents duly signed with date and stamped a part of Technical bid online. Only Online mode will be accepted for tender submission. No documents are required to be submitted offline by the bidders. Bidder has to upload all the relevant certificates regarding PQ criteria (Clause 2.0) and Clause 22.0 for qualifications with the tender, only uploaded documents will be considered for qualification.",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "16.1 The tenderer shall furnish truly & faithfully the foregoing information by an Affidavit on a Non-Judicial stamp paper of Rs.100/-. If any information so furnished shall be found to be untrue or false, the tender shall be liable to be dis-qualified and the Earnest Money / Performance Security as the case may be accompanying such tender shall stand forfeited to CIDCO. If the information so furnished shall be found to untrue or false during the currency of the contract, the tenderer shall be held to be in default and the contract if any awarded to him shall be liable to be terminated with its consequences.",
+          "text": "a) Document evidence with regard to tender fees and EMD payment (In case bidder has submitted BG for EMD, a copy of SFMS shall also be submitted along with BG as per Clause no. 7.0).",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "17.0 Notice of tender and these instructions shall form part of the contract.",
+          "text": "b) Notarized Power Of Attorney",
           "bbox": null,
           "section_title": null,
           "context": null
         },
         {
           "type": "paragraph",
-          "text": "Date :",
+          "text": "c) Affidavit of NIT (Annexure-A) and Site Visit Declaration (Annexure-B)",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "d) Undertaking regarding Constitution of Firm/Company (Annexure-C)",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "e) Covering letter for participation in Bid with Bid name, number with All Corrigendum and addendum (if any).",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "f) Details of similar works executed along with completion certificate & copy of Work order for qualification as per PQ criteria.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "g) List of works executed during the last 5 years indicating name of the Client, value, date of start and completion date.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "h) List of works under execution indicating name of the Client, Total Contract Value, Value of balance work in hand, date of start and completion.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "i) CA certified Annual Reports including Audited balance sheets, Financial Turnover and profit and loss accounts along with schedules for the last 5 years up to 31.03.2022 with UDIN issued by ICAI is to be submitted.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "j) Local Supplier Content certificate (Annexure-D) and Documentary evidence for certified skilled workforce as per Clause No. 18.0",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "k) Copy of Banker’s Certificate or Net Worth Certificate as per format.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "I) Declaration in Letter Head in accordance to Clause no. 15.0 of this NIT for no addition/deletion/corrections in the downloaded tender document.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "m) A notarized self-certification by bidder in accordance to Clause no. 2.0 (f) of this NIT for not blacklisted/debarred & reprimanded.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "n) Form of Tender and Letter of Undertaking",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "o) Registration Certificate/Memorandum and Articles of Association/ Partnership Deed /Affidavit as proof of the organization set up.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "p) Details of manpower and equipment/plant machinery available with Bidder.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "q) Copy of valid PF Registration No.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 12,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "r) Memorandum and Bidder Information with bank details as per the format",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "s) Copy of PAN Card and GST Registration Certificate.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "23.0 Bidders may obtain further information regarding this tender at the address given below from 10:00 hours to 17:00 hours on all working days till the last date of online submission of Bidding Documents.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Deputy General Manager (T)",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "(Contracts Division)",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Engineering Projects (India) Ltd. (PCO, Bhubaneswar)",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "3rd Floor, Plot no. 108,",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Unit-7, Surya nagar,",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Bhubaneswar – 751003, ODISHA",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "E-mail: dheeranjan.m@engineeringprojects.com, $ \\underline{\\text{epil.bbsr@epi.gov.in}} $",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "24.0 The bidders have to submit the scanned copy of Receipt/ details of Tender fee submission in EPI's Bank Account and Earnest Money Deposit as mentioned in the NIT (Insurance Surety Bond, Bank Guarantee, DD, Bankers Cheque etc) along with their online bid. However, the original of the same shall be submitted by the bidder at the later stage as and when required by EPI.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "25.0 Post tender clarification shall be governed as per clause no. 79.0 of GCC. However, no clarification will sought in case of non-submission of Tender Fee and EMD of requisite amount or unconditional letter of acceptance or Affidavit for correctness of document/information or Power of Attorney or Net worth/banker's certificate as per format. In such case the bidder shall be rejected summarily without seeking any further clarification/documents.",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "26.0 Contact details for site released Queries / Visit:",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Sh. Smruti Ranjan Behuray",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Manager Gr-I (T),",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Mobile No-9436769217",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Engineering Projects (I) Limited,",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "Email id: s.behuray@epil.gov.in / epil.bbsr@epi.gov.in",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "For more information on EPI, visit our website at: http://www.epi.gov.in",
+          "bbox": null,
+          "section_title": null,
+          "context": null
+        },
+        {
+          "type": "paragraph",
+          "text": "For more information on the e-tender visit website https://etenders.gov.in/eprocure/app",
           "bbox": null,
           "section_title": null,
           "context": null

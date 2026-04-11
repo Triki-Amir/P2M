@@ -76,9 +76,9 @@ def _update_document_status(doc_id: str, status: str, extra_metadata: Optional[d
         db.close()
 
 
-def _run_pipeline_background(doc_id: str, original_filename: str, file_data: bytes):
+def _run_pipeline_background(doc_id: str, original_filename: str, storage_filename: str):
     """
-    Runs local OCR->NLP->Indexer pipeline from uploaded bytes in background.
+    Runs local OCR->NLP->Indexer pipeline by downloading the file from MinIO in background.
     The PDF basename is preserved so indexer can resolve documents.filename.
     """
     work_dir = UPLOAD_TEMP_ROOT / doc_id
@@ -86,7 +86,9 @@ def _run_pipeline_background(doc_id: str, original_filename: str, file_data: byt
     pdf_path = work_dir / (original_filename or "unnamed.pdf")
 
     try:
-        pdf_path.write_bytes(file_data)
+        # Download the file from MinIO
+        minio_client.fget_object(MINIO_BUCKET, storage_filename, str(pdf_path))
+        
         run_local_pipeline(str(pdf_path))
 
         _update_document_status(
@@ -184,7 +186,7 @@ async def upload_document(
                 _run_pipeline_background,
                 str(new_doc.id),
                 file.filename or "unnamed.pdf",
-                file_content,
+                storage_filename,
             )
         else:
             try:

@@ -105,3 +105,8 @@ dmypy.json
 .ruff_cache/
 *.pdf
 
+# Data folder (generated OCR/NLP outputs)
+data/
+
+
+
