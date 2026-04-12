@@ -50,3 +50,12 @@ TABLE_CONTEXT_TYPES: set[str] = {"paragraph", "table_caption"}
 # ── Event names ───────────────────────────────────────────────────────────────
 
 OUTPUT_EVENT: str = "ocr_completed"
+
+# ── RabbitMQ ──────────────────────────────────────────────────────────────────
+RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://admin:secretpassword@localhost/")
+EVENT_EXCHANGE = os.getenv("EVENT_EXCHANGE", "p2m_events")
+OCR_QUEUE      = os.getenv("OCR_QUEUE",     "ocr_queue")
+NLP_QUEUE      = os.getenv("NLP_QUEUE",     "nlp_queue")
+MAX_WORKERS    = int(os.getenv("MAX_WORKERS", "2"))
+MAX_RETRY      = int(os.getenv("MAX_RETRY",  "3"))
+OCR_TIMEOUT    = int(os.getenv("OCR_TIMEOUT","300"))   # seconds

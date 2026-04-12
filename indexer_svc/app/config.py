@@ -33,3 +33,10 @@ EMBEDDING_MODEL  = os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3")
 DENSE_DIM        = 1024       # bge-m3 dense output dimension
 SPARSE_VOCAB_DIM = 250002     # bge-m3 tokenizer vocabulary size
 EMBED_BATCH_SIZE = int(os.getenv("EMBED_BATCH_SIZE", "16"))
+
+# ── RabbitMQ ──────────────────────────────────────────────────────────────────
+RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://admin:secretpassword@localhost/")
+INDEXER_QUEUE   = os.getenv("INDEXER_QUEUE",   "indexer_queue")
+MAX_WORKERS     = int(os.getenv("MAX_WORKERS",  "2"))
+MAX_RETRY       = int(os.getenv("MAX_RETRY",   "3"))
+INDEXER_TIMEOUT = int(os.getenv("INDEXER_TIMEOUT", "600"))

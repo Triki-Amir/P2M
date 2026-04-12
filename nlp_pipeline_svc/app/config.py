@@ -22,3 +22,12 @@ CHUNK_OVERLAP   = 100    # unchanged, but now maps to fallback_overlap
 
 INPUT_EVENT: str = "ocr_completed"
 OUTPUT_EVENT: str = "nlp_completed"
+
+# ── RabbitMQ ──────────────────────────────────────────────────────────────────
+RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://admin:secretpassword@localhost/")
+EVENT_EXCHANGE = os.getenv("EVENT_EXCHANGE", "p2m_events")
+NLP_QUEUE      = os.getenv("NLP_QUEUE",      "nlp_queue")
+INDEXER_QUEUE  = os.getenv("INDEXER_QUEUE",  "indexer_queue")
+MAX_WORKERS    = int(os.getenv("MAX_WORKERS", "2"))
+MAX_RETRY      = int(os.getenv("MAX_RETRY",  "3"))
+NLP_TIMEOUT    = int(os.getenv("NLP_TIMEOUT","300"))
