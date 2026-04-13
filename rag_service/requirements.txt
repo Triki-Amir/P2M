@@ -1,0 +1,6 @@
+langchain
+langchain-core
+langchain-postgres
+langchain-ollama
+psycopg_pool
+psycopg

@@ -58,19 +58,38 @@ class RAGPipeline:
         # ── Stage 3: Send sources to client ───────────────────────────────
         yield WSMessage.sources(chunks)
 
-        # ── Stage 4: Announce generation ──────────────────────────────────
+        # ── Stage 4: Fetch Conversation Memory ────────────────────────────
+        try:
+            from .memory import SummarizingPostgresMemory
+            memory = SummarizingPostgresMemory(session_id=message.session_id)
+            history_context = memory.get_history_context()
+        except Exception as exc:
+            logger.exception("Failed to load conversation history: %s", exc)
+            history_context = ""
+
+        # ── Stage 5: Announce generation ──────────────────────────────────
         yield WSMessage.generating()
 
-        # ── Stage 5: Stream tokens ────────────────────────────────────────
+        # ── Stage 6: Stream tokens ────────────────────────────────────────
         token_count = 0
+        full_response = []
         try:
             async for token in self.generator.stream(
                 query=message.query,
                 chunks=chunks,
-                conversation_history=message.conversation_history,
+                history_context=history_context,
             ):
+                full_response.append(token)
                 yield WSMessage.token(token)
                 token_count += 1
+                
+            try:
+                # Save this turn automatically
+                from .memory import SummarizingPostgresMemory
+                memory = SummarizingPostgresMemory(session_id=message.session_id)
+                memory.save_context(user_query=message.query, ai_response="".join(full_response))
+            except Exception as e:
+                logger.error("Failed to save conversation history: %s", e)
 
         except RuntimeError as exc:
             logger.error("Generation error: %s", exc)

@@ -47,6 +47,10 @@ class RAGSettings(BaseSettings):
     )
     MAX_CONTEXT_CHARS: int = 6000
 
+    # ── Memory ────────────────────────────────────────────────────────
+    MEMORY_TABLE_NAME: str = "chat_history"
+    MEMORY_MAX_TOKENS: int = 1000
+
     # ── WebSocket Server ──────────────────────────────────────────────────
     WS_HOST: str = "0.0.0.0"
     WS_PORT: int = 8001
