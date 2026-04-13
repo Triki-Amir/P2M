@@ -20,7 +20,7 @@ DB_HOST     = os.getenv("DB_HOST",     "localhost")
 DB_PORT     = int(os.getenv("DB_PORT", "5432"))
 DB_NAME     = os.getenv("DB_NAME",     "postgres")
 DB_USER     = os.getenv("DB_USER",     "postgres")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "123456789")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
 
 DB_DSN = (
     f"host={DB_HOST} port={DB_PORT} "
@@ -35,7 +35,7 @@ SPARSE_VOCAB_DIM = 250002     # bge-m3 tokenizer vocabulary size
 EMBED_BATCH_SIZE = int(os.getenv("EMBED_BATCH_SIZE", "16"))
 
 # ── RabbitMQ ──────────────────────────────────────────────────────────────────
-RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://admin:secretpassword@localhost/")
+RABBITMQ_URL = os.getenv("RABBITMQ_URL")
 INDEXER_QUEUE   = os.getenv("INDEXER_QUEUE",   "indexer_queue")
 MAX_WORKERS     = int(os.getenv("MAX_WORKERS",  "2"))
 MAX_RETRY       = int(os.getenv("MAX_RETRY",   "3"))

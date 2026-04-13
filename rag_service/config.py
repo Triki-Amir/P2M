@@ -13,7 +13,7 @@ class RAGSettings(BaseSettings):
     POSTGRES_PORT: int = 5432
     POSTGRES_DB: str = "postgres"
     POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "123456789"
+    POSTGRES_PASSWORD: str
 
     # Table and column names — matched to store.py schema
     CHUNKS_TABLE: str = "chunks"

@@ -21,41 +21,66 @@ PDF_DPI: int = int(os.getenv("OCR_PDF_DPI", "96"))
 # ── Layout / label filtering ──────────────────────────────────────────────────
 
 # PaddleOCR VL block labels we want to keep.
-# Dropped intentionally:
-#   figure_title  → figures are not useful for AO text retrieval
-#   header/footer → navigation artefacts, not content
-#   page_number   → noise
+# Only excluded: image, figure, chart, seal — pure visual blocks with no text.
 ALLOWED_LABELS: set[str] = {
-    "paragraph_title",   # section / article heading  (H1-level)
-    "sub_heading",       # sub-section heading        (H2/H3-level)
+    "paragraph_title",   # section heading
+    "sub_heading",       # sub-section heading
+    "doc_title",         # document-level title (cover page)
     "text",              # body paragraph
-    "table",             # tabular data  (PaddleOCR returns HTML; we convert to TSV)
-    "table_title",       # caption above/below a table → injected as table.context
+    "table",             # tabular data
+    "table_title",       # table caption
+    "header",            # page header — may contain org name, doc ref
+    "footer",            # page footer — may contain NIT number, dates
+    "footnote",          # footnotes — may contain legal references
+    "aside_text",        # side annotations
+    "number",            # page numbers (kept for position context)
+    "reference",         # bibliographic references
 }
 
-# Mapping from PaddleOCR internal labels → our normalised semantic type.
-# The NLP service reads these types to decide chunking strategy.
+# Mapping from PaddleOCR labels → normalised semantic type.
+# The NLP service reads content_type to decide chunking strategy.
 LABEL_MAP: dict[str, str] = {
-    "paragraph_title": "heading",
-    "sub_heading":     "sub_heading",
-    "text":            "paragraph",
+    "paragraph_title": "title",
+    "sub_heading":     "title",
+    "doc_title":       "title",
+    "text":            "body_text",
     "table":           "table",
-    "table_title":     "table_caption",   # kept for context injection, not stored standalone
+    "table_title":     "title",
+    "header":          "header",
+    "footer":          "footer",
+    "footnote":        "footer",
+    "aside_text":      "aside",
+    "number":          "page_number",
+    "reference":       "body_text",
 }
 
-# Block types that can supply context text to the table that follows them.
-# Used by the context-injection pass in paddle_ocr.py.
-TABLE_CONTEXT_TYPES: set[str] = {"paragraph", "table_caption"}
+# ── NLP relevance filter ──────────────────────────────────────────────────────
+
+# Blocks with these labels are passed to OCR output but skipped by the
+# NLP chunker (not embedded, not stored as chunks).
+# They are still read by the metadata extractor before chunking.
+NLP_IGNORED_LABELS: set[str] = {
+    "number",       # page numbers add no semantic value to chunks
+    "image",        # no text
+    "figure",       # no text
+    "chart",        # no text
+    "seal",         # no text
+}
+
+# ── Block types that can supply context to the table that follows ─────────────
+
+TABLE_CONTEXT_TYPES: set[str] = {"body_text", "title"}
 
 # ── Event names ───────────────────────────────────────────────────────────────
 
 OUTPUT_EVENT: str = "ocr_completed"
 
 # ── RabbitMQ ──────────────────────────────────────────────────────────────────
-RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://admin:secretpassword@localhost/")
+
+RABBITMQ_URL   = os.getenv("RABBITMQ_URL")
 EVENT_EXCHANGE = os.getenv("EVENT_EXCHANGE", "p2m_events")
-OCR_QUEUE      = os.getenv("OCR_QUEUE",     "ocr_queue")
-NLP_QUEUE      = os.getenv("NLP_QUEUE",     "nlp_queue")
+OCR_QUEUE      = os.getenv("OCR_QUEUE",      "ocr_queue")
+NLP_QUEUE      = os.getenv("NLP_QUEUE",      "nlp_queue")
 MAX_WORKERS    = int(os.getenv("MAX_WORKERS", "2"))
 MAX_RETRY      = int(os.getenv("MAX_RETRY",  "3"))
-OCR_TIMEOUT    = int(os.getenv("OCR_TIMEOUT","300"))   # seconds
+OCR_TIMEOUT    = int(os.getenv("OCR_TIMEOUT","300"))

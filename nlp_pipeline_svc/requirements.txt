@@ -2,6 +2,7 @@
 # Install from project root with: pip install -r requirements.txt
 pydantic>=2.0.0
 torch
+lingua-language-detector
 transformers
 sentencepiece
 sacremoses

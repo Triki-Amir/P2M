@@ -27,12 +27,16 @@ print("=" * 60)
 print()
 
 results = {}
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # 1. Check PostgreSQL
 def test_postgres():
     import psycopg2
     conn = psycopg2.connect(
-        "postgresql://postgres:123456789@localhost:5432/postgres"
+        os.getenv('DATABASE_URL')
     )
     conn.close()
 
@@ -41,8 +45,8 @@ results['PostgreSQL'] = check_status('PostgreSQL Database', test_postgres)
 # 2. Check RabbitMQ
 def test_rabbitmq():
     import pika
-    credentials = pika.PlainCredentials('admin', 'secretpassword')
-    parameters = pika.ConnectionParameters('localhost', credentials=credentials)
+    credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USER'), os.getenv('RABBITMQ_PASS'))
+    parameters = pika.ConnectionParameters(os.getenv('RABBITMQ_HOST'), credentials=credentials)
     connection = pika.BlockingConnection(parameters)
     connection.close()
 
@@ -52,10 +56,10 @@ results['RabbitMQ'] = check_status('RabbitMQ Message Queue', test_rabbitmq)
 def test_minio():
     from minio import Minio
     client = Minio(
-        'localhost:9000',
-        access_key='admin',
-        secret_key='password123',
-        secure=False
+        os.getenv('MINIO_ENDPOINT'),
+        access_key=os.getenv('MINIO_ACCESS_KEY'),
+        secret_key=os.getenv('MINIO_SECRET_KEY'),
+        secure=os.getenv('MINIO_SECURE', 'false').lower() == 'true'
     )
     # Just check if we can connect
     client.bucket_exists('pdf-storage')

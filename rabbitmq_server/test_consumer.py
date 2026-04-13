@@ -5,6 +5,7 @@ Run this to consume and process messages from the queue
 import pika
 import json
 import time
+import os
 
 def callback(ch, method, properties, body):
     """Process messages from the queue"""
@@ -26,8 +27,12 @@ def start_consumer():
     """Start consuming messages from the queue"""
     try:
         # Connect to RabbitMQ
+        credentials = pika.PlainCredentials(
+            os.getenv('RABBITMQ_USER'),
+            os.getenv('RABBITMQ_PASS')
+        )
         connection = pika.BlockingConnection(
-            pika.ConnectionParameters('localhost')
+            pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), credentials=credentials)
         )
         channel = connection.channel()
         

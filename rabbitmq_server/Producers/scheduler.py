@@ -5,11 +5,11 @@ import os
 def trigger_scheduled_check():
     # RabbitMQ connection with authentication
     credentials = pika.PlainCredentials(
-        os.getenv('RABBITMQ_USER', 'admin'),
-        os.getenv('RABBITMQ_PASS', 'secretpassword')
+        os.getenv('RABBITMQ_USER'),
+        os.getenv('RABBITMQ_PASS')
     )
     parameters = pika.ConnectionParameters(
-        host=os.getenv('RABBITMQ_HOST', 'localhost'),
+        host=os.getenv('RABBITMQ_HOST'),
         credentials=credentials,
         heartbeat=600,
         blocked_connection_timeout=300

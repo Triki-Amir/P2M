@@ -1,5 +1,5 @@
 """
-ocr_service/output_writer.py
+P2M/ocr_service/output_writer.py
 ─────────────────────────────
 Assembles the final OcrDocument and publishes the ocr_completed event.
 Separated from main.py so the serialisation logic is independently testable.
@@ -37,6 +37,13 @@ def write_output(doc_id: str, pages: list[OcrPage]) -> Path:
     )
 
     total_blocks = sum(len(p.blocks) for p in pages)
-    print(f"  [output_writer] {len(pages)} page(s), {total_blocks} block(s) → {out_path}")
+    nlp_relevant = sum(
+        1 for p in pages for b in p.blocks if b.is_nlp_relevant
+    )
+    print(
+        f"  [output_writer] {len(pages)} page(s), "
+        f"{total_blocks} block(s) "
+        f"({nlp_relevant} NLP-relevant) → {out_path}"
+    )
 
     return out_path

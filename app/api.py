@@ -29,8 +29,8 @@ UPLOAD_TEMP_ROOT = Path(os.getenv("UPLOAD_TEMP_ROOT", Path(__file__).resolve().p
 
 minio_client = Minio(
     os.getenv("MINIO_ENDPOINT", "localhost:9000"),
-    access_key=os.getenv("MINIO_ACCESS_KEY", "admin"),
-    secret_key=os.getenv("MINIO_SECRET_KEY", "password123"),
+    access_key=os.getenv("MINIO_ACCESS_KEY"),
+    secret_key=os.getenv("MINIO_SECRET_KEY"),
     secure=os.getenv("MINIO_SECURE", "false").lower() == "true"
 )
 

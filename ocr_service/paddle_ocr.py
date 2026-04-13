@@ -16,18 +16,19 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from paddleocr import PaddleOCRVL
 
-from ocr_service.config import ALLOWED_LABELS, LABEL_MAP
+from ocr_service.config import ALLOWED_LABELS, LABEL_MAP, NLP_IGNORED_LABELS
 from shared.models import OcrBlock, OcrPage
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-API_URL        = os.environ.get("PADDLE_API_URL",   "https://a4beybi7x2z4r2p6.aistudio-app.com/layout-parsing")
-API_TOKEN      = os.environ.get("PADDLE_API_TOKEN", "23e0bc0098f13ea9a1497c67479b2fbee18bc59f")
-API_TIMEOUT    = 120  # seconds — PDFs take longer than images
+API_URL     = os.environ.get("PADDLE_API_URL")
+API_TOKEN   = os.environ.get("PADDLE_API_TOKEN")
+API_TIMEOUT = 120  # seconds — PDFs take longer than images
 
 # ── Local model (lazy-loaded fallback) ────────────────────────────────────────
 
 _pipeline: PaddleOCRVL | None = None
+
 
 def _get_pipeline() -> PaddleOCRVL:
     global _pipeline
@@ -42,6 +43,7 @@ def _get_pipeline() -> PaddleOCRVL:
 def _normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
+
 def _table_html_to_tsv(html: str) -> str:
     soup = BeautifulSoup(html, "html.parser")
     rows = []
@@ -51,100 +53,62 @@ def _table_html_to_tsv(html: str) -> str:
     return "\n".join(rows)
 
 
-# ── Markdown → OcrBlock parser (for API response) ─────────────────────────────
+# ── Shared block builder (API + local model) ──────────────────────────────────
 
-def _markdown_to_blocks(markdown_text: str, page_index: int) -> list[OcrBlock]:
-    """
-    Parse the markdown returned by the API into OcrBlock objects.
+MARKDOWN_IGNORED = {
+    "header_image", "footer_image",
+}
 
-    Block types mapped:
-      # / ## / ###  → heading
-      |---|          → table
-      everything else → paragraph
-    """
-    seen_hashes: set[str] = set()
-    blocks: list[OcrBlock] = []
-
-    # Split into logical chunks separated by blank lines
-    chunks = re.split(r"\n{2,}", markdown_text.strip())
-
-    for chunk in chunks:
-        chunk = chunk.strip()
-        if not chunk:
-            continue
-
-        # ── Table (markdown pipe syntax) ──────────────────────────────────
-        if re.search(r"^\|.+\|$", chunk, re.MULTILINE):
-            # Convert markdown table → TSV
-            lines = chunk.splitlines()
-            rows = []
-            for line in lines:
-                if re.match(r"^\|[-| :]+\|$", line):
-                    continue  # skip separator row
-                cells = [c.strip() for c in line.strip("|").split("|")]
-                rows.append("\t".join(cells))
-            text = "\n".join(rows)
-            block_type = "table"
-
-        # ── Heading ───────────────────────────────────────────────────────
-        elif chunk.startswith("#"):
-            text = re.sub(r"^#+\s*", "", chunk).strip()
-            block_type = "heading"
-
-        # ── Paragraph / text ──────────────────────────────────────────────
-        else:
-            text = _normalize(chunk)
-            block_type = "paragraph"
-
-        if not text:
-            continue
-
-        # Deduplicate
-        h = hashlib.md5(text.encode()).hexdigest()
-        if h in seen_hashes:
-            continue
-        seen_hashes.add(h)
-
-        # Only keep types your downstream pipeline expects
-        ocr_type = block_type  # adjust if LABEL_MAP uses different names
-        blocks.append(OcrBlock(type=ocr_type, text=text, bbox=None))
-
-    return blocks
-
-
-# ── Local model block builder (unchanged logic) ───────────────────────────────
 
 def _build_blocks_from_res(parsing_res_list: list) -> list[OcrBlock]:
+    from nlp_pipeline_svc.app.nlp.language_detection import detect_languages
+
     seen_hashes: set[str] = set()
     blocks: list[OcrBlock] = []
-    for item in parsing_res_list:
+
+    for idx, item in enumerate(parsing_res_list):
         label   = item.get("block_label", "")
         content = item.get("block_content", "")
-        bbox    = item.get("block_bbox")
+
         if label not in ALLOWED_LABELS:
             continue
+
         if LABEL_MAP.get(label) == "table":
-            text = _table_html_to_tsv(content)
+            plain = _table_html_to_tsv(content)
         else:
-            text = _normalize(content)
-        if not text:
+            plain = _normalize(content)
+
+        if not plain:
             continue
-        h = hashlib.md5(text.encode()).hexdigest()
+
+        h = hashlib.md5(plain.encode()).hexdigest()
         if h in seen_hashes:
             continue
         seen_hashes.add(h)
-        blocks.append(OcrBlock(type=LABEL_MAP[label], text=text, bbox=bbox))
-    return blocks
 
+        blocks.append(OcrBlock(
+            block_id        = idx,
+            reading_order   = item.get("block_order"),   # ← block_index removed
+            block_label     = label,
+            content_type    = LABEL_MAP.get(label, "body_text"),
+            is_nlp_relevant = label not in NLP_IGNORED_LABELS,
+            plain_text      = plain,
+            languages       = detect_languages(plain),
+            section_title   = None,
+            context         = None,
+        ))
+
+    return blocks
 
 # ── API path ──────────────────────────────────────────────────────────────────
 
 def ocr_pdf_via_api(pdf_path: Path) -> list[OcrPage] | None:
     """
-    Send the entire PDF to the API and get back all pages at once.
-    Returns list[OcrPage] or None on failure (triggers per-page local fallback).
+    Send the entire PDF to the cloud API and get back all pages at once.
+    Uses parsing_res_list from the API response directly — same structure
+    as the local model output, so _build_blocks_from_res handles both.
 
-    Call this INSTEAD of looping ocr_image() when API is available.
+    Returns list[OcrPage] or None on failure (triggers local model fallback).
     """
     if not API_URL or not API_TOKEN:
         return None
@@ -154,15 +118,15 @@ def ocr_pdf_via_api(pdf_path: Path) -> list[OcrPage] | None:
         file_data = base64.b64encode(pdf_path.read_bytes()).decode("ascii")
 
         payload = {
-            "file": file_data,
-            "fileType": 0,              # 0 = PDF
+            "file":                      file_data,
+            "fileType":                  0,       # 0 = PDF
             "useDocOrientationClassify": False,
-            "useDocUnwarping": False,
-            "useChartRecognition": False,
+            "useDocUnwarping":           False,
+            "useChartRecognition":       False,
         }
         headers = {
             "Authorization": f"token {API_TOKEN}",
-            "Content-Type": "application/json",
+            "Content-Type":  "application/json",
         }
 
         resp = requests.post(API_URL, json=payload, headers=headers, timeout=API_TIMEOUT)
@@ -172,8 +136,8 @@ def ocr_pdf_via_api(pdf_path: Path) -> list[OcrPage] | None:
         pages: list[OcrPage] = []
 
         for page_index, res in enumerate(layout_results):
-            markdown_text = res.get("markdown", {}).get("text", "")
-            blocks = _markdown_to_blocks(markdown_text, page_index)
+            parsing_res_list = res.get("prunedResult", {}).get("parsing_res_list", [])
+            blocks = _build_blocks_from_res(parsing_res_list)
             pages.append(OcrPage(page_index=page_index, blocks=blocks))
             print(f"  [paddle_ocr] page {page_index} → API ✓ ({len(blocks)} blocks)")
 

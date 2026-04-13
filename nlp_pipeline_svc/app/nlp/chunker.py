@@ -62,7 +62,7 @@ class ChunkConfig:
 # ---------------------------------------------------------------------------
 
 # Returned as a single indivisible chunk — internal structure must not be torn.
-_ATOMIC_TYPES = {"heading", "sub_heading", "table", "table_caption"}
+_ATOMIC_TYPES = {"title", "table"}
 
 
 # ---------------------------------------------------------------------------
@@ -314,22 +314,13 @@ def _sentence_boundary_fallback(sentences: List[str], cfg: ChunkConfig) -> List[
 # Public router
 # ---------------------------------------------------------------------------
 
-def chunk_block(
-    text: str,
-    block_type: str,
-    cfg: Optional[ChunkConfig] = None,
-) -> List[str]:
+def chunk_block(text, block_type, cfg=None):
     """
-    Route *text* to the correct chunking strategy based on *block_type*.
-
     block_type      strategy
-    ─────────────   ────────────────────────────────────────────────────────
-    heading         atomic   – a title is indivisible
-    sub_heading     atomic   – a sub-title is indivisible
+    ─────────────   ─────────────────────────────
+    title           atomic   – headings are indivisible
     table           atomic   – row/column structure must stay intact
-    table_caption   atomic   – caption belongs atomically with its context
-    paragraph       detect → list?  yes → list_chunk()
-                            no  → semantic_chunk()
+    body_text       detect → list_chunk() or semantic_chunk()
     (unknown)       semantic – safe default
     """
     if cfg is None:
@@ -339,15 +330,11 @@ def chunk_block(
         return []
 
     if block_type in _ATOMIC_TYPES:
-        # ROUTER -> ATOMIC STRATEGY
         return atomic_chunk(text)
 
-    # paragraph (and unknowns): check for list patterns before semantic split
     if _is_list_block(text):
-        # ROUTER -> LIST STRATEGY
         return list_chunk(text)
 
-    # ROUTER -> SEMANTIC STRATEGY (default for non-list paragraphs/unknowns)
     return semantic_chunk(text, cfg)
 
 

@@ -31,7 +31,7 @@ Before starting, ensure the following are installed on your machine:
 | **Python** | 3.10+ | All backend services |
 | **Node.js** | 18+ | React frontend |
 | **Git** | Any | Clone the repository |
-| **Ollama** | Latest | Local LLM (llama3) |
+| **Ollama** | Latest | Local LLM (qwen2.5:7b for metadata + llama3 for RAG) |
 | **CUDA** (optional) | 12.x | GPU acceleration for embeddings |
 
 > ⚠️ **Windows users**: All commands below use PowerShell. Run as a standard user (not Administrator).
@@ -53,17 +53,30 @@ P2M/
 ├── ocr_service/                # OCR microservice
 │   ├── main.py                 # run(pdf_path) — API + local fallback
 │   ├── paddle_ocr.py           # PaddleOCR VL (cloud API + local model)
-│   ├── pdf_to_images.py        # PDF → page images
-│   ├── config.py               # OCR settings + RabbitMQ config
+│   │                           # API path uses parsing_res_list directly
+│   │                           # Both paths share _build_blocks_from_res()
+│   ├── pdf_to_images.py        # PDF → page images (local fallback only)
+│   ├── config.py               # ALLOWED_LABELS, LABEL_MAP, NLP_IGNORED_LABELS
+│   ├── output_writer.py        # Builds OcrDocument and publishes event
 │   ├── consumer.py             # RabbitMQ consumer ← ocr_queue
 │   └── publisher.py            # RabbitMQ publisher → nlp_queue
 │
 ├── nlp_pipeline_svc/           # NLP microservice
 │   ├── app/
-│   │   ├── pipeline.py         # NlpOrcestrator — cleaning, chunking
+│   │   ├── pipeline.py         # NlpOrchestrator — global block index,
+│   │   │                       # per-block chunking, metadata promotion
 │   │   ├── config.py           # NLP settings + RabbitMQ config
-│   │   ├── nlp/chunker.py      # Text chunking
-│   │   └── nlp/cleaning.py     # Text normalisation
+│   │   └── nlp/
+│   │       ├── language_detection.py  # lingua-py, returns list[str]
+│   │       │                          # Detects: ar | fr | en | mixed
+│   │       ├── translation.py         # Helsinki-NLP opus-mt models
+│   │       │                          # Handles mixed-language blocks
+│   │       ├── metadata_extractor.py  # Two-stage: regex + qwen2.5:7b (Ollama)
+│   │       │                          # Fields: title, nit_number, organization,
+│   │       │                          #         client, location, deadline,
+│   │       │                          #         budget, contact_email, contact_phone
+│   │       ├── chunker.py             # Block-type-aware semantic chunking
+│   │       └── cleaning.py            # Text normalisation
 │   ├── consumer.py             # RabbitMQ consumer ← nlp_queue
 │   └── publisher.py            # RabbitMQ publisher → indexer_queue
 │
@@ -72,7 +85,7 @@ P2M/
 │   │   ├── embedder.py         # BAAI/bge-m3 — dense + sparse embeddings
 │   │   ├── store.py            # pgvector upsert (chunks table)
 │   │   └── config.py           # Indexer settings + RabbitMQ config
-│   └── consumer.py             # RabbitMQ consumer ← indexer_queue (end of pipeline)
+│   └── consumer.py             # RabbitMQ consumer ← indexer_queue
 │
 ├── rag_service/                # RAG microservice (retrieval + generation)
 │   ├── config.py               # RAG settings
@@ -87,8 +100,10 @@ P2M/
 │   └── src/app/components/
 │       └── AIAgentSpace.tsx    # Upload + RAG chat interface
 │
-├── shared/                     # Shared models and event bus
-│   ├── models.py               # Pydantic schemas (OcrDocument, NlpChunk, etc.)
+├── shared/                     # Shared Pydantic models and event bus
+│   ├── models.py               # OcrBlock, OcrPage, OcrDocument
+│   │                           # NlpChunk, NlpDocument
+│   │                           # doc_metadata placed before chunks in output
 │   └── event_bus.py            # Disk-based event passing (legacy)
 │
 ├── postgres_server/            # PostgreSQL + pgvector (Docker)
@@ -125,6 +140,22 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+### Core NLP dependencies
+
+```powershell
+# Language detection (replaces langdetect)
+pip install lingua-language-detector
+
+# Translation tokenizer support
+pip install sentencepiece
+
+# Translation + embeddings backend
+pip install transformers
+
+# Metadata extraction LLM client (uses Ollama via requests — no extra install)
+# requests is already in requirements.txt
+```
+
 ### Install FlagEmbedding (required for BAAI/bge-m3)
 
 ```powershell
@@ -144,6 +175,11 @@ Verify:
 python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
 # Expected: 2.6.0+cu124 / True
 ```
+
+> ⚠️ **CPU-only machines**: Install the lighter build instead:
+> ```powershell
+> pip install torch --index-url https://download.pytorch.org/whl/cpu
+> ```
 
 ### Install RAG service dependencies
 
@@ -212,7 +248,7 @@ INDEXER_TIMEOUT=600
 
 # ── RAG Service ───────────────────────────────────────────────────────────────
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=llama3
+OLLAMA_MODEL=llama3                     # used for RAG answer generation
 
 # ── Pipeline Mode ─────────────────────────────────────────────────────────────
 # Options: "rabbitmq" (async queues) or "run_pipeline" (synchronous local)
@@ -293,15 +329,23 @@ The `chunks` table with pgvector support is created automatically when the Index
 
 ## 9. Ollama — Local LLM
 
-Install Ollama from [https://ollama.com](https://ollama.com), then:
+Install Ollama from [https://ollama.com](https://ollama.com), then pull both required models:
 
 ```powershell
-# Pull the llama3 model (~4.7 GB — do this once)
+# RAG answer generation (~4.7 GB)
 ollama pull llama3
 
-# Verify it's available
+# Metadata extraction — title, organization, client, location
+# Better multilingual support: Arabic, French, English (~4.7 GB)
+ollama pull qwen2.5:7b
+
+# Verify both are available
 ollama list
 ```
+
+> **Why two models?**
+> - `llama3` — used by the RAG service for streaming answer generation
+> - `qwen2.5:7b` — used by the NLP metadata extractor; better Arabic and French support, more reliable JSON output
 
 ---
 
@@ -434,22 +478,77 @@ Once all 7 services are running:
 
    Upload PDF
        ↓
-   app/api.py          → stores in MinIO + PostgreSQL
+   app/api.py              → stores in MinIO + PostgreSQL
        ↓ publishes to [ocr_queue]
-   ocr_service         → OCR (cloud API or local fallback)
-                       → DB status: ocr_processing → ocr_done
+   ocr_service             → PaddleOCR VL cloud API (parsing_res_list)
+                           → local PaddleOCRVL model (fallback)
+                           → all text labels kept (header, footer, footnote…)
+                           → DB status: ocr_processing → ocr_done
        ↓ publishes to [nlp_queue]
-   nlp_pipeline_svc    → cleaning, chunking, translation
-                       → DB status: nlp_processing → nlp_done
+   nlp_pipeline_svc        → metadata extraction (regex + qwen2.5:7b)
+                           →   title, nit_number, organization, client,
+                           →   location, deadline, budget, contacts
+                           → language detection (lingua-py: ar | fr | en | mixed)
+                           → translation to English (Helsinki-NLP opus-mt)
+                           → semantic chunking (sentence-transformers)
+                           → DB status: nlp_processing → nlp_done
        ↓ publishes to [indexer_queue]
-   indexer_svc         → BAAI/bge-m3 embeddings → pgvector
-                       → DB status: indexing → indexed ✅
+   indexer_svc             → BAAI/bge-m3 embeddings → pgvector
+                           → DB status: indexing → indexed ✅
 
 4. Once indexed, type a question in the chat
 5. RAG service retrieves relevant chunks (hybrid BM25 + semantic)
 6. llama3 generates a streaming answer
 7. Answer streams token-by-token into the chat UI with source citations
 ```
+
+### NLP output format
+
+The NLP service produces a structured JSON document. Document-level metadata appears **before** the chunks:
+
+```json
+{
+  "doc_id": "tender.pdf",
+  "source_lang": "fr",
+  "doc_metadata": {
+    "title": "Construction of Block Primary Health Unit",
+    "nit_number": "PCO/BBSR/953/144",
+    "organization": "Engineering Projects (India) Ltd.",
+    "client": "National Health Mission, Govt. of Odisha",
+    "location": "Lahunipada, Sundergarh District, Odisha",
+    "deadline": "2023-12-19",
+    "budget": "Rs. 54,53,776/-",
+    "contact_email": "dheeranjan.m@engineeringprojects.com",
+    "contact_phone": null
+  },
+  "chunks": [
+    {
+      "chunk_id": "a9c014...",
+      "page_index": 0,
+      "block_index": 0,
+      "chunk_index": 0,
+      "block_type": "paragraph_title",
+      "source_lang": "en",
+      "text_original": "NOTICE INVITING e-TENDER (NIT)",
+      "text_en": "NOTICE INVITING e-TENDER (NIT)",
+      "metadata": {
+        "section_title": null,
+        "context": null,
+        "translation_failed": false
+      }
+    }
+  ]
+}
+```
+
+### Language support
+
+| Language | OCR | Detection | Translation | Metadata extraction |
+|----------|-----|-----------|-------------|-------------------|
+| English  | ✅  | ✅ lingua | passthrough | ✅ qwen2.5:7b |
+| French   | ✅  | ✅ lingua | ✅ opus-mt-fr-en | ✅ qwen2.5:7b |
+| Arabic   | ✅  | ✅ lingua | ✅ opus-mt-ar-en | ✅ qwen2.5:7b |
+| Mixed (ar+fr) | ✅ | ✅ per segment | ✅ per segment | ✅ |
 
 ### Monitor pipeline status in PostgreSQL
 
@@ -518,13 +617,101 @@ A queue was previously declared with different arguments. Delete it:
 
 ---
 
-### OCR: API fails → falls back to local model
+### OCR: API returns 401 Unauthorized
 
-The cloud OCR API (`aistudio-app.com`) may be:
-- **Blocked by your network firewall** (university/corporate networks often block new domains)
-- **Temporarily down**
+Your token is missing or expired. Check `ocr_service/paddle_ocr.py`:
+```python
+API_TOKEN = os.environ.get("PADDLE_API_TOKEN", "your_token_here")
+```
+Get a fresh token from [https://aistudio.baidu.com/account/accessToken](https://aistudio.baidu.com/account/accessToken).
 
-The local fallback runs automatically and is fully functional. To bypass a firewall, use a VPN or mobile hotspot.
+Test the token:
+```powershell
+curl.exe -I https://a4beybi7x2z4r2p6.aistudio-app.com/layout-parsing `
+  -H "Authorization: token your_token_here"
+# Expected: HTTP/1.1 400 (not 401) means token is valid
+```
+
+---
+
+### OCR: API returns 500 / app is down
+
+The AIStudio hosted app may have stopped (free-tier apps sleep after inactivity). To restart:
+1. Go to [https://aistudio.baidu.com](https://aistudio.baidu.com)
+2. Navigate to your deployed app and click **Start**
+3. Wait ~2 minutes for the model to load
+
+The pipeline falls back to the local PaddleOCRVL model automatically. To force local mode, blank the API URL in `.env`:
+```env
+PADDLE_API_URL=
+PADDLE_API_TOKEN=
+```
+
+---
+
+### OCR: Local model crashes with cuDNN DLL error
+
+```
+OSError: [WinError 127] cudnn_cnn64_9.dll not found
+```
+
+Install the CPU-only build of PyTorch (removes the nvidia CUDA packages):
+```powershell
+pip uninstall nvidia-cudnn-cu11 -y
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+```
+
+---
+
+### NLP: `cannot import name 'detect_languages'`
+
+The `language_detection.py` file contains wrong content (translation.py was pasted into it). Overwrite it:
+```powershell
+# Verify what's in the file
+Get-Content C:\P2M\nlp_pipeline_svc\app\nlp\language_detection.py | Select-Object -First 5
+# Should start with: """P2M/nlp_pipeline_svc/app/nlp/language_detection.py
+# If it starts with: """P2M/nlp_service/translation.py — the file is wrong
+```
+
+---
+
+### NLP: `lingua-language-detector not installed`
+
+```powershell
+pip install lingua-language-detector
+```
+
+---
+
+### NLP: Metadata extraction returns all null fields
+
+Make sure Ollama is running and `qwen2.5:7b` is pulled:
+```powershell
+ollama serve          # in a separate terminal if not running
+ollama pull qwen2.5:7b
+ollama list           # should show qwen2.5:7b
+```
+
+Verify Ollama is reachable:
+```powershell
+curl.exe http://localhost:11434/api/tags
+```
+
+---
+
+### NLP: Translation model not loading
+
+Helsinki-NLP models are downloaded from HuggingFace on first use (~300 MB each). If your server has no internet:
+```powershell
+$env:TRANSFORMERS_OFFLINE = "1"
+$env:HF_HUB_OFFLINE = "1"
+```
+Pre-download the models on a machine with internet access first:
+```python
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-fr-en")
+AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ar-en")
+```
 
 ---
 
@@ -570,7 +757,7 @@ ollama serve
 And the model is pulled:
 ```powershell
 ollama list
-# Should show: llama3
+# Should show: llama3, qwen2.5:7b
 ```
 
 ---

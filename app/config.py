@@ -9,7 +9,7 @@ import os
 MINIO_BUCKET = os.getenv("MINIO_BUCKET", "pdf-storage")
 
 # ── RabbitMQ ──────────────────────────────────────────────────────────────────
-RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://admin:secretpassword@localhost/")
+RABBITMQ_URL = os.getenv("RABBITMQ_URL")
 EVENT_EXCHANGE = os.getenv("EVENT_EXCHANGE", "p2m_events")
 OCR_QUEUE      = os.getenv("OCR_QUEUE",      "ocr_queue")
 MAX_RETRY      = int(os.getenv("MAX_RETRY",  "3"))

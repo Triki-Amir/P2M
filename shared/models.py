@@ -1,5 +1,5 @@
 """
-shared/models.py
+P2M/shared/models.py
 ─────────────────
 Pydantic schemas shared across all services.
 These are the contracts between OCR → NLP → Indexer.
@@ -16,33 +16,59 @@ from pydantic import BaseModel, Field
 class OcrBlock(BaseModel):
     """One detected layout block from a single PDF page."""
 
-    type: str = Field(
+    block_id: int = Field(
+        description="Original block ID from PaddleOCR, unique within its page."
+    )
+    reading_order: Optional[int] = Field(
+        default=None,
         description=(
-            "Semantic type: heading | sub_heading | paragraph | "
-            "table | table_caption"
+            "Reading order position within the page. "
+            "None for blocks excluded from reading flow (headers, footers, images)."
         )
     )
-    text: str = Field(
-        description="Cleaned text content of the block"
+    block_label: str = Field(
+        description=(
+            "Raw layout label from PaddleOCR: text | paragraph_title | doc_title | "
+            "table | image | header | footer | footnote | aside_text | seal | ..."
+        )
     )
-    bbox: Optional[list[float]] = Field(
-        default=None,
-        description="Bounding box [x1, y1, x2, y2] in original image pixels"
+    content_type: str = Field(
+        description=(
+            "Mapped semantic type: body_text | title | table | image | "
+            "header | footer | aside | page_number | footnote | seal"
+        )
+    )
+    is_nlp_relevant: bool = Field(
+        description=(
+            "False for blocks in the OCR markdown_ignore_labels list "
+            "(header, footer, footnote, page_number, aside_text). "
+            "The NLP service skips these blocks entirely."
+        )
+    )
+    plain_text: str = Field(
+        description=(
+            "Cleaned text content — markdown syntax and HTML tags stripped. "
+            "Empty string for image blocks."
+        )
+    )
+    languages: list[str] = Field(
+        description=(
+            "Detected ISO 639-1 codes, e.g. ['en'], ['hi', 'en']. "
+            "'unknown' if no recognisable script is found."
+        )
     )
     section_title: Optional[str] = Field(
         default=None,
         description=(
             "Breadcrumb of the nearest heading(s) above this block on the page. "
-            "Format: 'Heading > Sub-heading'. "
-            "The NLP service prepends this to every chunk for retrieval context."
+            "Format: 'Heading > Sub-heading'."
         )
     )
     context: Optional[str] = Field(
         default=None,
         description=(
-            "For table blocks only: plain text of the paragraph or table_caption "
-            "immediately preceding this table. Lets the LLM understand what the "
-            "table describes without fetching the adjacent chunk."
+            "For table blocks only: plain text of the paragraph immediately "
+            "preceding this table."
         )
     )
 
@@ -77,33 +103,28 @@ class NlpChunk(BaseModel):
     page_index: int
     block_index: int
     chunk_index: int
-    block_type: str
+    block_type: str = Field(
+        description=(
+            "Semantic content type carried over from OcrBlock.content_type: "
+            "body_text | title | table | image | ..."
+        )
+    )
     source_lang: str = Field(description="Detected language of the original text")
     text_original: str = Field(description="Original text before translation")
     text_en: str = Field(description="English text used for embedding")
-    metadata: dict = Field(
-        default_factory=dict,
-        description=(
-            "Extracted fields: dates, budgets, orgs, locations, etc. "
-            "The NLP service also promotes section_title and context from "
-            "OcrBlock into this dict so they are queryable at retrieval time."
-        )
-    )
-    bbox: Optional[list[float]] = None
+    
+
 
 
 class NlpDocument(BaseModel):
-    """
-    Output of the NLP service / payload of the nlp_completed event.
-    This is what indexer_service reads as input.
-    """
     doc_id: str
     source_lang: Optional[str] = None
-    chunks: list[NlpChunk]
     doc_metadata: dict = Field(
         default_factory=dict,
         description=(
             "Document-level metadata extracted before chunking. "
-            "Keys: title, deadline (ISO 8601), owner, client, organization, budget."
+            "Keys: title, nit_number, organization, client, location, "
+            "deadline (ISO 8601), budget, contact_email, contact_phone."
         ),
     )
+    chunks: list[NlpChunk]

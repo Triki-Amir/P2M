@@ -106,7 +106,9 @@ dmypy.json
 *.pdf
 
 # Data folder (generated OCR/NLP outputs)
-data/
+nlp_completed.json
+ocr_completed.json
 
+.env
 
-
+.env

@@ -1,70 +1,148 @@
+"""
+P2M/nlp_service/translation.py
+"""
+
 from __future__ import annotations
-
 import logging
-
-# Global cache for models
-_models = {}
-_TORCH_AVAILABLE = None
 
 logger = logging.getLogger(__name__)
 
+_TORCH_AVAILABLE: bool | None = None
+_models: dict[str, tuple] = {}
+_mixed_detector = None          # cached lingua detector for mixed blocks
+
 
 def _ensure_backend_available() -> bool:
-    """Import translation dependencies lazily and cache availability."""
     global _TORCH_AVAILABLE
     if _TORCH_AVAILABLE is not None:
         return _TORCH_AVAILABLE
-
     try:
-        import torch  # noqa: F401
-        from transformers import AutoTokenizer, AutoModelForSeq2SeqLM  # noqa: F401
-    except Exception as exc:  # noqa: BLE001
+        import torch                                                       # noqa: F401
+        from transformers import AutoTokenizer, AutoModelForSeq2SeqLM     # noqa: F401
+        _TORCH_AVAILABLE = True
+    except Exception as exc:
         _TORCH_AVAILABLE = False
         logger.warning(
-            "[nlp_service] Translation backend unavailable (%s); "
-            "falling back to pass-through text.",
-            exc,
+            "[translation] Backend unavailable (%s); using pass-through.", exc
         )
-        return False
+    return _TORCH_AVAILABLE
 
-    _TORCH_AVAILABLE = True
-    return True
 
-def translate_to_en(text: str, source_lang: str) -> str:
-    """
-    Translates text to English using local Helsinki-NLP models with direct loading.
-    """
-    if source_lang == "en" or not text.strip():
+def _load_model(source_lang: str) -> tuple | None:
+    model_name = f"Helsinki-NLP/opus-mt-{source_lang}-en"
+    if model_name not in _models:
+        try:
+            from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+            logger.info("[translation] Loading model: %s", model_name)
+            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            model     = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+            _models[model_name] = (tokenizer, model)
+        except Exception as exc:
+            logger.error("[translation] Could not load %s: %s", model_name, exc)
+            return None
+    return _models[model_name]
+
+
+def _translate_single(text: str, source_lang: str) -> str:
+    if source_lang in ("en", "unknown") or not text.strip():
         return text
 
     if not _ensure_backend_available():
         return text
 
     import torch
-    from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-        
-    model_name = f"Helsinki-NLP/opus-mt-{source_lang}-en"
-    
+
+    pair = _load_model(source_lang)
+    if pair is None:
+        return text
+
+    tokenizer, model = pair
     try:
-        if model_name not in _models:
-            print(f"[nlp_service] Loading translation model: {model_name}...")
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
-            model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
-            _models[model_name] = (tokenizer, model)
-        else:
-            tokenizer, model = _models[model_name]
-
-        # Tokenize
-        inputs = tokenizer(text, return_tensors="pt", padding=True)
-        
-        # Generate translation
+        inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
         with torch.no_grad():
-            translated_tokens = model.generate(**inputs)
-            
-        # Decode
-        result = tokenizer.decode(translated_tokens[0], skip_special_tokens=True)
-        return result
+            tokens = model.generate(**inputs)
+        return tokenizer.decode(tokens[0], skip_special_tokens=True)
+    except Exception as exc:
+        logger.error("[translation] Inference error (%s → en): %s", source_lang, exc)
+        return text
 
-    except Exception as e:
-        print(f"[nlp_service] Translation error ({source_lang}): {e}")
-        return f"[Translation Error]: {text}"
+
+def _get_mixed_detector():
+    """Build the lingua detector once and reuse it for all mixed-block calls."""
+    global _mixed_detector
+    if _mixed_detector is not None:
+        return _mixed_detector
+    try:
+        from lingua import Language, LanguageDetectorBuilder
+        _mixed_detector = (
+            LanguageDetectorBuilder
+            .from_languages(Language.ENGLISH, Language.FRENCH, Language.ARABIC)
+            .with_minimum_relative_distance(0.15)
+            .build()
+        )
+        return _mixed_detector
+    except ImportError:
+        return None
+
+
+def _translate_mixed(text: str) -> str:
+    """
+    Split a mixed-language block into segments, translate each, then rejoin.
+    Falls back to full-block 'fr' translation if lingua is unavailable.
+    """
+    from lingua import Language
+
+    _LANG_MAP = {
+        Language.ENGLISH: "en",
+        Language.FRENCH:  "fr",
+        Language.ARABIC:  "ar",
+    }
+
+    detector = _get_mixed_detector()
+
+    if detector is None:
+        logger.warning(
+            "[translation] lingua unavailable for mixed-block splitting; "
+            "translating full block as 'fr'."
+        )
+        return _translate_single(text, "fr")
+
+    segments = detector.detect_multiple_languages_of(text)
+
+    if not segments:
+        return text
+
+    parts: list[str] = []
+    for seg in segments:
+        chunk     = text[seg.start_index:seg.end_index]
+        lang_code = _LANG_MAP.get(seg.language, "en")
+        parts.append(_translate_single(chunk, lang_code))
+
+    return " ".join(parts)
+
+
+def translate_to_en(text: str, source_langs: list[str]) -> str:
+    """
+    Translate *text* to English.
+
+    Parameters
+    ----------
+    text         : plain_text from OcrBlock
+    source_langs : languages list from OcrBlock, e.g. ["fr"] or ["ar", "fr"]
+
+    Returns
+    -------
+    English translation, or original text if already English or untranslatable.
+    """
+    if not text or not text.strip():
+        return text
+
+    langs_to_translate = [l for l in source_langs if l not in ("en", "unknown")]
+
+    if not langs_to_translate:
+        return text
+
+    if len(langs_to_translate) == 1:
+        return _translate_single(text, langs_to_translate[0])
+
+    return _translate_mixed(text)
