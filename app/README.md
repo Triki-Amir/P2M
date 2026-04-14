@@ -136,6 +136,8 @@ alembic downgrade -1
 
 ## API Endpoints
 
+- `POST /auth/signup` - Create tenant + employer user account
+- `POST /auth/login` - Employer login
 - `POST /upload` - Upload PDF (returns document metadata)
 - `GET /documents` - List documents
 - `GET /documents/{id}` - Get document details
