@@ -128,8 +128,6 @@ class HybridRetriever:
                 {self.cfg.CHUNK_TEXT_COL}         AS content,
                 page_index,
                 block_type,
-                section_title,
-                context,
                 ({self.cfg.CHUNK_EMBEDDING_COL} <#> $1::vector) AS distance
             FROM {self.cfg.CHUNKS_TABLE}
             WHERE {self.cfg.CHUNK_DOC_ID_COL} = $2
@@ -143,10 +141,8 @@ class HybridRetriever:
                 document_id=str(r["document_id"]),
                 content=r["content"],
                 metadata={
-                    "page_index":    r["page_index"],
-                    "block_type":    r["block_type"],
-                    "section_title": r["section_title"],
-                    "context":       r["context"],
+                    "page_index": r["page_index"],
+                    "block_type": r["block_type"],
                 },
                 semantic_rank=idx + 1,
             )
@@ -172,8 +168,6 @@ class HybridRetriever:
                 {self.cfg.CHUNK_TEXT_COL}         AS content,
                 page_index,
                 block_type,
-                section_title,
-                context,
                 ts_rank_cd(
                     to_tsvector('english', {self.cfg.CHUNK_TEXT_COL}),
                     plainto_tsquery('english', $1)
@@ -198,10 +192,8 @@ class HybridRetriever:
                 document_id=str(r["document_id"]),
                 content=r["content"],
                 metadata={
-                    "page_index":    r["page_index"],
-                    "block_type":    r["block_type"],
-                    "section_title": r["section_title"],
-                    "context":       r["context"],
+                    "page_index": r["page_index"],
+                    "block_type": r["block_type"],
                 },
                 bm25_rank=idx + 1,
             )

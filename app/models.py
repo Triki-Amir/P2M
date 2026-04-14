@@ -121,11 +121,11 @@ class Chunk(Base):
     text_original: Mapped[str] = mapped_column(Text, nullable=False)
     text_en: Mapped[str] = mapped_column(Text, nullable=False)
 
-    section_title: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    context: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    translation_failed: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
-
-    bbox: Mapped[Optional[list[float]]] = mapped_column(ARRAY(Float), nullable=True)
+    #section_title: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    #context: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    #translation_failed: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    #bbox: Mapped[Optional[list[float]]] = mapped_column(ARRAY(Float), nullable=True)
+    
     dense_vec: Mapped[Optional[str]] = mapped_column(PGVector(1024), nullable=True)
     sparse_vec: Mapped[Optional[str]] = mapped_column(PGSparseVector(250002), nullable=True)
 
@@ -144,3 +144,18 @@ class Chunk(Base):
 
     def __repr__(self):
         return f"<Chunk {self.chunk_id}>"
+
+class ChatHistory(Base):
+    __tablename__ = "chat_history"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    session_id: Mapped[str] = mapped_column(Text, nullable=False, index=True)
+    message: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=text("now()")
+    )
+
+    def __repr__(self):
+        return f"<ChatHistory {self.session_id}>"

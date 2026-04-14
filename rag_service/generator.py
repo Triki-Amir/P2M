@@ -36,7 +36,7 @@ class OllamaGenerator:
         self,
         query: str,
         chunks: list[SourceChunk],
-        conversation_history: list[dict[str, str]],
+        history_context: str,
     ) -> str:
         context_parts: list[str] = []
         total_chars = 0
@@ -52,13 +52,7 @@ class OllamaGenerator:
 
         context_block = "\n\n".join(context_parts) or "No relevant passages found."
 
-        history_block = ""
-        if conversation_history:
-            turns = [
-                f"{t['role'].upper()}: {t['content']}"
-                for t in conversation_history[-6:]
-            ]
-            history_block = "\n".join(turns) + "\n"
+        history_block = (history_context + "\n") if history_context else ""
 
         return (
             f"{self.cfg.SYSTEM_PROMPT}\n\n"
@@ -71,12 +65,12 @@ class OllamaGenerator:
         self,
         query: str,
         chunks: list[SourceChunk],
-        conversation_history: list[dict[str, str]],
+        history_context: str,
     ) -> AsyncIterator[str]:
         if not self._client:
             raise RuntimeError("OllamaGenerator not connected. Call connect() first.")
 
-        prompt = self.build_prompt(query, chunks, conversation_history)
+        prompt = self.build_prompt(query, chunks, history_context)
         payload = {
             "model": self.cfg.OLLAMA_MODEL,
             "prompt": prompt,

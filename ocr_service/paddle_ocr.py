@@ -11,6 +11,7 @@ import hashlib
 import os
 import re
 import base64
+from gradio import blocks
 import requests
 from pathlib import Path
 from bs4 import BeautifulSoup
@@ -18,6 +19,11 @@ from paddleocr import PaddleOCRVL
 
 from ocr_service.config import ALLOWED_LABELS, LABEL_MAP, NLP_IGNORED_LABELS
 from shared.models import OcrBlock, OcrPage
+from dotenv import load_dotenv
+import urllib3
+
+load_dotenv()
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -129,7 +135,7 @@ def ocr_pdf_via_api(pdf_path: Path) -> list[OcrPage] | None:
             "Content-Type":  "application/json",
         }
 
-        resp = requests.post(API_URL, json=payload, headers=headers, timeout=API_TIMEOUT)
+        resp = requests.post(API_URL, json=payload, headers=headers, timeout=API_TIMEOUT, verify=False)
         resp.raise_for_status()
 
         layout_results = resp.json()["result"]["layoutParsingResults"]
@@ -139,12 +145,12 @@ def ocr_pdf_via_api(pdf_path: Path) -> list[OcrPage] | None:
             parsing_res_list = res.get("prunedResult", {}).get("parsing_res_list", [])
             blocks = _build_blocks_from_res(parsing_res_list)
             pages.append(OcrPage(page_index=page_index, blocks=blocks))
-            print(f"  [paddle_ocr] page {page_index} → API ✓ ({len(blocks)} blocks)")
+            print(f"  [paddle_ocr] page {page_index} -> API OK ({len(blocks)} blocks)")
 
         return pages
 
     except Exception as e:
-        print(f"  [paddle_ocr] API failed: {e} → falling back to local model")
+        print(f"  [paddle_ocr] API failed: {e} -> falling back to local model")
         return None
 
 

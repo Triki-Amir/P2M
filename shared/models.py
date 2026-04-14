@@ -112,7 +112,10 @@ class NlpChunk(BaseModel):
     source_lang: str = Field(description="Detected language of the original text")
     text_original: str = Field(description="Original text before translation")
     text_en: str = Field(description="English text used for embedding")
-    
+    section_title: Optional[str] = None
+    context: Optional[str] = None
+    bbox: Optional[list] = None
+    translation_failed: bool = False
 
 
 

@@ -1,71 +1,71 @@
 {
-  "doc_id": "sibo.pdf",
+  "doc_id": "test_ff.pdf",
   "source_lang": null,
   "pages": [
     {
       "page_index": 0,
       "blocks": [
         {
-          "block_id": 1,
-          "reading_order": null,
-          "block_label": "header",
-          "content_type": "header",
+          "block_id": 0,
+          "reading_order": 1,
+          "block_label": "paragraph_title",
+          "content_type": "title",
           "is_nlp_relevant": true,
-          "plain_text": "الجمهورية التونسيّة وزارة الشؤون المحلية والبيئته بلدية المرسي",
+          "plain_text": "APPEL D’OFFRES N° 05/2026 - ACQUISITION D’ÉQUIPEMENTS SCIENTIFIQUES POUR LABORATOIRES",
           "languages": [
-            "ar"
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 1,
+          "reading_order": 2,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Le Centre de Recherche en Biotechnologie (CRBT) se propose de lancer la présente consultation N°05/2026 pour l'acquisition d'équipements scientifiques, répartis en trois lots non solidaires, pour ses laboratoires de recherche.",
+          "languages": [
+            "fr"
           ],
           "section_title": null,
           "context": null
         },
         {
           "block_id": 2,
-          "reading_order": 1,
-          "block_label": "doc_title",
-          "content_type": "title",
+          "reading_order": 3,
+          "block_label": "text",
+          "content_type": "body_text",
           "is_nlp_relevant": true,
-          "plain_text": "اعلان طلب فروض بابجراءات همسطة أشغال بناء عدد 2 ملاعب بكل من حي الطابق وقمرت القريبة عند 16 2021/",
+          "plain_text": "Cette consultation est ouverte aux entreprises spécialisées dans la fourniture de matériel de laboratoire. Les offres doivent être conformes aux spécifications techniques détaillées ci-après et soumises avant la date limite.",
           "languages": [
-            "ar"
+            "fr"
           ],
           "section_title": null,
           "context": null
         },
         {
           "block_id": 3,
-          "reading_order": 2,
-          "block_label": "text",
-          "content_type": "body_text",
+          "reading_order": null,
+          "block_label": "table",
+          "content_type": "table",
           "is_nlp_relevant": true,
-          "plain_text": "تعتزم بلدية المرسى إجراء طلب عروض لإنجاز أشغال بناء عدد 2 ملاعب بكل من حي الطابق وقمرت القريبة. يسمح للمشاركة المقاولات التالية والمزكية من طرف وزارة التجهيز والاسكان والبنية التحتية :",
+          "plain_text": "Nº du lot\tDésignation\tArticles\tQuantité\n1\tMicroscope optique binoculaire à grossissement variable\tObjectifs plans achromatiques\t15\n2\tCentrifugeuse de paillasse pour micro-tubes\tCapacité minimum 24 places, écran numérique\t10\n3\tStation de travail informatique pour analyse d'images\tÉcran 27\", processeur haute performance, logiciel d'analyse\t05",
           "languages": [
-            "ar"
+            "fr"
           ],
           "section_title": null,
           "context": null
         },
         {
           "block_id": 4,
-          "reading_order": null,
-          "block_label": "table",
-          "content_type": "table",
-          "is_nlp_relevant": true,
-          "plain_text": "الصنف\tالاختصاص\tالنشاط\n1 فما فوق\tط ش م 0: مقاولة\tالطرقات والشبكات\n2 فما فوق\tط 0: مقاولة عامة\tالطرقات والشغال\n1 فما فوق\tب 0: مقاولة عامة\tالنعامة",
-          "languages": [
-            "ar"
-          ],
-          "section_title": null,
-          "context": null
-        },
-        {
-          "block_id": 5,
-          "reading_order": 3,
+          "reading_order": 4,
           "block_label": "text",
           "content_type": "body_text",
           "is_nlp_relevant": true,
-          "plain_text": "تسحب ملفات طلب العروض من موقع منظومة الشراع العمومي على الخط .(www.tuneps.tn)",
+          "plain_text": "Les candidats intéressés peuvent retirer le dossier de consultation complet auprès du secrétariat du CRBT ou le télécharger sur la plateforme en ligne à l'adresse suivante : [www.crbt-offres.tn]. La date limite de réception des offres est fixée au 15 Mai 2026 à 12h00.",
           "languages": [
-            "ar",
+            "fr",
             "en"
           ],
           "section_title": null,
@@ -73,52 +73,13 @@
         },
         {
           "block_id": 6,
-          "reading_order": 4,
-          "block_label": "text",
-          "content_type": "body_text",
+          "reading_order": null,
+          "block_label": "footer",
+          "content_type": "footer",
           "is_nlp_relevant": true,
-          "plain_text": "يقع تقديم العروض طبقا للشروط الواردة بكراس الشروط الإدارية الخاصة. توجه الوثائق الإدارية والعروض الفنية والعروض المالية وجوبا عبر منظومة الشراء العمومي على الخط (tuneps) قبل آخر أجل لقبول العروض وحسب دليل الإجراءات الخاص بابرام الصفقات العمومية على الخط، أما فيما يتعلق بالضمان المالي الوقتي والمقدر بـ 4000 د تتم توجيهه عن طريق البريد المضمون الوصول أو البريد السريع أو مباشرة إلى مكتب الضبط المركزي التابع لبلدية المرسي في ظرف مغلق يحمل عبارة «لا يفتح طلب عروض باجراءات مبسطة عدد 16/2021 لانجاز أشغال بناء عدد 2 ملاعب بكل من حي الطابق وقمرت القريبة جزء لا يتجزا من العرض على الخط، يوجه الظرف إلى العنوان التي : بلدية المرسي 1 شارع الحريق 2078 المرسي وذلك في أجل أقصاء يوم الأربعاء 1/9/2021 على الساعة التاسعة صياغا ومعتمد في ذلك ختم مكتب الضبط الآخرة",
+          "plain_text": "Scanné avec CamScanner",
           "languages": [
-            "ar"
-          ],
-          "section_title": null,
-          "context": null
-        },
-        {
-          "block_id": 7,
-          "reading_order": 5,
-          "block_label": "text",
-          "content_type": "body_text",
-          "is_nlp_relevant": true,
-          "plain_text": "أما بالنسبة للعروض على الخط فإن المنظومة تغلق أوتوماتيكيا في نفس التاريخ والساعة المحددين.",
-          "languages": [
-            "ar"
-          ],
-          "section_title": null,
-          "context": null
-        },
-        {
-          "block_id": 8,
-          "reading_order": 6,
-          "block_label": "text",
-          "content_type": "body_text",
-          "is_nlp_relevant": true,
-          "plain_text": "يتم فتح العروض في جلسة علنية يوم الأربعاء 1/9/2021 على الساعة التاسعة والنصف صباحا بقصر البلدية «السعادة» ويسمح للعارضين بحضورها. يبقي التعهدون ملزمون بعروضهم لمدة 120 يوم من اليوم الموالي للتاريخ الأقصى المحدد لوصول العروض.",
-          "languages": [
-            "ar"
-          ],
-          "section_title": null,
-          "context": null
-        },
-        {
-          "block_id": 9,
-          "reading_order": 7,
-          "block_label": "text",
-          "content_type": "body_text",
-          "is_nlp_relevant": true,
-          "plain_text": "IP 221/6979",
-          "languages": [
-            "unknown"
+            "fr"
           ],
           "section_title": null,
           "context": null

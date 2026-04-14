@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from typing import Optional
 from io import BytesIO
 from pathlib import Path
-
+from sqlalchemy import text
 from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -124,6 +124,9 @@ def _run_pipeline_background(doc_id: str, original_filename: str, storage_filena
 
 @app.on_event("startup")
 async def startup_event():
+    with engine.connect() as conn:
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+        conn.commit()
     Base.metadata.create_all(bind=engine)
     if not minio_client.bucket_exists(MINIO_BUCKET):
         minio_client.make_bucket(MINIO_BUCKET)

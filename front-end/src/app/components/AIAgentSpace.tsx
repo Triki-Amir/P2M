@@ -242,6 +242,7 @@ export const AIAgentSpace: React.FC = () => {
     wsRef.current?.send(JSON.stringify({
       document_id: documentId,
       query,
+      session_id: documentId,
       conversation_history: [],
     }));
   };

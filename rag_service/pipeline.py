@@ -9,6 +9,7 @@ from typing import AsyncIterator
 
 from .config import RAGSettings
 from .generator import OllamaGenerator
+from .memory import ConversationMemory
 from .models import QueryMessage, SourceChunk, WSMessage
 from .retriever import HybridRetriever
 
@@ -18,10 +19,7 @@ logger = logging.getLogger(__name__)
 class RAGPipeline:
     """
     High-level pipeline:
-        retrieve → build prompt → stream generate → yield events
-
-    The caller (WebSocket handler) iterates over `run()` and serialises
-    each WSMessage to JSON before sending it over the wire.
+        retrieve → load memory → build prompt → stream → save memory → done
     """
 
     def __init__(self, retriever: HybridRetriever, generator: OllamaGenerator):
@@ -58,17 +56,27 @@ class RAGPipeline:
         # ── Stage 3: Send sources to client ───────────────────────────────
         yield WSMessage.sources(chunks)
 
-        # ── Stage 4: Announce generation ──────────────────────────────────
+        # ── Stage 4: Load conversation memory ─────────────────────────────
+        memory = ConversationMemory(session_id=message.session_id)
+        history_context = memory.get_history_context()
+
+        if history_context:
+            logger.debug("Memory loaded: %d chars of history.", len(history_context))
+
+        # ── Stage 5: Announce generation ──────────────────────────────────
         yield WSMessage.generating()
 
-        # ── Stage 5: Stream tokens ────────────────────────────────────────
+        # ── Stage 6: Stream tokens ────────────────────────────────────────
         token_count = 0
+        full_response: list[str] = []
+
         try:
             async for token in self.generator.stream(
                 query=message.query,
                 chunks=chunks,
-                conversation_history=message.conversation_history,
+                history_context=history_context,
             ):
+                full_response.append(token)
                 yield WSMessage.token(token)
                 token_count += 1
 
@@ -81,7 +89,13 @@ class RAGPipeline:
             yield WSMessage.error("Unexpected error during generation.", code="INTERNAL_ERROR")
             return
 
-        # ── Stage 6: Done ─────────────────────────────────────────────────
+        # ── Stage 7: Save turn to memory ──────────────────────────────────
+        memory.save_turn(
+            user_query=message.query,
+            ai_response="".join(full_response),
+        )
+
+        # ── Stage 8: Done ─────────────────────────────────────────────────
         yield WSMessage.done(total_tokens=token_count)
         logger.info(
             "RAG complete | doc=%s | tokens=%d | chunks=%d",
@@ -93,11 +107,6 @@ async def build_pipeline(settings: RAGSettings, embed_fn) -> RAGPipeline:
     """
     Factory: initialises retriever + generator and returns a ready pipeline.
     Call once at startup and reuse across all WebSocket sessions.
-
-    Args:
-        settings:  RAGSettings instance.
-        embed_fn:  Async callable (query: str) -> list[float].
-                   Must match the embedding model used by your Indexer.
     """
     retriever = HybridRetriever(settings=settings, embed_fn=embed_fn)
     await retriever.connect()
@@ -105,12 +114,10 @@ async def build_pipeline(settings: RAGSettings, embed_fn) -> RAGPipeline:
     generator = OllamaGenerator(settings=settings)
     await generator.connect()
 
-    # Optional but helpful: warn if model not pulled
     model_ok = await generator.check_model_available()
     if not model_ok:
         logger.warning(
-            "⚠  Model '%s' not found in Ollama. "
-            "Run: ollama pull %s",
+            "⚠  Model '%s' not found in Ollama. Run: ollama pull %s",
             settings.OLLAMA_MODEL, settings.OLLAMA_MODEL,
         )
 

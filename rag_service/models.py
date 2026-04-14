@@ -12,12 +12,10 @@ from pydantic import BaseModel, Field
 
 class QueryMessage(BaseModel):
     """Initial query sent by the client to start a RAG session."""
-    document_id: str = Field(..., description="UUID of the document to query against")
-    query: str = Field(..., min_length=1, max_length=2000, description="User question")
-    conversation_history: list[dict[str, str]] = Field(
-        default_factory=list,
-        description="Optional prior turns: [{'role': 'user'|'assistant', 'content': '...'}]"
-    )
+    document_id: str 
+    query: str = Field(..., min_length=1, max_length=2000)
+    session_id: str = Field(default_factory=lambda: __import__('uuid').uuid4().hex, description="Unique ID for the conversation session")
+    conversation_history: list[dict[str, str]] = Field(default_factory=list,)
 
 
 # ── Outbound (Server → Client) ────────────────────────────────────────────────
