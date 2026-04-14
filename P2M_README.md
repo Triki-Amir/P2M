@@ -372,7 +372,7 @@ python app/start_api.py
 ```
 
 > Expected: `Uvicorn running on http://0.0.0.0:8000`
-
+> Expected: `Application startup complete`
 ---
 
 ### Terminal 3 — RAG Service (WebSocket, port 8001)
@@ -394,6 +394,9 @@ cd C:\P2M
 .venv\Scripts\activate
 python -c "
 import asyncio
+from dotenv import load_dotenv
+load_dotenv()
+
 from ocr_service.consumer import OCRConsumer
 
 async def main():
@@ -417,6 +420,9 @@ cd C:\P2M
 .venv\Scripts\activate
 python -c "
 import asyncio
+from dotenv import load_dotenv
+load_dotenv()
+
 from nlp_pipeline_svc.consumer import NLPConsumer
 
 async def main():
@@ -440,6 +446,9 @@ cd C:\P2M
 .venv\Scripts\activate
 python -c "
 import asyncio
+from dotenv import load_dotenv
+load_dotenv()
+
 from indexer_svc.consumer import IndexerConsumer
 
 async def main():

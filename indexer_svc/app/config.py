@@ -7,6 +7,10 @@ Override any value via environment variables in production.
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Ensure variables are loaded before evaluation
+load_dotenv()
 
 # ── Paths ─────────────────────────────────────────────────────────────────
 

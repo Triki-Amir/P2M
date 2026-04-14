@@ -27,7 +27,7 @@ def main(pdf_path: str) -> None:
 
     run_ocr(pdf_path)
     run_nlp()           # reads data/ocr_completed.json automatically
-    # run_indexer()       # reads data/nlp_completed.json automatically
+    run_indexer()       # reads data/nlp_completed.json automatically
 
     print("=" * 60)
     print("  Pipeline complete")

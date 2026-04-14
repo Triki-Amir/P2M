@@ -1,32 +1,45 @@
 {
-  "doc_id": "sibo.pdf",
+  "doc_id": "test_final.pdf",
   "source_lang": null,
   "pages": [
     {
       "page_index": 0,
       "blocks": [
         {
+          "block_id": 0,
+          "reading_order": 1,
+          "block_label": "doc_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "ENGINEERING PROJECTS (INDIA) LTD. (A. Govt. of India Enterprise) PCO-Bhubaneswar",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
           "block_id": 1,
           "reading_order": null,
           "block_label": "header",
           "content_type": "header",
           "is_nlp_relevant": true,
-          "plain_text": "الجمهورية التونسيّة وزارة الشؤون المحلية والبيئته بلدية المرسي",
+          "plain_text": "Tender No: PCO/BBSR/953/144",
           "languages": [
-            "ar"
+            "en"
           ],
           "section_title": null,
           "context": null
         },
         {
           "block_id": 2,
-          "reading_order": 1,
-          "block_label": "doc_title",
-          "content_type": "title",
+          "reading_order": null,
+          "block_label": "header",
+          "content_type": "header",
           "is_nlp_relevant": true,
-          "plain_text": "اعلان طلب فروض بابجراءات همسطة أشغال بناء عدد 2 ملاعب بكل من حي الطابق وقمرت القريبة عند 16 2021/",
+          "plain_text": "Date: 14.11.2023",
           "languages": [
-            "ar"
+            "en"
           ],
           "section_title": null,
           "context": null
@@ -34,38 +47,37 @@
         {
           "block_id": 3,
           "reading_order": 2,
-          "block_label": "text",
-          "content_type": "body_text",
+          "block_label": "paragraph_title",
+          "content_type": "title",
           "is_nlp_relevant": true,
-          "plain_text": "تعتزم بلدية المرسى إجراء طلب عروض لإنجاز أشغال بناء عدد 2 ملاعب بكل من حي الطابق وقمرت القريبة. يسمح للمشاركة المقاولات التالية والمزكية من طرف وزارة التجهيز والاسكان والبنية التحتية :",
+          "plain_text": "NOTICE INVITING e- TENDER (NIT)",
           "languages": [
-            "ar"
+            "en"
           ],
           "section_title": null,
           "context": null
         },
         {
           "block_id": 4,
-          "reading_order": null,
-          "block_label": "table",
-          "content_type": "table",
+          "reading_order": 3,
+          "block_label": "text",
+          "content_type": "body_text",
           "is_nlp_relevant": true,
-          "plain_text": "الصنف\tالاختصاص\tالنشاط\n1 فما فوق\tط ش م 0: مقاولة\tالطرقات والشبكات\n2 فما فوق\tط 0: مقاولة عامة\tالطرقات والشغال\n1 فما فوق\tب 0: مقاولة عامة\tالنعامة",
+          "plain_text": "Tender for Construction of Block Primary Health Unit (BPHU) Building at Lahunipada in Sundergarh District, Odisha.",
           "languages": [
-            "ar"
+            "en"
           ],
           "section_title": null,
           "context": null
         },
         {
           "block_id": 5,
-          "reading_order": 3,
+          "reading_order": 4,
           "block_label": "text",
           "content_type": "body_text",
           "is_nlp_relevant": true,
-          "plain_text": "تسحب ملفات طلب العروض من موقع منظومة الشراع العمومي على الخط .(www.tuneps.tn)",
+          "plain_text": "1.0 Engineering Projects (India) Ltd. invites the online open e-Tenders on Percentage Rate Basis on behalf of \"National Health Mission, Govt. of Odisha\" through e-tendering from the eligible contractors/firms who fulfil the eligibility criteria as per the brief particulars of scope for the \"Construction of Block Primary Health Unit (BPHU) Building at Lahunipada in Sundergarh District, Odisha.\" In Single Stage two bid system (Techno-commercial bid & Price Bid) for the following works:",
           "languages": [
-            "ar",
             "en"
           ],
           "section_title": null,
@@ -73,13 +85,13 @@
         },
         {
           "block_id": 6,
-          "reading_order": 4,
-          "block_label": "text",
-          "content_type": "body_text",
+          "reading_order": null,
+          "block_label": "table",
+          "content_type": "table",
           "is_nlp_relevant": true,
-          "plain_text": "يقع تقديم العروض طبقا للشروط الواردة بكراس الشروط الإدارية الخاصة. توجه الوثائق الإدارية والعروض الفنية والعروض المالية وجوبا عبر منظومة الشراء العمومي على الخط (tuneps) قبل آخر أجل لقبول العروض وحسب دليل الإجراءات الخاص بابرام الصفقات العمومية على الخط، أما فيما يتعلق بالضمان المالي الوقتي والمقدر بـ 4000 د تتم توجيهه عن طريق البريد المضمون الوصول أو البريد السريع أو مباشرة إلى مكتب الضبط المركزي التابع لبلدية المرسي في ظرف مغلق يحمل عبارة «لا يفتح طلب عروض باجراءات مبسطة عدد 16/2021 لانجاز أشغال بناء عدد 2 ملاعب بكل من حي الطابق وقمرت القريبة جزء لا يتجزا من العرض على الخط، يوجه الظرف إلى العنوان التي : بلدية المرسي 1 شارع الحريق 2078 المرسي وذلك في أجل أقصاء يوم الأربعاء 1/9/2021 على الساعة التاسعة صياغا ومعتمد في ذلك ختم مكتب الضبط الآخرة",
+          "plain_text": "Sr. No.\tName of Work\tTentative Estimated Cost (Excluding GST)\tTime of Completion\tEarnest Money Deposit\tTender Fee\n1.\tConstruction of Block Primary Health Unit (BPHU) Building at Lahunipada in Sundergarh District, Odisha\tRs. 54,53,776/-\t03 months\tRs. 1,09,076/- (Rupees One Lakh Nine Thousand Seventy-Six only)\tRs.11,800/-",
           "languages": [
-            "ar"
+            "en"
           ],
           "section_title": null,
           "context": null
@@ -87,12 +99,12 @@
         {
           "block_id": 7,
           "reading_order": 5,
-          "block_label": "text",
-          "content_type": "body_text",
+          "block_label": "paragraph_title",
+          "content_type": "title",
           "is_nlp_relevant": true,
-          "plain_text": "أما بالنسبة للعروض على الخط فإن المنظومة تغلق أوتوماتيكيا في نفس التاريخ والساعة المحددين.",
+          "plain_text": "1.1 Brief Scope of Work:",
           "languages": [
-            "ar"
+            "en"
           ],
           "section_title": null,
           "context": null
@@ -103,9 +115,9 @@
           "block_label": "text",
           "content_type": "body_text",
           "is_nlp_relevant": true,
-          "plain_text": "يتم فتح العروض في جلسة علنية يوم الأربعاء 1/9/2021 على الساعة التاسعة والنصف صباحا بقصر البلدية «السعادة» ويسمح للعارضين بحضورها. يبقي التعهدون ملزمون بعروضهم لمدة 120 يوم من اليوم الموالي للتاريخ الأقصى المحدد لوصول العروض.",
+          "plain_text": "The brief scope of work included in this tender shall include Building work, Internal PH & External PH, Sanitary Works, Electrical, Fire Fighting etc.",
           "languages": [
-            "ar"
+            "en"
           ],
           "section_title": null,
           "context": null
@@ -113,12 +125,454 @@
         {
           "block_id": 9,
           "reading_order": 7,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "1.2 Time schedule of Tender activities:",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 10,
+          "reading_order": 8,
           "block_label": "text",
           "content_type": "body_text",
           "is_nlp_relevant": true,
-          "plain_text": "IP 221/6979",
+          "plain_text": "(i) Start Date & Time for Downloading of tender documents: 28.11. 2023 from 06.00 PM",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 11,
+          "reading_order": 9,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "(ii) Date of Pre bid Meeting: NA - Bidders are requested to send their queries after visiting the site through email upto 07 days prior to due date of submission of tender and reply will be given accordingly.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 12,
+          "reading_order": 10,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "(iii) Last Date & Time of submission of Tender (online):19.12.2023 up to 03.00 PM",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 13,
+          "reading_order": 11,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "(iv) Date & Time of online opening of tender (Techno-Commercial Bid): 20.12.2023 at 03:00PM",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 14,
+          "reading_order": null,
+          "block_label": "footer",
+          "content_type": "footer",
+          "is_nlp_relevant": true,
+          "plain_text": "Sign and Stamp of Bidder",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 15,
+          "reading_order": null,
+          "block_label": "footer",
+          "content_type": "footer",
+          "is_nlp_relevant": true,
+          "plain_text": "Sign and Stamp of EPIL",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 1,
+      "blocks": [
+        {
+          "block_id": 0,
+          "reading_order": 1,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "2.0 Pre-Qualification Criteria:",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 1,
+          "reading_order": 2,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Contractors/Bidders who fulfill the following requirements are eligible to participate in this tender. The joint ventures/Consortium is not accepted.",
+          "languages": [
+            "en",
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 2,
+          "reading_order": 3,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "a) The bidders must have experience of having successfully completed following similar works during the last seven (7) years ending last day of the month previous to the one in which applications invited should be either of the following:",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 3,
+          "reading_order": 4,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Three similar works, each costing not less than the amount equal to FORTY PERCENT (40%) of estimated cost put to tender",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 4,
+          "reading_order": 5,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "OR",
           "languages": [
             "unknown"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 5,
+          "reading_order": 6,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Two similar works, each costing not less than the amount equal to SIXTY PERCENT (60%) of estimated cost put to tender",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 7,
+          "reading_order": 8,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "One similar work of aggregate cost not less than the amount equal to EIGHTY PERCENT (80%) of estimated cost put to tender",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 8,
+          "reading_order": 9,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "The “similar works” shall mean “Construction of any Non-Residential Building with Electrical, Plumbing works”.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 9,
+          "reading_order": 10,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Note- Bidder shall submit copies of Completion certificates along with LOA / LOI, Contract agreement clearly mentioning the detail scope of work, value of work, date of start, time period as per LOI and actual date of completion and actual value of work completed. The experience certificate in this regard should be issued by officer not below the rank of Executive Engineer / Project Manager / Unit Officer. In case of experience certificate issued by private firm it should be supported with Form 26AS duly certified by CA certificate. In case the verification of certificate will not be received within the stipulated time given by EPIL then the same will not be considered for evaluation of bidder.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 10,
+          "reading_order": 11,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "(i) For evaluation purpose, the completion cost of works mentioned in the Completion Certificate shall be enhanced by Seven Percent (7%) per annum till the end of month prior to date of NIT.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 11,
+          "reading_order": 12,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "(ii) The cost of free issue materials shall not be included in the completion cost of works.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 12,
+          "reading_order": 13,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "(iii) The experience certificates issued by any Government Organizations / Semi Government Organizations / Autonomous Bodies / Municipal Bodies / Public Limited Companies listed on BSE / NSE and private party shall be accepted for assessing the eligibility of the tenderer. In case of private party Income Tax Return File is to be submitted. However, the completion certificates issued must be supported by work order/Agreement & completion certificates.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 13,
+          "reading_order": 14,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "b) Should have an Average Annual financial Turn Over during the last three years, ending 31.03.2022, should be at least 50% of the estimated cost. Turnover certificate duly certified by a Chartered Accountant along with UDIN issued by ICAI is also to be submitted.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 14,
+          "reading_order": null,
+          "block_label": "footer",
+          "content_type": "footer",
+          "is_nlp_relevant": true,
+          "plain_text": "Sign and Stamp of Bidder",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 15,
+          "reading_order": null,
+          "block_label": "footer",
+          "content_type": "footer",
+          "is_nlp_relevant": true,
+          "plain_text": "Sign and Stamp of EPIL",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 2,
+      "blocks": [
+        {
+          "block_id": 0,
+          "reading_order": 1,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "c) Should not have incurred any losses in more than two years during the immediate last five consecutive financial years, ending 31.03.2022, Copies of Annual report/balance sheet and a No loss Certificate duly certified by a Chartered Accountant along with UDIN issued by ICAI is also to be submitted.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 1,
+          "reading_order": 2,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "d) Should have a Bankers Certificate from a Nationalized / Scheduled Bank of the amount equal to 40% of the estimated cost put to Tender. The Bankers certificate should not have been issued earlier than three months of last date of submission of the tender.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 2,
+          "reading_order": 3,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "OR",
+          "languages": [
+            "unknown"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 3,
+          "reading_order": 4,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Net worth certificate of minimum 10 % of the estimated cost put to tender issued by Certified Chartered Accountant with Unique Document Identification number (UDIN). The Net worth certificate shall be of the last financial year ending on 31st March 2022.",
+          "languages": [
+            "en",
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 4,
+          "reading_order": 5,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "The Banker's Certificate & Net worth Certificate shall be in the format prescribed in Annexure-F.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 5,
+          "reading_order": 6,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "e) Bidder has to submit undertaking regarding details of Constitution of firm/Company along with the details of its Directors as per enclosed Annexure-C. In case the bidder fails to submit Constitution of firms with the bid along with the details of its firm Directors as per Annexure-C their bid will be rejected.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 6,
+          "reading_order": 7,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "f) The Bidder should not have been currently (till the last date of bid submission of the tender or till the last date of extended tender) blacklisted or debarred in any State Govt./Municipal Corporations/Central Govt./any State Govt. Organizations, Urban Local Body and/or its Undertaking company. Bidder has to submit a notarized self-declaration with the bid in respect of the same that \"(.....Agency Name...) has not been currently (till the last date of bid submission of the tender or till the last date of extended tender) debarred/ black listed/banned/suspended/declared ineligible by any of its client/ in any State Govt./Municipal Corporations/ Central Govt./ any State Govt. Organizations, Urban Local Body and/or its Undertaking company for poor performance, unprofessional/ slow work leading to cancellation of work\".",
+          "languages": [
+            "en",
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 7,
+          "reading_order": 8,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Notwithstanding anything stated in tender, EPI reserves the right to assess the capabilities and capacity of the tenderer to perform the contract, in the overall interest of EPI. In case, tenderer's capabilities and capacities are not found satisfactory, EPI reserves the right to reject the tender. The credentials of the Bidders with respect to Technical & Financial criteria shall be verified and inspection of the works, if required, to be carried out by EPI. If not found satisfactory by EPI, their bid will be considered non-responsive and rejected.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 8,
+          "reading_order": 9,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "2.1 Evaluation of the bidders:",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 9,
+          "reading_order": 10,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Evaluation of the consultants shall be subject to through verification of their documents related with credentials and BG and inspection of similar consultancy works carried out / in progress by them, through a Technical Committee of experts to be constituted by EPIL. Price bids of all eligible bidders will be opened only after receiving the confirmations of Credentials & BG from the concerned Department/Bank.",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 10,
+          "reading_order": null,
+          "block_label": "footer",
+          "content_type": "footer",
+          "is_nlp_relevant": true,
+          "plain_text": "Sign and Stamp of Bidder",
+          "languages": [
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 11,
+          "reading_order": null,
+          "block_label": "footer",
+          "content_type": "footer",
+          "is_nlp_relevant": true,
+          "plain_text": "Sign and Stamp of EPIL",
+          "languages": [
+            "en"
           ],
           "section_title": null,
           "context": null

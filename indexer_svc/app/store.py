@@ -197,11 +197,10 @@ class VectorStore:
                 logger.warning("[store] No embedding for chunk %s — skipped", chunk.chunk_id)
                 continue
 
-            meta = chunk.metadata or {}
             rows.append((
                 chunk.chunk_id,
                 doc_id,
-                document_id,                          # UUID or None
+                document_id,
                 chunk.page_index,
                 chunk.block_index,
                 chunk.chunk_index,
@@ -209,10 +208,6 @@ class VectorStore:
                 chunk.source_lang,
                 chunk.text_original,
                 chunk.text_en,
-                meta.get("section_title"),
-                meta.get("context"),
-                meta.get("translation_failed", False),
-                chunk.bbox,
                 _to_dense_str(emb.dense_vec),
                 _to_sparse_str(emb.sparse_vec),
             ))
@@ -222,41 +217,33 @@ class VectorStore:
             return 0
 
         sql = """
-            INSERT INTO chunks (
-                chunk_id, doc_id, document_id,
-                page_index, block_index, chunk_index,
-                block_type, source_lang,
-                text_original, text_en,
-                section_title, context, translation_failed,
-                bbox,
-                dense_vec, sparse_vec
-            ) VALUES (
-                %s, %s, %s,
-                %s, %s, %s,
-                %s, %s,
-                %s, %s,
-                %s, %s, %s,
-                %s,
-                %s::vector, %s::sparsevec
-            )
-            ON CONFLICT (chunk_id) DO UPDATE SET
-                doc_id             = EXCLUDED.doc_id,
-                document_id        = EXCLUDED.document_id,
-                page_index         = EXCLUDED.page_index,
-                block_index        = EXCLUDED.block_index,
-                chunk_index        = EXCLUDED.chunk_index,
-                block_type         = EXCLUDED.block_type,
-                source_lang        = EXCLUDED.source_lang,
-                text_original      = EXCLUDED.text_original,
-                text_en            = EXCLUDED.text_en,
-                section_title      = EXCLUDED.section_title,
-                context            = EXCLUDED.context,
-                translation_failed = EXCLUDED.translation_failed,
-                bbox               = EXCLUDED.bbox,
-                dense_vec          = EXCLUDED.dense_vec,
-                sparse_vec         = EXCLUDED.sparse_vec,
-                indexed_at         = now()
-        """
+                INSERT INTO chunks (
+                    chunk_id, doc_id, document_id,
+                    page_index, block_index, chunk_index,
+                    block_type, source_lang,
+                    text_original, text_en,
+                    dense_vec, sparse_vec
+                ) VALUES (
+                    %s, %s, %s,
+                    %s, %s, %s,
+                    %s, %s,
+                    %s, %s,
+                    %s::vector, %s::sparsevec
+                )
+                ON CONFLICT (chunk_id) DO UPDATE SET
+                    doc_id             = EXCLUDED.doc_id,
+                    document_id        = EXCLUDED.document_id,
+                    page_index         = EXCLUDED.page_index,
+                    block_index        = EXCLUDED.block_index,
+                    chunk_index        = EXCLUDED.chunk_index,
+                    block_type         = EXCLUDED.block_type,
+                    source_lang        = EXCLUDED.source_lang,
+                    text_original      = EXCLUDED.text_original,
+                    text_en            = EXCLUDED.text_en,
+                    dense_vec          = EXCLUDED.dense_vec,
+                    sparse_vec         = EXCLUDED.sparse_vec,
+                    indexed_at         = now()
+            """
 
         psycopg2.extras.execute_batch(self._cur, sql, rows, page_size=100)
         self._con.commit()
