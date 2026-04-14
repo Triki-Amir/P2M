@@ -1,5 +1,5 @@
 {
-  "doc_id": "test_ff.pdf",
+  "doc_id": "test_mi_parcours.pdf",
   "source_lang": null,
   "pages": [
     {
@@ -73,6 +73,142 @@
         },
         {
           "block_id": 6,
+          "reading_order": null,
+          "block_label": "footer",
+          "content_type": "footer",
+          "is_nlp_relevant": true,
+          "plain_text": "Scanné avec CamScanner",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 1,
+      "blocks": [
+        {
+          "block_id": 0,
+          "reading_order": 1,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "ANNEXE AU DOSSIER D’OFFRES N° 05/2026 - MODIFICATIONS ET PRÉCISIONS SUPPLÉMENTAIRES",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 1,
+          "reading_order": 2,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Le Centre de Recherche en Biotechnologie (CRBT) apporte les modifications et précisions suivantes au dossier de consultation pour l'acquisition d'équipements scientifiques.",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 2,
+          "reading_order": 3,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "1. Garantie et Service Après-Vente :",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 3,
+          "reading_order": 4,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Exigence : Une garantie minimale de deux (2) ans sur tous les équipements (pièces, main-d’œuvre et déplacements) est exigée de la part des soumissionnaires.",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 4,
+          "reading_order": 5,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "2. Installation et Formation :",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 5,
+          "reading_order": 6,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Équipe technique : Le fournisseur devra mettre à disposition pour l'installation, la mise en service et la formation, une équipe qualifiée composée au minimum de trois (3) ingénieurs expérimentés et dix (10) techniciens certifiés.",
+          "languages": [
+            "fr",
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 6,
+          "reading_order": 7,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "3. Capacités Techniques et Financières du Soumissionnaire :",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 7,
+          "reading_order": 8,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Certification Qualité : Le soumissionnaire doit être certifié ISO 9001 (management de la qualité). Une copie valide du certificat devra être jointe à l’offre. Capacité Financière : Le soumissionnaire doit justifier d’un chiffre d’affaires annuel moyen supérieur à cent mille (100.000) Euros sur les trois derniers exercices.",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 8,
+          "reading_order": 9,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Toutes les autres conditions et informations du dossier de consultation restent inchangées.",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 10,
           "reading_order": null,
           "block_label": "footer",
           "content_type": "footer",
