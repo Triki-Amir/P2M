@@ -1,5 +1,5 @@
 {
-  "doc_id": "test_ff.pdf",
+  "doc_id": "test_mi_parcours.pdf",
   "source_lang": "fr",
   "doc_metadata": {
     "title": "APPEL D’OFFRES N° 05/2026 - ACQUISITION D’ÉQUIPEMENTS SCIENTIFIQUES POUR LABORATOIRES",
@@ -14,7 +14,7 @@
   },
   "chunks": [
     {
-      "chunk_id": "974665163914990dbb5823b98c1c17e8",
+      "chunk_id": "97760199d387a932678a5441f10c3fbd",
       "page_index": 0,
       "block_index": 0,
       "chunk_index": 0,
@@ -28,7 +28,7 @@
       "translation_failed": false
     },
     {
-      "chunk_id": "47de57565bc6c153aa749982e72068b0",
+      "chunk_id": "afa98ef74c84219f469a1de98ca8f3de",
       "page_index": 0,
       "block_index": 1,
       "chunk_index": 0,
@@ -42,7 +42,7 @@
       "translation_failed": false
     },
     {
-      "chunk_id": "1879f42394168ceae5aa6d46351d997f",
+      "chunk_id": "750f2d32f401955abbf9b229e5be871d",
       "page_index": 0,
       "block_index": 2,
       "chunk_index": 0,
@@ -56,7 +56,7 @@
       "translation_failed": false
     },
     {
-      "chunk_id": "548a7ca312d5bcf39bf34f34da6c3cda",
+      "chunk_id": "065454daeecf60fa8e25e7ed46fc7da4",
       "page_index": 0,
       "block_index": 3,
       "chunk_index": 0,
@@ -70,7 +70,7 @@
       "translation_failed": false
     },
     {
-      "chunk_id": "7b650cfc7fb301e608423f5d3855d2fb",
+      "chunk_id": "664a9118130ba8d3f5f9897bbc1a62f3",
       "page_index": 0,
       "block_index": 4,
       "chunk_index": 0,
@@ -84,9 +84,149 @@
       "translation_failed": false
     },
     {
-      "chunk_id": "1e3b4f939d42de549e3a4d7620ea1f53",
+      "chunk_id": "5e2ca96cce96182d941a899bffd3dd37",
       "page_index": 0,
       "block_index": 5,
+      "chunk_index": 0,
+      "block_type": "footer",
+      "source_lang": "fr",
+      "text_original": "Scanné avec CamScanner",
+      "text_en": "Scanned with CamScanner",
+      "section_title": null,
+      "context": null,
+      "bbox": null,
+      "translation_failed": false
+    },
+    {
+      "chunk_id": "c6a9991b3742bc303a68b0eb33ebc4b5",
+      "page_index": 1,
+      "block_index": 6,
+      "chunk_index": 0,
+      "block_type": "paragraph_title",
+      "source_lang": "fr",
+      "text_original": "ANNEXE AU DOSSIER D’OFFRES N° 05/2026 - MODIFICATIONS ET PRÉCISIONS SUPPLÉMENTAIRES",
+      "text_en": "ANNEX TO FILE OFOFFERS No. 05/2026 - ADDITIONAL AMENDMENTS AND PRECISION",
+      "section_title": null,
+      "context": null,
+      "bbox": null,
+      "translation_failed": false
+    },
+    {
+      "chunk_id": "a45dc53d4ebdfa1e630ac3421f3fa413",
+      "page_index": 1,
+      "block_index": 7,
+      "chunk_index": 0,
+      "block_type": "text",
+      "source_lang": "fr",
+      "text_original": "Le Centre de Recherche en Biotechnologie (CRBT) apporte les modifications et précisions suivantes au dossier de consultation pour l'acquisition d'équipements scientifiques.",
+      "text_en": "The Biotechnology Research Centre (BRC) makes the following changes and clarifications to the consultation file for the acquisition of scientific equipment.",
+      "section_title": null,
+      "context": null,
+      "bbox": null,
+      "translation_failed": false
+    },
+    {
+      "chunk_id": "a75180f6bb5603b05d3b3c7d1c02e07c",
+      "page_index": 1,
+      "block_index": 8,
+      "chunk_index": 0,
+      "block_type": "paragraph_title",
+      "source_lang": "fr",
+      "text_original": "1. Garantie et Service Après-Vente :",
+      "text_en": "1. Guarantee and After Sale Service:",
+      "section_title": null,
+      "context": null,
+      "bbox": null,
+      "translation_failed": false
+    },
+    {
+      "chunk_id": "2523a4fb110939e59f96c5052abeabf5",
+      "page_index": 1,
+      "block_index": 9,
+      "chunk_index": 0,
+      "block_type": "text",
+      "source_lang": "fr",
+      "text_original": "Exigence : Une garantie minimale de deux (2) ans sur tous les équipements (pièces, main-d’œuvre et déplacements) est exigée de la part des soumissionnaires.",
+      "text_en": "Requirement: A minimum warranty of two (2) years on all equipment (parts, labour and travel) is required from bidders.",
+      "section_title": null,
+      "context": null,
+      "bbox": null,
+      "translation_failed": false
+    },
+    {
+      "chunk_id": "9ba9f83d686524d6c52f47ab204776f7",
+      "page_index": 1,
+      "block_index": 10,
+      "chunk_index": 0,
+      "block_type": "paragraph_title",
+      "source_lang": "fr",
+      "text_original": "2. Installation et Formation :",
+      "text_en": "2. Installation and training:",
+      "section_title": null,
+      "context": null,
+      "bbox": null,
+      "translation_failed": false
+    },
+    {
+      "chunk_id": "77e23da3a99053c78204598b7efda7ab",
+      "page_index": 1,
+      "block_index": 11,
+      "chunk_index": 0,
+      "block_type": "text",
+      "source_lang": "fr",
+      "text_original": "Équipe technique : Le fournisseur devra mettre à disposition pour l'installation, la mise en service et la formation, une équipe qualifiée composée au minimum de trois (3) ingénieurs expérimentés et dix (10) techniciens certifiés.",
+      "text_en": "Technical team: The supplier must make available for installation, commissioning and training, a qualified team consisting of at least three (3) experienced engineers and ten (10) certified technicians.",
+      "section_title": null,
+      "context": null,
+      "bbox": null,
+      "translation_failed": false
+    },
+    {
+      "chunk_id": "7c7154a6858c16339cd61123d1eef3d0",
+      "page_index": 1,
+      "block_index": 12,
+      "chunk_index": 0,
+      "block_type": "paragraph_title",
+      "source_lang": "fr",
+      "text_original": "3. Capacités Techniques et Financières du Soumissionnaire :",
+      "text_en": "3. Submitter's Technical and Financial Capabilities:",
+      "section_title": null,
+      "context": null,
+      "bbox": null,
+      "translation_failed": false
+    },
+    {
+      "chunk_id": "e8bc9bf7d7459d7a67ee5e1bbce055c0",
+      "page_index": 1,
+      "block_index": 13,
+      "chunk_index": 0,
+      "block_type": "text",
+      "source_lang": "fr",
+      "text_original": "Certification Qualité : Le soumissionnaire doit être certifié ISO 9001 (management de la qualité). Une copie valide du certificat devra être jointe à l’offre. Capacité Financière : Le soumissionnaire doit justifier d’un chiffre d’affaires annuel moyen supérieur à cent mille (100.000) Euros sur les trois derniers exercices.",
+      "text_en": "Certification Quality: The tenderer must be certified ISO 9001 (quality management). A valid copy of the certificate must be attached to the offer. Financial Capacity: The tenderer must justify an average annual turnover of more than one hundred thousand (100,000) Euros over the last three years.",
+      "section_title": null,
+      "context": null,
+      "bbox": null,
+      "translation_failed": false
+    },
+    {
+      "chunk_id": "095eabe95c792233b2613824bc344dff",
+      "page_index": 1,
+      "block_index": 14,
+      "chunk_index": 0,
+      "block_type": "text",
+      "source_lang": "fr",
+      "text_original": "Toutes les autres conditions et informations du dossier de consultation restent inchangées.",
+      "text_en": "All other conditions and information in the consultation file remain unchanged.",
+      "section_title": null,
+      "context": null,
+      "bbox": null,
+      "translation_failed": false
+    },
+    {
+      "chunk_id": "700c075f2efb127a9b131887747c760e",
+      "page_index": 1,
+      "block_index": 15,
       "chunk_index": 0,
       "block_type": "footer",
       "source_lang": "fr",

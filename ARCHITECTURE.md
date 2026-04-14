@@ -1,313 +1,288 @@
-# System Architecture - Complete Integration
+# P2M System Architecture (Updated)
 
-## Component Overview
+This document describes the current architecture across ingestion, OCR/NLP/indexing, RAG chat, and conversation storage.
+
+---
+
+## 1. High-Level Components
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        P2M System                                │
-└─────────────────────────────────────────────────────────────────┘
+                                ┌──────────────────────────────┐
+                                │      Frontend (React)        │
+                                │  Upload + Chat UI (Vite)     │
+                                └──────────────┬───────────────┘
+                                               │
+                 HTTP /upload                  │ WebSocket /rag/ws
+                                               │
+                            ┌──────────────────▼──────────────────┐
+                            │       FastAPI Upload API (app)      │
+                            │            port 8000                │
+                            └──────────────┬───────────┬──────────┘
+                                           │           │
+                                           │           │
+                                  ┌────────▼───┐   ┌──▼──────────────┐
+                                  │   MinIO    │   │   PostgreSQL     │
+                                  │ PDF object │   │ documents/chunks │
+                                  │  storage   │   │ + chat_history   │
+                                  └────────────┘   └────────┬─────────┘
+                                                             │
+                                                             │ read/write
+                           ┌─────────────────────────────────▼────────────────────────────────┐
+                           │                  RAG Service (FastAPI, port 8001)              │
+                           │  retrieve (pgvector + BM25) + generate (Ollama) + memory save  │
+                           └─────────────────────────────────┬────────────────────────────────┘
+                                                             │
+                                                             ▼
+                                                         Ollama LLM
 
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Frontend   │────▶│   FastAPI    │────▶│  PostgreSQL  │
-│   (React)    │     │   (app/)     │     │   Database   │
-└──────────────┘     └──────┬───────┘     └──────────────┘
-                            │
-                            ├──────────────▶ ┌──────────────┐
-                            │                │    MinIO     │
-                            │                │   Storage    │
-                            │                └──────────────┘
-                            │
-                            ▼
-                     ┌──────────────┐
-                     │   RabbitMQ   │
-                     │  Message Q   │
-                     └──────┬───────┘
-                            │
-                            ▼
-                     ┌──────────────┐
-                     │ OCR Consumer │
-                     │ (ocr_service)│
-                     └──────┬───────┘
-                            │
-                            └──────────────▶ Updates DB
+
+Async processing path (queue-based):
+
+FastAPI -> RabbitMQ ocr_queue -> OCR -> RabbitMQ nlp_queue -> NLP -> RabbitMQ indexer_queue -> Indexer -> PostgreSQL chunks
+
+Synchronous processing path (default in app/api.py):
+
+FastAPI background task -> run_pipeline.py -> OCR -> NLP -> Indexer -> PostgreSQL chunks
 ```
 
 ---
 
-## Data Flow - Document Upload & Processing
+## 2. Services And Responsibilities
 
-### Step 1: Upload Request
+| Service | Role | Main Files |
+|---|---|---|
+| Frontend | Upload PDF and run chat UI | `front-end/src/app/components/AIAgentSpace.tsx` |
+| Upload API | Accept PDF uploads, persist metadata, trigger pipeline | `app/api.py` |
+| OCR | Extract structured blocks/pages from PDF | `ocr_service/main.py`, `ocr_service/consumer.py` |
+| NLP Pipeline | Clean, detect language, translate, chunk | `nlp_pipeline_svc/app/pipeline.py`, `nlp_pipeline_svc/consumer.py` |
+| Indexer | Build embeddings and upsert vectors to pgvector | `indexer_svc/app/embedder.py`, `indexer_svc/app/store.py`, `indexer_svc/consumer.py` |
+| RAG Service | Retrieve chunks + stream answer tokens via WebSocket | `rag_service/start_rag.py`, `rag_service/retriever.py`, `rag_service/pipeline.py` |
+| Chat Storage | Persist per-session chat turns in PostgreSQL table | `rag_service/memory.py`, `app/models.py` |
+| RabbitMQ | Queue transport (ocr_queue, nlp_queue, indexer_queue + DLQ) | `rabbitmq_server/docker-compose.yml` |
+| MinIO | PDF object storage bucket | `minio_server/docker-compose.yml` |
+| PostgreSQL + pgvector | Document metadata, vector chunks, chat history | `postgres_server/docker-compose.yml`, `app/models.py` |
+| Redis | Infra service present (cache/session candidate) | `redis_server/docker-compose.yml` |
+
+---
+
+## 3. Processing Modes In Repository
+
+The repository currently contains multiple valid processing paths.
+
+### A. Background Local Pipeline (Current API default)
+
+`PIPELINE_TRIGGER_MODE=run_pipeline` in `app/api.py` triggers:
+
+1. Upload API stores PDF in MinIO and creates document row.
+2. API marks document as processing.
+3. Background task downloads PDF and runs `run_pipeline.py`.
+4. `run_pipeline.py` executes OCR -> NLP -> Indexer sequentially.
+5. Chunks are stored in PostgreSQL/pgvector; document status updated.
+
+Key files:
+- `app/api.py`
+- `run_pipeline.py`
+- `ocr_service/main.py`
+- `nlp_pipeline_svc/app/main.py`
+- `indexer_svc/app/main.py`
+
+### B. Legacy RabbitMQ Path (Still available)
+
+`PIPELINE_TRIGGER_MODE != run_pipeline` in `app/api.py` currently uses:
+
+1. API publishes `{doc_id, url, source}` to `ocr_queue`.
+2. `rabbitmq_server/consumers/ocr_services.py` consumes message.
+3. Consumer runs OCR -> NLP -> Indexer and updates DB.
+
+Key files:
+- `rabbitmq_server/Producers/ingestion.py`
+- `rabbitmq_server/consumers/ocr_services.py`
+
+### C. Full Microservice Queue Chain (Service modules present)
+
+Service-specific consumers/publishers implement a staged queue pipeline:
+
+1. OCR consumer reads `ocr_queue` and publishes to `nlp_queue`.
+2. NLP consumer reads `nlp_queue` and publishes to `indexer_queue`.
+3. Indexer consumer reads `indexer_queue` and finalizes indexing.
+
+Key files:
+- `ocr_service/consumer.py`, `ocr_service/publisher.py`
+- `nlp_pipeline_svc/consumer.py`, `nlp_pipeline_svc/publisher.py`
+- `indexer_svc/consumer.py`
+
+---
+
+## 4. End-To-End Data Flows
+
+### 4.1 Upload And Indexing Flow
+
 ```
-Client → POST /upload (PDF file) → FastAPI
+Client -> POST /upload -> Upload API
+Upload API -> MinIO (store PDF)
+Upload API -> PostgreSQL documents (create row)
+
+Then one of:
+
+(A) background run_pipeline
+    -> OCR -> NLP -> Indexer -> PostgreSQL chunks
+
+(B) RabbitMQ
+    -> ocr_queue -> OCR/NLP/Indexer consumers -> PostgreSQL chunks
 ```
 
-### Step 2: Storage
-```
-FastAPI → MinIO Storage (save PDF)
-         ↓
-      success
-         ↓
-FastAPI → PostgreSQL (create document record)
-         status = "uploaded"
-```
+### 4.2 RAG Chat Flow
 
-### Step 3: Queue for Processing
 ```
-FastAPI → RabbitMQ Producer (ingestion.py)
-         ↓
-      Publish message: {doc_id, file_url, source}
-         ↓
-      ocr_queue (durable)
-```
-
-### Step 4: Status Update
-```
-FastAPI → PostgreSQL (update document)
-         status = "processing"
-```
-
-### Step 5: Consumer Processing
-```
-RabbitMQ → OCR Consumer (ocr_services.py)
-          ↓
-       Get message
-          ↓
-       Fetch document from DB
-          ↓
-       Download from MinIO (optional)
-          ↓
-       Run OCR Processing
-          ↓
-       Update PostgreSQL
-       - status = "completed"
-       - metadata = {OCR results}
-          ↓
-       Acknowledge message
+Client -> WebSocket ws://localhost:8001/rag/ws
+RAG Service -> retrieve chunks from PostgreSQL (hybrid: vector + BM25)
+RAG Service -> generate answer stream from Ollama
+RAG Service -> save turn history in PostgreSQL chat_history
+RAG Service -> stream token events back to client
 ```
 
 ---
 
-## File Connections
+## 5. Queue Contracts (Staged Pipeline)
 
-### API Integration
-**File:** `app/api.py`
-```python
-from rabbitmq_server.Producers.ingestion import trigger_ingestion
+### 5.1 OCR Queue (ingestion)
 
-# After saving document:
-trigger_ingestion(doc_id=str(new_doc.id), file_url=file_url)
-```
+Legacy payload (`rabbitmq_server/Producers/ingestion.py`):
 
-### Producer
-**File:** `rabbitmq_server/Producers/ingestion.py`
-```python
-def trigger_ingestion(doc_id, file_url):
-    # Sends message to RabbitMQ ocr_queue
-```
-
-### Consumer
-**File:** `rabbitmq_server/consumers/ocr_services.py`
-```python
-def callback(ch, method, properties, body):
-    # Receives message from RabbitMQ
-    # Processes OCR
-    # Updates database
-```
-
----
-
-## Message Format
-
-### RabbitMQ Message Structure
 ```json
 {
   "doc_id": "uuid-string",
-  "url": "http://localhost:9000/pdf-storage/timestamp-filename.pdf",
+  "url": "http://localhost:9000/pdf-storage/<file>.pdf",
   "source": "user_upload"
 }
 ```
 
----
+### 5.2 NLP Queue (from OCR service publisher)
 
-## Database States
-
-### Document Status Flow
-```
-uploaded → processing → completed
-                    ↓
-                  failed (on error)
-```
-
-### Document Model
-```python
+```json
 {
-  "id": UUID,
-  "filename": str,
-  "storage_path": str,
-  "status": str,  # uploaded/processing/completed/failed
-  "doc_metadata": dict,  # OCR results stored here
-  "created_at": datetime,
-  "updated_at": datetime
+  "document_id": "uuid-string",
+  "tenant_id": "tenant-id",
+  "filename": "document.pdf",
+  "pages": [],
+  "metadata": {},
+  "retry_count": 0
+}
+```
+
+### 5.3 Indexer Queue (from NLP service publisher)
+
+```json
+{
+  "document_id": "uuid-string",
+  "tenant_id": "tenant-id",
+  "filename": "document.pdf",
+  "chunks": [],
+  "metadata": {},
+  "retry_count": 0
 }
 ```
 
 ---
 
-## Service Ports
+## 6. Storage Model
 
-| Service    | Port(s)        | Access                            |
-|------------|----------------|-----------------------------------|
-| FastAPI    | 8000           | http://localhost:8000             |
-| PostgreSQL | 5432           | postgresql://localhost:5432       |
-| MinIO      | 9000, 9001     | http://localhost:9000 (API)       |
-|            |                | http://localhost:9001 (Console)   |
-| RabbitMQ   | 5672, 15672    | localhost:5672 (AMQP)            |
-|            |                | http://localhost:15672 (UI)       |
+### 6.1 PostgreSQL Core Tables
 
----
+- `documents`: upload metadata + status + metadata payload.
+- `chunks`: vectorized chunks (`dense_vec`, `sparse_vec`) for retrieval.
+- `chat_history`: conversation memory by `session_id` (JSONB messages).
 
-## Configuration Files
+### 6.2 Chat Storage
 
-### Environment Variables
-**File:** `.env`
-```env
-DATABASE_URL=postgresql://postgres:123456789@localhost:5432/postgres
-MINIO_ENDPOINT=localhost:9000
-RABBITMQ_HOST=localhost
-RABBITMQ_USER=admin
-RABBITMQ_PASS=secretpassword
-```
+Chat memory is currently stored in PostgreSQL via `PostgresChatMessageHistory`.
 
-### Docker Compose Files
-- `postgres_server/docker-compose.yml`
-- `minio_server/docker-compose.yml`
-- `rabbitmq_server/docker-compose.yml`
+Source:
+- `rag_service/memory.py` (table creation + save/load/clear)
+- `rag_service/config.py` (`MEMORY_TABLE_NAME`, `MEMORY_MAX_EXCHANGES`)
+
+### 6.3 Redis Status
+
+Redis container exists in `redis_server/docker-compose.yml`.
+At present, repository runtime wiring for chat memory uses PostgreSQL; Redis is available as infrastructure for future cache/session usage.
 
 ---
 
-## Key Integration Points
+## 7. Status Progression
 
-### 1. API → RabbitMQ
-**Location:** [app/api.py](app/api.py)
-**Function:** After document upload, triggers RabbitMQ producer
-**Import:** `from rabbitmq_server.Producers.ingestion import trigger_ingestion`
+Document status/pipeline values observed in code paths include:
 
-### 2. RabbitMQ → Consumer
-**Location:** [rabbitmq_server/consumers/ocr_services.py](rabbitmq_server/consumers/ocr_services.py)
-**Function:** Listens to queue, processes OCR jobs
-**Queue:** `ocr_queue` (durable)
-
-### 3. Consumer → Database
-**Location:** [rabbitmq_server/consumers/ocr_services.py](rabbitmq_server/consumers/ocr_services.py)
-**Function:** Updates document status and metadata
-**Import:** `from app.database import get_db_session`
+- Upload/API states: `uploaded`, `processing`, `completed`, `failed`.
+- Pipeline sub-states (queue services): `ocr_processing`, `ocr_done`, `ocr_failed`, `nlp_processing`, `nlp_done`, `nlp_failed`, `indexing`, `indexed`, `index_failed`.
 
 ---
 
-## Testing Flow
+## 8. Runtime Ports And Endpoints
 
-```
-1. Start Services
-   ├─ docker-compose up -d (PostgreSQL)
-   ├─ docker-compose up -d (MinIO)
-   └─ docker-compose up -d (RabbitMQ)
-
-2. Start Application
-   ├─ python app/start_api.py
-   └─ python rabbitmq_server/start_consumer.py
-
-3. Upload Document
-   └─ POST http://localhost:8000/upload
-
-4. Verify Processing
-   ├─ Check RabbitMQ UI (http://localhost:15672)
-   ├─ Check consumer logs
-   └─ Query database for status
-
-5. Confirm Completion
-   └─ Document status = "completed"
-```
+| Service | Port | Endpoint / Usage |
+|---|---:|---|
+| Frontend (Vite) | 5173 (typical dev) | http://localhost:5173 |
+| Upload API (FastAPI) | 8000 | http://localhost:8000, `/upload`, `/docs` |
+| RAG Service (FastAPI WS) | 8001 | ws://localhost:8001/rag/ws, `/health`, `/health/model` |
+| PostgreSQL | 5432 | postgresql://localhost:5432 |
+| MinIO API | 9000 | http://localhost:9000 |
+| MinIO Console | 9001 | http://localhost:9001 |
+| RabbitMQ AMQP | 5672 | amqp://localhost |
+| RabbitMQ UI | 15672 | http://localhost:15672 |
+| Redis | 6379 | redis://localhost:6379 |
+| Ollama | 11434 | http://localhost:11434 |
 
 ---
 
-## Error Handling
+## 9. Key Integration Points
 
-### Upload Failures
-- **MinIO Error:** HTTP 500 returned, no DB record created
-- **DB Error:** HTTP 500 returned, MinIO file orphaned
-- **RabbitMQ Error:** Document saved but not queued (status = "uploaded")
+1. Upload trigger and mode switch
+   - `app/api.py`
+   - Controls `PIPELINE_TRIGGER_MODE` and starts either background local pipeline or RabbitMQ trigger.
 
-### Processing Failures
-- **Consumer Down:** Messages accumulate in queue
-- **OCR Error:** Document status set to "failed"
-- **DB Update Error:** Message requeued for retry
+2. Legacy queue producer and consumer
+   - `rabbitmq_server/Producers/ingestion.py`
+   - `rabbitmq_server/consumers/ocr_services.py`
 
----
+3. Staged queue microservices
+   - `ocr_service/consumer.py`
+   - `nlp_pipeline_svc/consumer.py`
+   - `indexer_svc/consumer.py`
 
-## Monitoring Points
+4. RAG retrieval and chat streaming
+   - `rag_service/start_rag.py`
+   - `rag_service/retriever.py`
+   - `rag_service/pipeline.py`
+   - `rag_service/websocket_handler.py`
 
-### Health Checks
-1. **API Health:** `curl http://localhost:8000/docs`
-2. **RabbitMQ:** Check http://localhost:15672
-3. **Database:** Query documents table
-4. **MinIO:** Check bucket contents
-
-### Metrics to Monitor
-- Upload success rate
-- Queue depth (RabbitMQ)
-- Processing time per document
-- Failed document count
-- Consumer throughput
+5. Chat persistence
+   - `rag_service/memory.py`
+   - `app/models.py` (`ChatHistory`)
 
 ---
 
-## Quick Commands
+## 10. Health And Verification Checklist
 
-### Check System Status
-```powershell
-python verify_integration.py
-```
+1. Infrastructure up
+   - PostgreSQL, MinIO, RabbitMQ, Redis containers are running.
 
-### View All Services
-```powershell
-docker ps
-```
+2. Upload API available
+   - `GET http://localhost:8000/docs` loads.
 
-### Check Queue Status
-```powershell
-docker exec rabbitmq-server rabbitmqctl list_queues
-```
+3. RAG service available
+   - `GET http://localhost:8001/health` returns ok.
+   - WebSocket connection to `/rag/ws` returns `ready` event.
 
-### View Recent Documents
-```sql
-SELECT id, filename, status, created_at 
-FROM documents 
-ORDER BY created_at DESC 
-LIMIT 10;
-```
+4. Indexing data exists
+   - `chunks` table has rows for uploaded docs.
+
+5. Chat memory persists
+   - `chat_history` table receives user/assistant messages.
 
 ---
 
-## Success Criteria
+## 11. Notes For Ongoing Integration
 
-✓ Document uploaded via API  
-✓ File stored in MinIO  
-✓ Record created in PostgreSQL  
-✓ Message sent to RabbitMQ  
-✓ Consumer receives message  
-✓ OCR processing completes  
-✓ Database updated with results  
-✓ Message acknowledged and removed from queue  
-
----
-
-## Next Development Steps
-
-1. Implement actual OCR processing
-2. Add document download endpoint
-3. Build frontend upload interface
-4. Add authentication/authorization
-5. Implement error retry logic
-6. Set up monitoring and logging
-7. Add API rate limiting
-8. Scale consumer instances
+- The repository contains both legacy and new queue integration patterns.
+- Keep API producer payload and consumer payload aligned when selecting queue mode.
+- If Redis is adopted for chat memory or caching, document the new storage path and TTL policy in this file.
