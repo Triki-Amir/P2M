@@ -65,8 +65,8 @@ def _normalize_email(email: str) -> str:
 
 
 def _hash_password(password: str) -> str:
-    salt = secrets.token_hex(16)
-    iterations = 310000
+    salt = secrets.token_hex(32)
+    iterations = 600000
     digest = hashlib.pbkdf2_hmac(
         "sha256",
         password.encode("utf-8"),
@@ -174,13 +174,13 @@ class SignupRequest(BaseModel):
     tenant_email: str = Field(min_length=3, max_length=255)
     full_name: str = Field(min_length=2, max_length=255)
     email: str = Field(min_length=3, max_length=255)
-    password: str = Field(min_length=8, max_length=128)
+    password: str = Field(min_length=12, max_length=128)
 
 
 class LoginRequest(BaseModel):
     tenant_email: str = Field(min_length=3, max_length=255)
     email: str = Field(min_length=3, max_length=255)
-    password: str = Field(min_length=8, max_length=128)
+    password: str = Field(min_length=12, max_length=128)
 
 
 @app.post("/auth/signup", status_code=201)
@@ -188,14 +188,17 @@ def auth_signup(payload: SignupRequest, db: Session = Depends(get_db)):
     tenant_email = _normalize_email(payload.tenant_email)
     user_email = _normalize_email(payload.email)
 
-    existing_tenant = db.query(Tenant).filter(
-        (Tenant.email == tenant_email) | (Tenant.name == payload.tenant_name.strip())
-    ).first()
-    if existing_tenant:
+    tenant_name = payload.tenant_name.strip()
+    existing_tenant_by_email = db.query(Tenant).filter(Tenant.email == tenant_email).first()
+    if existing_tenant_by_email:
+        raise HTTPException(status_code=409, detail="Tenant already exists")
+
+    existing_tenant_by_name = db.query(Tenant).filter(Tenant.name == tenant_name).first()
+    if existing_tenant_by_name:
         raise HTTPException(status_code=409, detail="Tenant already exists")
 
     tenant = Tenant(
-        name=payload.tenant_name.strip(),
+        name=tenant_name,
         email=tenant_email,
         subscription_plan="free",
         tenant_metadata={},

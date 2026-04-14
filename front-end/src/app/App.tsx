@@ -192,7 +192,7 @@ const App: React.FC = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              minLength={8}
+              minLength={12}
               required
             />
             <button
@@ -241,7 +241,7 @@ const App: React.FC = () => {
               type="password"
               value={signupPassword}
               onChange={(e) => setSignupPassword(e.target.value)}
-              minLength={8}
+              minLength={12}
               required
             />
             <button
