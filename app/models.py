@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import UserDefinedType
 
-from app.database import Base
+from .database import Base
 
 
 class PGVector(UserDefinedType):
@@ -195,14 +195,17 @@ class Tenant(Base):
         DateTime(timezone=True),
         nullable=False,
         server_default=text("now()"),
-        onupdate=datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
     )
 
     __table_args__ = (
-        Index("ix_tenants_email", "email", unique=True),
         Index("ix_tenants_name", "name"),
         Index("ix_tenants_is_active", "is_active"),
+        Index("ix_tenants_email", "email"),
     )
+
+    def __repr__(self):
+        return f"<Tenant {self.name}>"
 
 
 class Role(Base):
@@ -214,7 +217,7 @@ class Role(Base):
         server_default=text("uuid_generate_v4()"),
     )
     name: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
-    description: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    description: Mapped[Optional[str]] = mapped_column(String(255))
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
@@ -224,8 +227,11 @@ class Role(Base):
         DateTime(timezone=True),
         nullable=False,
         server_default=text("now()"),
-        onupdate=datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
     )
+
+    def __repr__(self):
+        return f"<Role {self.name}>"
 
 
 class User(Base):
@@ -238,17 +244,16 @@ class User(Base):
     )
     tenant_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("tenants.id", name="fk_users_tenant_id_tenants", ondelete="CASCADE"),
+        ForeignKey("tenants.id", ondelete="CASCADE"),
         nullable=False,
     )
     role_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("roles.id", name="fk_users_role_id_roles", ondelete="SET NULL"),
-        nullable=True,
+        ForeignKey("roles.id", ondelete="SET NULL"),
     )
     email: Mapped[str] = mapped_column(String(255), nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
-    full_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    full_name: Mapped[Optional[str]] = mapped_column(String(255))
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
@@ -259,10 +264,7 @@ class User(Base):
         nullable=False,
         server_default=text("false"),
     )
-    last_login_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-    )
+    last_login_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
     user_metadata: Mapped[Optional[dict]] = mapped_column(
         "metadata",
         JSONB,
@@ -277,7 +279,7 @@ class User(Base):
         DateTime(timezone=True),
         nullable=False,
         server_default=text("now()"),
-        onupdate=datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
     )
 
     __table_args__ = (
@@ -286,5 +288,14 @@ class User(Base):
         Index("ix_users_role_id", "role_id"),
         Index("ix_users_email", "email"),
         Index("ix_users_is_active", "is_active"),
-        Index("ix_users_is_deleted", "is_deleted", postgresql_where=text("is_deleted = false")),
+        Index(
+            "ix_users_is_deleted",
+            "is_deleted",
+            postgresql_where=(is_deleted == False),
+        ),
     )
+
+    def __repr__(self):
+        return f"<User {self.email}>"
+
+

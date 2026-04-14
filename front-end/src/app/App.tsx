@@ -4,6 +4,7 @@ import { Navbar } from '@/app/components/Navbar';
 import { TenderCard, Tender } from '@/app/components/TenderCard';
 import { AIAgentSpace } from '@/app/components/AIAgentSpace';
 import { NotificationsPanel } from '@/app/components/NotificationsPanel';
+import { TenantProfileForm } from '@/app/components/TenantProfileForm';
 import { 
   TrendingUp, 
   Users, 
@@ -62,7 +63,7 @@ const mockTenders: Tender[] = [
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!localStorage.getItem('user'));
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState('');
@@ -98,6 +99,8 @@ const App: React.FC = () => {
       }
 
       setIsAuthenticated(true);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('tenant', JSON.stringify(data.tenant));
     } catch (error) {
       setAuthError(error instanceof Error ? error.message : 'Login failed');
     } finally {
@@ -358,13 +361,14 @@ const App: React.FC = () => {
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       
       <main className="pl-64 flex flex-col min-h-screen">
-        <Navbar />
+        <Navbar onProfileClick={() => setActiveTab('profile')} />
         
         <div className="flex-1 p-8 max-w-7xl mx-auto w-full">
           {activeTab === 'dashboard' && renderDashboard()}
           {activeTab === 'tenders' && renderTenders()}
           {activeTab === 'ai-agent' && <AIAgentSpace />}
           {activeTab === 'notifications' && <NotificationsPanel />}
+          {activeTab === 'profile' && <TenantProfileForm />}
         </div>
       </main>
     </div>

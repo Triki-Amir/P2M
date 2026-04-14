@@ -1,7 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, Bell, User, ChevronDown } from 'lucide-react';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  onProfileClick?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onProfileClick }) => {
+  const [user, setUser] = useState<{ full_name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
     <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-40">
       <div className="flex-1 max-w-xl">
@@ -25,13 +47,20 @@ export const Navbar: React.FC = () => {
 
         <div className="h-8 w-px bg-slate-200"></div>
 
-        <button className="flex items-center gap-3 hover:bg-slate-50 p-1.5 rounded-lg transition-colors">
+        <button 
+          onClick={onProfileClick}
+          className="flex items-center gap-3 hover:bg-slate-50 p-1.5 rounded-lg transition-colors"
+        >
           <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">
-            JD
+            {user ? getInitials(user.full_name) : '??'}
           </div>
           <div className="text-left hidden sm:block">
-            <p className="text-xs font-semibold text-slate-900 leading-tight">Jean Dupont</p>
-            <p className="text-[10px] text-slate-500 font-medium">Chef de projet</p>
+            <p className="text-xs font-semibold text-slate-900 leading-tight">
+              {user ? user.full_name : 'Invité'}
+            </p>
+            <p className="text-[10px] text-slate-500 font-medium truncate max-w-[120px]">
+              {user ? user.email : 'Non connecté'}
+            </p>
           </div>
           <ChevronDown className="w-4 h-4 text-slate-400" />
         </button>

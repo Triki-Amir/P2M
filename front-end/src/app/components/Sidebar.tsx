@@ -7,7 +7,9 @@ import {
   Settings, 
   HelpCircle,
   Menu,
-  ChevronRight
+  ChevronRight,
+  ShieldCheck,
+  LogOut
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -21,7 +23,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
     { id: 'tenders', icon: FileText, label: 'Appels d\'offres' },
     { id: 'notifications', icon: Bell, label: 'Notifications' },
     { id: 'ai-agent', icon: Bot, label: 'Agent IA' },
+    { id: 'profile', icon: ShieldCheck, label: 'Profil Entreprise' },
   ];
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('tenant');
+    window.location.reload();
+  };
 
   return (
     <div className="w-64 h-screen bg-slate-900 text-white flex flex-col fixed left-0 top-0 z-50 transition-all duration-300">
@@ -53,13 +62,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
       </nav>
 
       <div className="p-4 mt-auto border-t border-slate-800">
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors">
-          <Settings className="w-5 h-5" />
-          <span className="font-medium">Paramètres</span>
-        </button>
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors">
-          <HelpCircle className="w-5 h-5" />
-          <span className="font-medium">Support</span>
+        <button 
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:text-red-300 transition-colors"
+        >
+          <LogOut className="w-5 h-5" />
+          <span className="font-medium">Déconnexion</span>
         </button>
       </div>
     </div>

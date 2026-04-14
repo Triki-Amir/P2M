@@ -183,6 +183,17 @@ class LoginRequest(BaseModel):
     password: str = Field(min_length=12, max_length=128)
 
 
+class TenantMetadataUpdate(BaseModel):
+    geo_zone: Optional[str] = None
+    guarantee: Optional[str] = None
+    annual_revenue: Optional[float] = None
+    certifications: Optional[list[str]] = None
+    staff_count: Optional[dict] = None  # e.g. {"engineers": 10, "technicians": 5}
+
+    class Config:
+        extra = "allow"
+
+
 @app.post("/auth/signup", status_code=201)
 def auth_signup(payload: SignupRequest, db: Session = Depends(get_db)):
     tenant_email = _normalize_email(payload.tenant_email)
@@ -266,6 +277,7 @@ def auth_login(payload: LoginRequest, db: Session = Depends(get_db)):
             "id": str(tenant.id),
             "name": tenant.name,
             "email": tenant.email,
+            "metadata": tenant.tenant_metadata or {},
         },
         "user": {
             "id": str(user.id),
@@ -273,6 +285,50 @@ def auth_login(payload: LoginRequest, db: Session = Depends(get_db)):
             "full_name": user.full_name,
         },
     }
+
+
+@app.get("/tenants/{tenant_id}", status_code=200)
+def get_tenant(tenant_id: uuid.UUID, db: Session = Depends(get_db)):
+    tenant = db.query(Tenant).filter(Tenant.id == tenant_id).first()
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    return {
+        "id": str(tenant.id),
+        "name": tenant.name,
+        "email": tenant.email,
+        "metadata": tenant.tenant_metadata or {},
+    }
+
+
+@app.patch("/tenants/{tenant_id}/metadata", status_code=200)
+def update_tenant_metadata(
+    tenant_id: uuid.UUID, 
+    payload: TenantMetadataUpdate, 
+    db: Session = Depends(get_db)
+):
+    tenant = db.query(Tenant).filter(Tenant.id == tenant_id).first()
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    
+    # Use model_dump for Pydantic v2, or dict() for v1
+    try:
+        new_data = payload.model_dump(exclude_unset=True)
+    except AttributeError:
+        new_data = payload.dict(exclude_unset=True)
+    
+    current_metadata = tenant.tenant_metadata or {}
+    tenant.tenant_metadata = {**current_metadata, **new_data}
+    
+    # Force SQLAlchemy to recognize the JSON change
+    from sqlalchemy.orm.attributes import flag_modified
+    flag_modified(tenant, "tenant_metadata")
+    
+    tenant.updated_at = datetime.now(timezone.utc)
+    
+    db.commit()
+    db.refresh(tenant)
+    return {"message": "Tenant metadata updated", "metadata": tenant.tenant_metadata}
+
 
 @app.post("/upload", status_code=201)
 async def upload_document(
