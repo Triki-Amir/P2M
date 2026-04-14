@@ -271,7 +271,7 @@ Make sure **Docker Desktop is running**, then start each service:
 cd minio_server
 docker-compose up -d
 cd ..
-
+(pour fermer le server: docker-compose down)
 # PostgreSQL + pgvector — Database (port 5432)
 cd postgres_server
 docker-compose up -d
