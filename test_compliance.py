@@ -15,18 +15,19 @@ def test_compliance():
         if not tenant:
             tenant = Tenant(
                 name="Test Tenant",
-                admin_attrs={
-                    "location": "Paris",
-                    "specializations": ["IT", "Logiciel", "Développement"]
-                },
-                financial_attrs={
-                    "ca": 1000000.0,
-                    "guarantee_capacity": 50000.0
-                },
-                technical_attrs={
-                    "certs": ["ISO 9001", "ISO 27001"],
-                    "experience_years": 10,
-                    "covered_lots": [1, 2, 3]
+                email="test@tenant.com",
+                tenant_metadata={
+                    "geo_zone": "Tunisie, ariana ",
+                    "guarantee": "5 ans",
+                    "staff_count": {
+                        "others": 10,
+                        "engineers": 15,
+                        "technicians": 50
+                    },
+                    "annual_revenue": 100.0,
+                    "certifications": [
+                        "ISO 9001"
+                    ]
                 }
             )
             db.add(tenant)

@@ -166,7 +166,34 @@ async def startup_event():
     if not minio_client.bucket_exists(MINIO_BUCKET):
         minio_client.make_bucket(MINIO_BUCKET)
 
-# --- ROUTES ---
+@app.get("/ao/compliant/{tenant_id}", status_code=200)
+def get_compliant_ao(tenant_id: uuid.UUID, db: Session = Depends(get_db)):
+    """
+    Called by the UI Appel d'Offre (AO) page to list all documents 
+    that match society criteria.
+    """
+    from app.models import DocumentCompliance, Document
+    results = db.query(DocumentCompliance, Document).join(
+        Document, DocumentCompliance.document_id == Document.id
+    ).filter(
+        DocumentCompliance.tenant_id == tenant_id,
+        DocumentCompliance.is_compliant == True
+    ).all()
+    
+    return [
+        {
+            "compliance_id": str(comp.id),
+            "document_id": str(doc.id),
+            "filename": doc.filename,
+            "status": "COMPLIANT",
+            "extracted_criteria": comp.extracted_criteria,
+            "validation_details": comp.compliance_details,
+            "analyzed_at": comp.analyzed_at.isoformat()
+        }
+        for comp, doc in results
+    ]
+
+# --- EOF ---
 
 
 class SignupRequest(BaseModel):
