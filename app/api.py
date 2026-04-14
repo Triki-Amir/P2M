@@ -1,6 +1,8 @@
 import uuid
 import os
 import traceback
+import hashlib
+import secrets
 from datetime import datetime, timezone
 from typing import Optional
 from io import BytesIO
@@ -12,9 +14,10 @@ from sqlalchemy.orm import Session
 from minio import Minio
 from minio.error import S3Error
 from dotenv import load_dotenv
+from pydantic import BaseModel, Field
 
 from app.database import get_db, engine, Base, SessionLocal
-from app.models import Document
+from app.models import Document, Tenant, User, Role
 from rabbitmq_server.Producers.ingestion import trigger_ingestion
 from run_pipeline import main as run_local_pipeline
 
@@ -55,6 +58,38 @@ def upload_to_s3(file_data: bytes, filename: str, content_type: str):
         )
     except S3Error as e:
         raise HTTPException(status_code=500, detail=f"Storage error: {str(e)}")
+
+
+def _normalize_email(email: str) -> str:
+    return email.strip().lower()
+
+
+def _hash_password(password: str) -> str:
+    salt = secrets.token_hex(32)
+    iterations = 600000
+    digest = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        bytes.fromhex(salt),
+        iterations,
+    ).hex()
+    return f"pbkdf2_sha256${iterations}${salt}${digest}"
+
+
+def _verify_password(password: str, stored_hash: str) -> bool:
+    try:
+        algorithm, iterations_str, salt, digest = stored_hash.split("$", 3)
+        if algorithm != "pbkdf2_sha256":
+            return False
+        check = hashlib.pbkdf2_hmac(
+            "sha256",
+            password.encode("utf-8"),
+            bytes.fromhex(salt),
+            int(iterations_str),
+        ).hex()
+        return secrets.compare_digest(check, digest)
+    except Exception:
+        return False
 
 
 def _update_document_status(doc_id: str, status: str, extra_metadata: Optional[dict] = None):
@@ -132,6 +167,112 @@ async def startup_event():
         minio_client.make_bucket(MINIO_BUCKET)
 
 # --- ROUTES ---
+
+
+class SignupRequest(BaseModel):
+    tenant_name: str = Field(min_length=2, max_length=255)
+    tenant_email: str = Field(min_length=3, max_length=255)
+    full_name: str = Field(min_length=2, max_length=255)
+    email: str = Field(min_length=3, max_length=255)
+    password: str = Field(min_length=12, max_length=128)
+
+
+class LoginRequest(BaseModel):
+    tenant_email: str = Field(min_length=3, max_length=255)
+    email: str = Field(min_length=3, max_length=255)
+    password: str = Field(min_length=12, max_length=128)
+
+
+@app.post("/auth/signup", status_code=201)
+def auth_signup(payload: SignupRequest, db: Session = Depends(get_db)):
+    tenant_email = _normalize_email(payload.tenant_email)
+    user_email = _normalize_email(payload.email)
+
+    tenant_name = payload.tenant_name.strip()
+    existing_tenant_by_email = db.query(Tenant).filter(Tenant.email == tenant_email).first()
+    if existing_tenant_by_email:
+        raise HTTPException(status_code=409, detail="Tenant already exists")
+
+    existing_tenant_by_name = db.query(Tenant).filter(Tenant.name == tenant_name).first()
+    if existing_tenant_by_name:
+        raise HTTPException(status_code=409, detail="Tenant already exists")
+
+    tenant = Tenant(
+        name=tenant_name,
+        email=tenant_email,
+        subscription_plan="free",
+        tenant_metadata={},
+    )
+    db.add(tenant)
+    db.flush()
+
+    employer_role = db.query(Role).filter(Role.name == "employer").first()
+    if not employer_role:
+        employer_role = Role(name="employer", description="Default employer role")
+        db.add(employer_role)
+        db.flush()
+
+    existing_user = db.query(User).filter(
+        User.tenant_id == tenant.id,
+        User.email == user_email,
+    ).first()
+    if existing_user:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="User already exists for this tenant")
+
+    user = User(
+        tenant_id=tenant.id,
+        role_id=employer_role.id,
+        email=user_email,
+        hashed_password=_hash_password(payload.password),
+        full_name=payload.full_name.strip(),
+        user_metadata={},
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    return {
+        "message": "Employer account created successfully",
+        "tenant_id": str(tenant.id),
+        "user_id": str(user.id),
+    }
+
+
+@app.post("/auth/login")
+def auth_login(payload: LoginRequest, db: Session = Depends(get_db)):
+    tenant_email = _normalize_email(payload.tenant_email)
+    user_email = _normalize_email(payload.email)
+
+    tenant = db.query(Tenant).filter(Tenant.email == tenant_email).first()
+    if not tenant or not tenant.is_active:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    user = db.query(User).filter(
+        User.tenant_id == tenant.id,
+        User.email == user_email,
+        User.is_deleted.is_(False),
+    ).first()
+
+    if not user or not user.is_active or not _verify_password(payload.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    user.last_login_at = datetime.now(timezone.utc)
+    db.commit()
+
+    return {
+        "message": "Login successful",
+        "tenant": {
+            "id": str(tenant.id),
+            "name": tenant.name,
+            "email": tenant.email,
+        },
+        "user": {
+            "id": str(user.id),
+            "email": user.email,
+            "full_name": user.full_name,
+        },
+    }
 
 @app.post("/upload", status_code=201)
 async def upload_document(

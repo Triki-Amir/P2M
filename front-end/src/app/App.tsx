@@ -62,6 +62,203 @@ const mockTenders: Tender[] = [
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [authMessage, setAuthMessage] = useState('');
+
+  const [tenantEmail, setTenantEmail] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [signupTenantName, setSignupTenantName] = useState('');
+  const [signupTenantEmail, setSignupTenantEmail] = useState('');
+  const [signupFullName, setSignupFullName] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPassword, setSignupPassword] = useState('');
+
+  const API_BASE_URL = (import.meta as ImportMeta & { env?: Record<string, string> }).env?.VITE_API_URL || 'http://localhost:8000';
+
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setAuthError('');
+    setAuthMessage('');
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tenant_email: tenantEmail, email, password }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.detail || 'Login failed');
+      }
+
+      setIsAuthenticated(true);
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Login failed');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSignup = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setAuthError('');
+    setAuthMessage('');
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenant_name: signupTenantName,
+          tenant_email: signupTenantEmail,
+          full_name: signupFullName,
+          email: signupEmail,
+          password: signupPassword,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.detail || 'Sign-up failed');
+      }
+
+      setAuthMessage('Compte créé. Connectez-vous maintenant.');
+      setAuthMode('login');
+      setTenantEmail(signupTenantEmail);
+      setEmail(signupEmail);
+      setPassword('');
+      setSignupPassword('');
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Sign-up failed');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const renderAuthScreen = () => (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+      <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Espace Employeur</h1>
+          <p className="text-slate-500 text-sm mt-1">
+            {authMode === 'login' ? 'Connectez-vous à votre plateforme.' : 'Créez votre compte employeur.'}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 bg-slate-100 rounded-xl p-1">
+          <button
+            type="button"
+            onClick={() => { setAuthMode('login'); setAuthError(''); }}
+            className={`py-2 rounded-lg text-sm font-semibold ${authMode === 'login' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}`}
+          >
+            Login
+          </button>
+          <button
+            type="button"
+            onClick={() => { setAuthMode('signup'); setAuthError(''); }}
+            className={`py-2 rounded-lg text-sm font-semibold ${authMode === 'signup' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}`}
+          >
+            Sign up
+          </button>
+        </div>
+
+        {authMode === 'login' ? (
+          <form className="space-y-3" onSubmit={handleLogin}>
+            <input
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm"
+              placeholder="Email entreprise (tenant)"
+              type="email"
+              value={tenantEmail}
+              onChange={(e) => setTenantEmail(e.target.value)}
+              required
+            />
+            <input
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm"
+              placeholder="Email utilisateur"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm"
+              placeholder="Mot de passe"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={12}
+              required
+            />
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white rounded-xl py-2.5 text-sm font-bold"
+            >
+              {isSubmitting ? 'Connexion...' : 'Se connecter'}
+            </button>
+          </form>
+        ) : (
+          <form className="space-y-3" onSubmit={handleSignup}>
+            <input
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm"
+              placeholder="Nom de l’entreprise"
+              value={signupTenantName}
+              onChange={(e) => setSignupTenantName(e.target.value)}
+              required
+            />
+            <input
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm"
+              placeholder="Email entreprise (tenant)"
+              type="email"
+              value={signupTenantEmail}
+              onChange={(e) => setSignupTenantEmail(e.target.value)}
+              required
+            />
+            <input
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm"
+              placeholder="Nom complet"
+              value={signupFullName}
+              onChange={(e) => setSignupFullName(e.target.value)}
+              required
+            />
+            <input
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm"
+              placeholder="Email utilisateur"
+              type="email"
+              value={signupEmail}
+              onChange={(e) => setSignupEmail(e.target.value)}
+              required
+            />
+            <input
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm"
+              placeholder="Mot de passe"
+              type="password"
+              value={signupPassword}
+              onChange={(e) => setSignupPassword(e.target.value)}
+              minLength={12}
+              required
+            />
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-slate-900 hover:bg-slate-800 disabled:opacity-60 text-white rounded-xl py-2.5 text-sm font-bold"
+            >
+              {isSubmitting ? 'Création...' : 'Créer un compte'}
+            </button>
+          </form>
+        )}
+
+        {authError && <p className="text-sm text-red-600">{authError}</p>}
+        {authMessage && <p className="text-sm text-emerald-600">{authMessage}</p>}
+      </div>
+    </div>
+  );
 
   const renderDashboard = () => (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -151,6 +348,10 @@ const App: React.FC = () => {
       </div>
     </div>
   );
+
+  if (!isAuthenticated) {
+    return renderAuthScreen();
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
