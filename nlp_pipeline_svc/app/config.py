@@ -24,6 +24,8 @@ INPUT_EVENT: str = "ocr_completed"
 OUTPUT_EVENT: str = "nlp_completed"
 
 # ── RabbitMQ ──────────────────────────────────────────────────────────────────
+from dotenv import load_dotenv
+load_dotenv()
 RABBITMQ_URL = os.getenv("RABBITMQ_URL")
 EVENT_EXCHANGE = os.getenv("EVENT_EXCHANGE", "p2m_events")
 NLP_QUEUE      = os.getenv("NLP_QUEUE",      "nlp_queue")

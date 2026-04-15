@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sidebar } from '@/app/components/Sidebar';
 import { Navbar } from '@/app/components/Navbar';
 import { TenderCard, Tender } from '@/app/components/TenderCard';
@@ -22,41 +22,41 @@ const mockTenders: Tender[] = [
   {
     id: '1',
     title: 'Rénovation du Musée d\'Art Moderne',
-    owner: 'Ministère de la Culture',
-    status: 'New',
-    budget: '12 400 000 $',
+    organizationName: 'Ministère de la Culture',
+    isCompliant: true,
+    chiffreAffaireMinimal: '12 400 000 $',
     deadline: '24 oct. 2026',
-    location: 'Paris, France',
+    certificat: 'ISO 9001',
     image: 'https://images.unsplash.com/photo-1727777265265-b41e52787d4c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
   },
   {
     id: '2',
     title: 'Infrastructure Smart City - Phase 4',
-    owner: 'Autorité du Dév. Urbain',
-    status: 'Ongoing',
-    budget: '45 000 000 $',
+    organizationName: 'Autorité du Dév. Urbain',
+    isCompliant: false,
+    chiffreAffaireMinimal: '45 000 000 $',
     deadline: '12 déc. 2026',
-    location: 'Berlin, Allemagne',
+    certificat: 'ISO 14001',
     image: 'https://images.unsplash.com/photo-1633360821222-7e8df83639fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
   },
   {
     id: '3',
     title: 'Maintenance de Parc Éolien Côtier',
-    owner: 'Green Energy Corp',
-    status: 'Draft',
-    budget: '3 200 000 $',
+    organizationName: 'Green Energy Corp',
+    isCompliant: true,
+    chiffreAffaireMinimal: '3 200 000 $',
     deadline: '05 nov. 2026',
-    location: 'Oslo, Norvège',
+    certificat: 'ISO 45001',
     image: 'https://images.unsplash.com/photo-1764336312138-14a5368a6cd3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
   },
   {
     id: '4',
     title: 'Réseau Fibre Optique IT Hub',
-    owner: 'Telco Connect',
-    status: 'Closed',
-    budget: '8 500 000 $',
+    organizationName: 'Telco Connect',
+    isCompliant: false,
+    chiffreAffaireMinimal: '8 500 000 $',
     deadline: '01 fév. 2026',
-    location: 'Londres, Royaume-Uni',
+    certificat: 'ISO 27001',
     image: 'https://images.unsplash.com/photo-1727777265265-b41e52787d4c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
   }
 ];
@@ -69,6 +69,9 @@ const App: React.FC = () => {
   const [authError, setAuthError] = useState('');
   const [authMessage, setAuthMessage] = useState('');
 
+  const [tenders, setTenders] = useState<Tender[]>([]);
+  const [isLoadingTenders, setIsLoadingTenders] = useState(false);
+
   const [tenantEmail, setTenantEmail] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -80,6 +83,31 @@ const App: React.FC = () => {
   const [signupPassword, setSignupPassword] = useState('');
 
   const API_BASE_URL = (import.meta as ImportMeta & { env?: Record<string, string> }).env?.VITE_API_URL || 'http://localhost:8000';
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchTenders();
+    }
+  }, [isAuthenticated]);
+
+  const fetchTenders = async () => {
+    try {
+      setIsLoadingTenders(true);
+      const tenantStr = localStorage.getItem('tenant');
+      if (!tenantStr) return;
+      const tenant = JSON.parse(tenantStr);
+      
+      const response = await fetch(`${API_BASE_URL}/ao/tenders/${tenant.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        setTenders(data);
+      }
+    } catch (error) {
+      console.error('Error fetching tenders:', error);
+    } finally {
+      setIsLoadingTenders(false);
+    }
+  };
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -317,11 +345,17 @@ const App: React.FC = () => {
           <h3 className="text-xl font-bold text-slate-900">Appels d'offres récents</h3>
           <button onClick={() => setActiveTab('tenders')} className="text-sm font-bold text-blue-600 hover:text-blue-700">Voir tout</button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {mockTenders.slice(0, 4).map((tender) => (
-            <TenderCard key={tender.id} tender={tender} />
-          ))}
-        </div>
+        {isLoadingTenders ? (
+          <div className="text-center py-10 text-slate-500">Chargement des données...</div>
+        ) : tenders.length === 0 ? (
+          <div className="text-center py-10 text-slate-500">Aucun appel d'offre trouvé</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {tenders.slice(0, 4).map((tender) => (
+              <TenderCard key={tender.id} tender={tender} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -345,9 +379,15 @@ const App: React.FC = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {mockTenders.map((tender) => (
-          <TenderCard key={tender.id} tender={tender} />
-        ))}
+        {isLoadingTenders ? (
+          <div className="col-span-full text-center py-10 text-slate-500">Chargement des données...</div>
+        ) : tenders.length === 0 ? (
+          <div className="col-span-full text-center py-10 text-slate-500">Aucun appel d'offre trouvé</div>
+        ) : (
+          tenders.map((tender) => (
+            <TenderCard key={tender.id} tender={tender} />
+          ))
+        )}
       </div>
     </div>
   );

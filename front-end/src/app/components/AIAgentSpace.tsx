@@ -158,11 +158,32 @@ export const AIAgentSpace: React.FC = () => {
     setFile(droppedFile);
     setIsProcessing(true);
 
+    let uploadUrl = `${UPLOAD_API}/upload`;
+    const tenantStr = localStorage.getItem('tenant');
+    const userStr = localStorage.getItem('user');
+
+    const searchParams = new URLSearchParams();
+    if (tenantStr) {
+      try {
+        const tenant = JSON.parse(tenantStr);
+        if (tenant.id) searchParams.append('tenant_id', tenant.id);
+      } catch (e) {}
+    }
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user.id) searchParams.append('uploaded_by', user.id);
+      } catch (e) {}
+    }
+    if (searchParams.toString()) {
+      uploadUrl += '?' + searchParams.toString();
+    }
+
     try {
       const formData = new FormData();
       formData.append('file', droppedFile);
 
-      const response = await fetch(`${UPLOAD_API}/upload`, {
+      const response = await fetch(uploadUrl, {
         method: 'POST',
         body: formData,
       });

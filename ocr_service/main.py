@@ -53,8 +53,8 @@ def run(pdf_path: str | Path) -> None:
     # Step 4: publish ocr_completed event
     out_path = write_output(doc_id=doc_id, pages=pages)
 
-    print(f"[ocr_service] done → {out_path}\n")
-
+    print(f"[ocr_service] done -> {out_path}\n")
+    return [p.dict() for p in pages]
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

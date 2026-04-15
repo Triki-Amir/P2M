@@ -141,32 +141,27 @@ class VectorStore:
     # Document UUID resolution
     # ------------------------------------------------------------------
 
-    def resolve_document_id(self, doc_id: str) -> Optional[str]:
+    def resolve_document(self, doc_id: str) -> tuple[Optional[str], Optional[str]]:
         """
-        Look up the UUID of the document whose filename matches *doc_id*.
+        Look up the UUID and tenant_id of the document whose filename matches *doc_id*.
 
-        The ingestion pipeline stores the original filename in
-        documents.filename (e.g. "subo.pdf"). The NLP pipeline uses the
-        same filename as doc_id. This joins the two pipelines together.
-
-        Returns None if the document is not found in the documents table
-        (e.g. file was processed offline without going through ingestion).
+        Returns (document_id, tenant_id) or (None, None).
         """
         self._cur.execute(
-            "SELECT id FROM documents WHERE filename = %s AND is_deleted = false LIMIT 1",
+            "SELECT id, tenant_id FROM documents WHERE filename = %s AND is_deleted = false LIMIT 1",
             (doc_id,),
         )
         row = self._cur.fetchone()
         if row:
             logger.info("[store] Resolved '%s' → document UUID %s", doc_id, row[0])
-            return str(row[0])
+            return str(row[0]), str(row[1])
 
         logger.warning(
             "[store] Document '%s' not found in documents table. "
             "Chunks will be stored without a document_id FK.",
             doc_id,
         )
-        return None
+        return None, None
 
     # ------------------------------------------------------------------
     # Upsert
@@ -177,15 +172,13 @@ class VectorStore:
         chunks: List[NlpChunk],
         embeddings: List[ChunkEmbedding],
         doc_id: str,
-    ) -> int:
+    ) -> tuple[int, Optional[str], Optional[str]]:
         """
         Insert or update all chunks in one transaction.
-        ON CONFLICT on chunk_id → overwrite stale vectors (safe to re-run).
 
-        Returns number of rows upserted.
+        Returns (number of rows upserted, document_id, tenant_id)
         """
-        # Resolve filename → UUID (may be None for offline docs)
-        document_id = self.resolve_document_id(doc_id)
+        document_id, tenant_id = self.resolve_document(doc_id)
 
         # Build embedding lookup map
         emb_map = {e.chunk_id: e for e in embeddings}
@@ -249,4 +242,4 @@ class VectorStore:
         self._con.commit()
 
         logger.info("[store] Upserted %d chunks for '%s'.", len(rows), doc_id)
-        return len(rows)
+        return len(rows), document_id, tenant_id

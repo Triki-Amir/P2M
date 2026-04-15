@@ -27,7 +27,7 @@ app = FastAPI(title="P2M Document Upload API")
 
 # --- CONFIGURATION ---
 MINIO_BUCKET = os.getenv("MINIO_BUCKET", "pdf-storage")
-PIPELINE_TRIGGER_MODE = os.getenv("PIPELINE_TRIGGER_MODE", "run_pipeline").strip().lower()
+PIPELINE_TRIGGER_MODE = os.getenv("PIPELINE_TRIGGER_MODE", "rabbitmq").strip().lower()
 UPLOAD_TEMP_ROOT = Path(os.getenv("UPLOAD_TEMP_ROOT", Path(__file__).resolve().parents[1] / "temp" / "uploads"))
 
 minio_client = Minio(
@@ -165,6 +165,40 @@ async def startup_event():
     Base.metadata.create_all(bind=engine)
     if not minio_client.bucket_exists(MINIO_BUCKET):
         minio_client.make_bucket(MINIO_BUCKET)
+
+@app.get("/ao/tenders/{tenant_id}", status_code=200)
+def get_all_ao(tenant_id: uuid.UUID, db: Session = Depends(get_db)):
+    from app.models import DocumentCompliance, Document
+    results = db.query(DocumentCompliance, Document).join(
+        Document, DocumentCompliance.document_id == Document.id
+    ).filter(
+        DocumentCompliance.tenant_id == tenant_id
+    ).all()
+    
+    def get_first(criteria, category, key, default="N/A"):
+        if not criteria or not isinstance(criteria, dict):
+            return default
+        cat = criteria.get(category, {})
+        if not cat or not isinstance(cat, dict):
+            return default
+        val = cat.get(key)
+        if isinstance(val, list) and len(val) > 0:
+            return str(val[0])
+        elif isinstance(val, str) and val:
+            return val
+        return default
+
+    return [
+        {
+            "id": str(doc.id),
+            "organizationName": doc.doc_metadata.get("organization_name", "Inconnu") if doc.doc_metadata else "Inconnu",
+            "isCompliant": comp.is_compliant,
+            "deadline": get_first(comp.extracted_criteria, "admin_criteria", "deadline", "N/A"),
+            "chiffreAffaireMinimal": get_first(comp.extracted_criteria, "financial_criteria", "annual_revenue", "N/A"),
+            "certificat": get_first(comp.extracted_criteria, "technical_criteria", "certifications", "N/A"),
+        }
+        for comp, doc in results
+    ]
 
 @app.get("/ao/compliant/{tenant_id}", status_code=200)
 def get_compliant_ao(tenant_id: uuid.UUID, db: Session = Depends(get_db)):
@@ -369,6 +403,13 @@ async def upload_document(
     # 1. Validation
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Only PDF files are accepted")
+        
+    if tenant_id:
+        tenant = db.query(Tenant).filter(Tenant.id == tenant_id).first()
+        if not tenant:
+            raise HTTPException(status_code=404, detail="Tenant not found")
+    else:
+        tenant_id = uuid.UUID("00000000-0000-0000-0000-000000000000")
 
     # 2. Prepare Metadata
     file_content = await file.read()
@@ -381,7 +422,7 @@ async def upload_document(
     # 4. Save Record (Database)
     try:
         new_doc = Document(
-            tenant_id=tenant_id or uuid.UUID("00000000-0000-0000-0000-000000000000"),
+            tenant_id=tenant_id,
             uploaded_by=uploaded_by,
             created_by=uploaded_by,
             updated_by=uploaded_by,
@@ -422,7 +463,13 @@ async def upload_document(
                 file_url = f"http://{minio_endpoint}/{MINIO_BUCKET}/{storage_filename}"
 
                 # Trigger ingestion to RabbitMQ queue
-                trigger_ingestion(doc_id=str(new_doc.id), file_url=file_url)
+                trigger_ingestion(
+                    doc_id=str(new_doc.id), 
+                    file_url=file_url,
+                    tenant_id=str(new_doc.tenant_id),
+                    storage_path=f"{MINIO_BUCKET}/{storage_filename}",
+                    filename=file.filename or "unnamed.pdf"
+                )
 
                 # Update status to processing
                 new_doc.status = "processing"

@@ -26,7 +26,7 @@ class RAGSettings(BaseSettings):
     # ── Hybrid Retrieval ──────────────────────────────────────────────────
     TOP_K_SEMANTIC: int = 10      # candidates from vector search
     TOP_K_BM25: int = 10          # candidates from full-text search
-    TOP_K_FINAL: int = 5          # chunks sent to the LLM after RRF fusion
+    TOP_K_FINAL: int = 10          # chunks sent to the LLM after RRF fusion
     RRF_K: int = 60               # RRF constant (60 is standard)
 
     # ── Ollama / LLM ─────────────────────────────────────────────────────

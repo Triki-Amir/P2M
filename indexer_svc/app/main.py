@@ -70,13 +70,23 @@ def run_indexer() -> int:
 
     # 3 & 4. Resolve UUID + upsert ────────────────────────────────────────
     with VectorStore(dsn=config.DB_DSN) as store:
-        n = store.upsert_chunks(
+        n, document_id, tenant_id = store.upsert_chunks(
             chunks=nlp_doc.chunks,
             embeddings=embeddings,
             doc_id=nlp_doc.doc_id,
         )
 
     logger.info("[indexer] Done — %d chunks indexed for '%s'.", n, nlp_doc.doc_id)
+    
+    # 5. Trigger compliance service via RabbitMQ event
+    if document_id and tenant_id:
+        try:
+            # We import the publisher only if needed
+            from indexer_svc.publisher import trigger_compliance_task
+            trigger_compliance_task(document_id, tenant_id)
+        except Exception as e:
+            logger.error("[indexer] Failed to trigger compliance task: %s", e)
+
     return n
 
 

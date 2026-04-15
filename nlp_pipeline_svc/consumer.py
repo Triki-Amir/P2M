@@ -161,13 +161,17 @@ class NLPConsumer:
                         max_chunk_chars=nlp_config.MAX_CHUNK_CHARS,
                         fallback_overlap=nlp_config.CHUNK_OVERLAP,
                     )
-                    ocr_doc = event_bus.consume(
-                        nlp_config.INPUT_EVENT, OcrDocument, nlp_config.DATA_DIR
+                    # Convert pages list from message back to OcrPage models
+                    from shared.models import OcrPage, OcrDocument
+                    page_models = [OcrPage(**p) for p in (pages or [])]
+                    ocr_doc = OcrDocument(
+                        doc_id=document_id,
+                        source_lang=None,
+                        pages=page_models
                     )
                     nlp_doc = orchestrator.process_document(ocr_doc)
-                    event_bus.publish(
-                        nlp_config.OUTPUT_EVENT, nlp_doc, nlp_config.DATA_DIR
-                    )
+                    
+                    # Instead of saving to disk, just return chunks (microservice decoupling)
                     return [c.dict() for c in nlp_doc.chunks]
 
                 chunks = await asyncio.wait_for(
@@ -207,23 +211,25 @@ class NLPConsumer:
         error: str | None = None,
     ) -> None:
         async with self.db_pool.acquire() as conn:
+            import uuid
+            doc_uuid = uuid.UUID(document_id)
             if error:
                 await conn.execute(
                     """
                     UPDATE documents
-                    SET pipeline_status = $1, error_message = $2, updated_at = now()
+                    SET status = $1, metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object('error', $2::text), updated_at = now()
                     WHERE id = $3
                     """,
-                    status, error, document_id,
+                    status, error, doc_uuid,
                 )
             else:
                 await conn.execute(
                     """
                     UPDATE documents
-                    SET pipeline_status = $1, updated_at = now()
+                    SET status = $1, updated_at = now()
                     WHERE id = $2
                     """,
-                    status, document_id,
+                    status, doc_uuid,
                 )
 
     async def _retry_or_dlq(
@@ -246,3 +252,38 @@ class NLPConsumer:
         else:
             logger.error("NLPConsumer: max retries reached → DLQ.")
             await message.reject(requeue=False)
+
+import asyncio
+import asyncpg
+    
+async def main():
+    import os
+    import logging
+    from dotenv import load_dotenv
+    load_dotenv()
+    
+    logging.basicConfig(level=logging.INFO)
+    print("Starting NLP RabbitMQ Consumer...")
+
+    dsn = os.getenv("DATABASE_URL", "postgresql://postgres:123456789@localhost:5432/postgres")
+    if dsn and dsn.startswith("postgresql://"):
+        dsn = dsn.replace("postgresql://", "postgres://", 1)
+        
+    db_pool = await asyncpg.create_pool(dsn)
+
+    consumer = NLPConsumer(db_pool)
+    await consumer.start()
+    
+    try:
+        await asyncio.Future()
+    except asyncio.CancelledError:
+        pass
+    finally:
+        await db_pool.close()
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Interrupted by user")
+

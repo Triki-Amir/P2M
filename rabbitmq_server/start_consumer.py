@@ -1,6 +1,11 @@
 """
-Startup script for OCR Consumer Service
-Run this to start processing OCR jobs from the queue
+DEPRECATED MONOLITHIC CONSUMER.
+DO NOT USE THIS SCRIPT FOR TRUE MICROSERVICES.
+Instead, run each service's individual consumer module:
+python -m ocr_service.consumer
+python -m nlp_pipeline_svc.consumer
+python -m indexer_svc.consumer
+python -m compliance_service.consumer
 """
 import sys
 import os

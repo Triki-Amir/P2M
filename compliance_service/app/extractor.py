@@ -50,8 +50,8 @@ Extractions :
 {extractions_json}
 """
 
-def call_llm(prompt: str) -> dict:
-    """Sync call to local Ollama for JSON extraction."""
+async def call_llm(prompt: str) -> dict:
+    """Async call to local Ollama for JSON extraction."""
     payload = {
         "model": MODEL_NAME,
         "prompt": prompt,
@@ -60,16 +60,17 @@ def call_llm(prompt: str) -> dict:
     }
     
     try:
-        response = httpx.post(LLM_URL, json=payload, timeout=60.0)
-        response.raise_for_status()
-        data = response.json()
-        result_text = data.get("response", "")
-        return json.loads(result_text)
+        async with httpx.AsyncClient() as client:
+            response = await client.post(LLM_URL, json=payload, timeout=60.0)
+            response.raise_for_status()
+            data = response.json()
+            result_text = data.get("response", "")
+            return json.loads(result_text)
     except Exception as e:
         logger.error(f"Error calling LLM or parsing JSON: {e}")
         return {}
 
-def extract_criteria_sliding_window(texts: List[str]) -> dict:
+async def extract_criteria_sliding_window(texts: List[str]) -> dict:
     """Extract criteria using a sliding window approach with no memory across windows."""
     results_list = []
     
@@ -81,7 +82,7 @@ def extract_criteria_sliding_window(texts: List[str]) -> dict:
         prompt = EXTRACTION_PROMPT_TEMPLATE.format(chunks_text=combined_text)
         logger.info(f"Processing window {i // WINDOW_SIZE + 1} with {len(window)} chunks...")
         
-        extracted = call_llm(prompt)
+        extracted = await call_llm(prompt)
         if extracted:
             results_list.append(extracted)
     
@@ -95,7 +96,7 @@ def extract_criteria_sliding_window(texts: List[str]) -> dict:
     consolidation_prompt = CONSOLIDATION_PROMPT.format(
         extractions_json=json.dumps(results_list, ensure_ascii=False, indent=2)
     )
-    final_merged = call_llm(consolidation_prompt)
+    final_merged = await call_llm(consolidation_prompt)
     if not final_merged:
          logger.warning("Consolidation returned empty, falling back to first result.")
          return results_list[0]
@@ -209,23 +210,25 @@ def compare_with_tenant(extracted: dict, tenant: Tenant, doc_date: datetime) -> 
         "details": details
     }
 
-def run_compliance_for_document(doc_id: str, tenant_db_id: str) -> None:
+import asyncio
+
+async def run_compliance_for_document(doc_id: str, tenant_db_id: str) -> None:
     db = SessionLocal()
     try:
         # Load the tenant
-        tenant = db.query(Tenant).filter(Tenant.id == tenant_db_id).first()
+        tenant = await asyncio.to_thread(lambda: db.query(Tenant).filter(Tenant.id == tenant_db_id).first())
         if not tenant:
             logger.error(f"Tenant {tenant_db_id} not found.")
             return
             
         # Get DB document mapping
-        doc_entry = db.query(Document).filter(Document.id == doc_id).first()
+        doc_entry = await asyncio.to_thread(lambda: db.query(Document).filter(Document.id == doc_id).first())
         if not doc_entry:
             logger.error(f"Document entry for id {doc_id} not found")
             return
             
         # Load the chunks
-        chunks = db.query(Chunk).filter(Chunk.document_id == doc_id).order_by(Chunk.chunk_index).all()
+        chunks = await asyncio.to_thread(lambda: db.query(Chunk).filter(Chunk.document_id == doc_id).order_by(Chunk.chunk_index).all())
         if not chunks:
             logger.warning(f"No chunks found for document {doc_id} in DB.")
             return
@@ -233,7 +236,7 @@ def run_compliance_for_document(doc_id: str, tenant_db_id: str) -> None:
         texts = [c.text_original for c in chunks]
         
         # 1. & 2. & 3. Extraction with Sliding Window + LLM merge
-        extracted_criteria = extract_criteria_sliding_window(texts)
+        extracted_criteria = await extract_criteria_sliding_window(texts)
         if not extracted_criteria:
             logger.error("Extraction failed or returned empty.")
             return
@@ -242,20 +245,21 @@ def run_compliance_for_document(doc_id: str, tenant_db_id: str) -> None:
         comparison_results = compare_with_tenant(extracted_criteria, tenant, doc_entry.created_at)
         
         # 5. Save to database
-        compliance_record = db.query(DocumentCompliance).filter(DocumentCompliance.document_id == doc_id).first()
-        
-        if not compliance_record:
-            compliance_record = DocumentCompliance(
-                document_id=doc_entry.id,
-                tenant_id=tenant.id,
-            )
-            db.add(compliance_record)
+        def save_compliance():
+            compliance_record = db.query(DocumentCompliance).filter(DocumentCompliance.document_id == doc_id).first()
+            if not compliance_record:
+                compliance_record = DocumentCompliance(
+                    document_id=doc_entry.id,
+                    tenant_id=tenant.id,
+                )
+                db.add(compliance_record)
             
-        compliance_record.extracted_criteria = extracted_criteria
-        compliance_record.is_compliant = comparison_results["is_compliant"]
-        compliance_record.compliance_details = comparison_results["details"]
-        
-        db.commit()
+            compliance_record.extracted_criteria = extracted_criteria
+            compliance_record.is_compliant = comparison_results["is_compliant"]
+            compliance_record.compliance_details = comparison_results["details"]
+            db.commit()
+
+        await asyncio.to_thread(save_compliance)
         logger.info(f"Compliance check completed for document {doc_id}.")
         
         # 6. Publish event back to UI with Appel d'Offres metadata
@@ -269,17 +273,18 @@ def run_compliance_for_document(doc_id: str, tenant_db_id: str) -> None:
                 "document_filename": doc_entry.filename,
                 "ao_status": "COMPLIANT" if comparison_results["is_compliant"] else "REJECTED"
             }
-            publish_compliance_result(
-                document_id=doc_id,
-                tenant_id=tenant_db_id,
-                is_compliant=comparison_results["is_compliant"],
-                metadata=ao_payload
+            await asyncio.to_thread(
+                publish_compliance_result,
+                doc_id,
+                tenant_db_id,
+                comparison_results["is_compliant"],
+                ao_payload
             )
         except Exception as e:
             logger.error(f"Failed to publish compliance UI event: {e}")
 
     except Exception as e:
         logger.error(f"Error during compliance check: {e}")
-        db.rollback()
+        await asyncio.to_thread(db.rollback)
     finally:
         db.close()
