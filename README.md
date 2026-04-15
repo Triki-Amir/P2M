@@ -1,5 +1,41 @@
 ﻿# P2M - Arborescence du projet
+### Vue d'ensemble (Graphe de la Pipeline)
 
+```mermaid
+graph TD
+    classDef frontend fill:#f3f4f6,stroke:#333,stroke-width:2px;
+    classDef api fill:#dbeafe,stroke:#2563eb,stroke-width:2px;
+    classDef queue fill:#fef3c7,stroke:#d97706,stroke-width:2px;
+    classDef worker fill:#dcfce7,stroke:#16a34a,stroke-width:2px;
+    classDef storage fill:#fee2e2,stroke:#dc2626,stroke-width:2px;
+    classDef smart fill:#f3e8ff,stroke:#9333ea,stroke-width:2px;
+
+    UI[React / Vite]:::frontend -->|Upload| API[FastAPI Upload API]:::api
+    UI -. Websocket .-> RAG[RAG Service - Ollama]:::smart
+
+    API -->|1. Object Storage| MinIO[(MinIO)]:::storage
+    API -->|2. init processing| PG[(PostgreSQL)]:::storage
+    API -->|3. document_uploaded| Q1([ocr_queue]):::queue
+
+    Q1 -->|Consume| OCR[OCR Service / Paddle]:::worker
+    OCR -. Fetch PDF .-> MinIO
+    OCR -->|4. ocr_completed| Q2([nlp_queue]):::queue
+
+    Q2 -->|Consume| NLP1[1. Meta Extractor Regex/LLM]:::worker
+    NLP1 --> NLP2[2. Translation]:::worker
+    NLP2 --> NLP3[3. Semantic Chunker]:::worker
+    NLP3 -->|5. nlp_completed| Q3([indexer_queue]):::queue
+
+    Q3 -->|Consume| IDX[Indexer Service]:::worker
+    IDX -->|6. Upsert Vectors| PGV[(pgvector)]:::storage
+    IDX -. Update Status SUCCESS .-> PG
+
+    RAG -. Retriever: Semantic+BM25 .-> PGV
+    COMP[Compliance Service]:::smart -. Match Rules .-> PGV
+    
+```
+
+---
 Cette arborescence annotée décrit chaque composant du projet pour faciliter la compréhension globale de l'architecture par un modèle d'IA ou un nouveau développeur.
 
 ```text
