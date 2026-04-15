@@ -3,36 +3,76 @@
 
 ```mermaid
 graph TD
-    classDef frontend fill:#f3f4f6,stroke:#333,stroke-width:2px;
-    classDef api fill:#dbeafe,stroke:#2563eb,stroke-width:2px;
-    classDef queue fill:#fef3c7,stroke:#d97706,stroke-width:2px;
-    classDef worker fill:#dcfce7,stroke:#16a34a,stroke-width:2px;
-    classDef storage fill:#fee2e2,stroke:#dc2626,stroke-width:2px;
-    classDef smart fill:#f3e8ff,stroke:#9333ea,stroke-width:2px;
+    %% Configuration du Thème (Design dynamique)
+    classDef client fill:#3b82f6,stroke:#1e3a8a,stroke-width:2px,color:#fff,rx:8px,ry:8px,shadow:shadow;
+    classDef api fill:#8b5cf6,stroke:#581c87,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+    classDef mq fill:#f59e0b,stroke:#b45309,stroke-width:3px,color:#fff,stroke-dasharray: 5 5;
+    classDef microservice fill:#10b981,stroke:#065f46,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+    classDef db fill:#ef4444,stroke:#7f1d1d,stroke-width:2px,color:#fff,rx:15px,ry:15px;
+    classDef ai fill:#ec4899,stroke:#701a75,stroke-width:2px,color:#fff,rx:10px,ry:10px;
 
-    UI[React / Vite]:::frontend -->|Upload| API[FastAPI Upload API]:::api
-    UI -. Websocket .-> RAG[RAG Service - Ollama]:::smart
+    %% Entités
+    subgraph Frontend ["🟢 Interface Utilisateur"]
+        UI[💻 Frontend (React/Vite)]:::client
+    end
 
-    API -->|1. Object Storage| MinIO[(MinIO)]:::storage
-    API -->|2. init processing| PG[(PostgreSQL)]:::storage
-    API -->|3. document_uploaded| Q1([ocr_queue]):::queue
+    subgraph EntryPoint ["🔵 Couche d'Entrée & Auth"]
+        API[🚀 FastAPI (Upload & Auth)]:::api
+    end
 
-    Q1 -->|Consume| OCR[OCR Service / Paddle]:::worker
-    OCR -. Fetch PDF .-> MinIO
-    OCR -->|4. ocr_completed| Q2([nlp_queue]):::queue
+    subgraph EventBus ["🟠 Message Broker (RabbitMQ)"]
+        Q1((ocr_queue)):::mq
+        Q2((nlp_queue)):::mq
+        Q3((indexer_queue)):::mq
+    end
 
-    Q2 -->|Consume| NLP1[1. Meta Extractor Regex/LLM]:::worker
-    NLP1 --> NLP2[2. Translation]:::worker
-    NLP2 --> NLP3[3. Semantic Chunker]:::worker
-    NLP3 -->|5. nlp_completed| Q3([indexer_queue]):::queue
+    subgraph Pipeline ["🟢 Document Processing Pipeline"]
+        OCR[👁️ OCR Service (PaddleOCR)]:::microservice
+        
+        subgraph NLP ["🧠 NLP Service (Hybride)"]
+            M[Metadata LLM/Regex] 
+            T[Translation] 
+            C[Semantic Chunker]
+            M -.-> T -.-> C
+        end
+        class M,T,C microservice
+        
+        IDX[⚙️ Indexer Service]:::microservice
+    end
 
-    Q3 -->|Consume| IDX[Indexer Service]:::worker
-    IDX -->|6. Upsert Vectors| PGV[(pgvector)]:::storage
-    IDX -. Update Status SUCCESS .-> PG
+    subgraph Databases ["🔴 Persistance des Données"]
+        MinIO[(📦 MinIO: PDF Storage)]:::db
+        PG[(🗄️ PostgreSQL: Users)]:::db
+        PGV[(📊 pgvector: Chunks)]:::db
+    end
 
-    RAG -. Retriever: Semantic+BM25 .-> PGV
-    COMP[Compliance Service]:::smart -. Match Rules .-> PGV
-    
+    subgraph SmartLayer ["🟣 Couche Intelligente (Smart Layer)"]
+        COMP[✅ Compliance Service]:::ai
+        RAG[🤖 RAG Service (Ollama)]:::ai
+    end
+
+    %% Relations (Cheminement du document)
+    UI == 1. Upload PDF ==> API
+    UI <== 💬 WebSocket Chat ==> RAG
+
+    API == "2. Save PDF" ==> MinIO
+    API == "3. Metadata" ==> PG
+    API == "4. Publisher" ==> Q1
+
+    Q1 -. "Consume" .-> OCR
+    OCR -. "Read PDF" .-> MinIO
+    OCR == "5. ocr_completed" ==> Q2
+
+    Q2 -. "Consume" .-> M
+    C == "6. nlp_completed" ==> Q3
+
+    Q3 -. "Consume" .-> IDX
+    IDX == "7. Upsert Tensors" ==> PGV
+    IDX -. "Update Status" .-> PG
+
+    %% IA Operations
+    RAG -. "Semantic/BM25 Search" .-> PGV
+    COMP -. "Rule Matching" .-> PGV
 ```
 
 ---
