@@ -13,42 +13,42 @@ graph TD
 
     %% Entités
     subgraph Frontend ["🟢 Interface Utilisateur"]
-        UI[💻 Frontend (React/Vite)]:::client
+        UI["💻 Frontend (React/Vite)"]:::client
     end
 
     subgraph EntryPoint ["🔵 Couche d'Entrée & Auth"]
-        API[🚀 FastAPI (Upload & Auth)]:::api
+        API["🚀 FastAPI (Upload & Auth)"]:::api
     end
 
     subgraph EventBus ["🟠 Message Broker (RabbitMQ)"]
-        Q1((ocr_queue)):::mq
-        Q2((nlp_queue)):::mq
-        Q3((indexer_queue)):::mq
+        Q1(("ocr_queue")):::mq
+        Q2(("nlp_queue")):::mq
+        Q3(("indexer_queue")):::mq
     end
 
     subgraph Pipeline ["🟢 Document Processing Pipeline"]
-        OCR[👁️ OCR Service (PaddleOCR)]:::microservice
+        OCR["👁️ OCR Service (PaddleOCR)"]:::microservice
         
         subgraph NLP ["🧠 NLP Service (Hybride)"]
-            M[Metadata LLM/Regex] 
-            T[Translation] 
-            C[Semantic Chunker]
+            M["Metadata LLM/Regex"] 
+            T["Translation"] 
+            C["Semantic Chunker"]
             M -.-> T -.-> C
         end
         class M,T,C microservice
         
-        IDX[⚙️ Indexer Service]:::microservice
+        IDX["⚙️ Indexer Service"]:::microservice
     end
 
     subgraph Databases ["🔴 Persistance des Données"]
-        MinIO[(📦 MinIO: PDF Storage)]:::db
-        PG[(🗄️ PostgreSQL: Users)]:::db
-        PGV[(📊 pgvector: Chunks)]:::db
+        MinIO[("📦 MinIO: PDF Storage")]:::db
+        PG[("🗄️ PostgreSQL: Users")]:::db
+        PGV[("📊 pgvector: Chunks")]:::db
     end
 
     subgraph SmartLayer ["🟣 Couche Intelligente (Smart Layer)"]
-        COMP[✅ Compliance Service]:::ai
-        RAG[🤖 RAG Service (Ollama)]:::ai
+        COMP["✅ Compliance Service"]:::ai
+        RAG["🤖 RAG Service (Ollama)"]:::ai
     end
 
     %% Relations (Cheminement du document)
