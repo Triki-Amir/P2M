@@ -1,10 +1,10 @@
 ﻿# P2M - Arborescence du projet
 ### Vue d'ensemble (Graphe de la Pipeline)
 
-`mermaid
+```mermaid
 graph TD
     %% Configuration du Thème (Design dynamique)
-    classDef client fill:#3b82f6,stroke:#1e3a8a,stroke-width:2px,color:#fff,rx:8px,ry:8px,shadow:shadow;
+    classDef client fill:#3b82f6,stroke:#1e3a8a,stroke-width:2px,color:#fff,rx:8px,ry:8px;
     classDef api fill:#8b5cf6,stroke:#581c87,stroke-width:2px,color:#fff,rx:5px,ry:5px;
     classDef mq fill:#f59e0b,stroke:#b45309,stroke-width:3px,color:#fff,stroke-dasharray: 5 5;
     classDef microservice fill:#10b981,stroke:#065f46,stroke-width:2px,color:#fff,rx:10px,ry:10px;
@@ -73,7 +73,7 @@ graph TD
     %% IA Operations
     RAG -. "Semantic/BM25 Search" .-> PGV
     COMP -. "Rule Matching" .-> PGV
-`
+```
 
 ---
 Cette arborescence annotée décrit chaque composant du projet pour faciliter la compréhension globale de l'architecture par un modèle d'IA ou un nouveau développeur.
