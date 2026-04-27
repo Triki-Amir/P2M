@@ -7,19 +7,21 @@ Separated from main.py so the serialisation logic is independently testable.
 
 from __future__ import annotations
 from pathlib import Path
+from typing import Optional
 
 from shared.models import OcrDocument, OcrPage
 from shared import event_bus
 from ocr_service.config import DATA_DIR, OUTPUT_EVENT
 
 
-def write_output(doc_id: str, pages: list[OcrPage]) -> Path:
+def write_output(doc_id: str, pages: list[OcrPage], file_size: Optional[int] = None) -> Path:
     """
     Build an OcrDocument from the processed pages and publish it.
 
     Args:
-        doc_id:  original PDF filename used as the document identifier
-        pages:   list of OcrPage objects, one per PDF page
+        doc_id:    original PDF filename used as the document identifier
+        pages:     list of OcrPage objects, one per PDF page
+        file_size: size of the original PDF file in bytes (optional)
 
     Returns:
         Path to the written JSON event file.
@@ -27,6 +29,7 @@ def write_output(doc_id: str, pages: list[OcrPage]) -> Path:
     document = OcrDocument(
         doc_id=doc_id,
         source_lang=None,   # language detection is done by the NLP service
+        file_size=file_size,
         pages=pages,
     )
 

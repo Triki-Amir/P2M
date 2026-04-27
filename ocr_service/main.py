@@ -51,7 +51,7 @@ def run(pdf_path: str | Path) -> None:
         cleanup_images(image_paths)
 
     # Step 4: publish ocr_completed event
-    out_path = write_output(doc_id=doc_id, pages=pages)
+    out_path = write_output(doc_id=doc_id, pages=pages, file_size=pdf_path.stat().st_size)
 
     print(f"[ocr_service] done -> {out_path}\n")
     return [p.dict() for p in pages]

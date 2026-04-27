@@ -243,3 +243,25 @@ class VectorStore:
 
         logger.info("[store] Upserted %d chunks for '%s'.", len(rows), doc_id)
         return len(rows), document_id, tenant_id
+
+    def update_document_metadata(self, document_id: str, metadata: dict) -> None:
+        """
+        Merge *metadata* into the doc_metadata JSONB column of the matching document.
+
+        Uses a PostgreSQL JSONB merge so existing keys set by the ingestion
+        service (e.g. pipeline_mode, processed_at) are preserved.
+        """
+        if not document_id or not metadata:
+            return
+
+        self._cur.execute(
+            """
+            UPDATE documents
+               SET doc_metadata = COALESCE(doc_metadata, '{}'::jsonb) || %s::jsonb,
+                   updated_at   = now()
+             WHERE id = %s::uuid
+            """,
+            (psycopg2.extras.Json(metadata), document_id),
+        )
+        self._con.commit()
+        logger.info("[store] Updated doc_metadata for document %s.", document_id)
