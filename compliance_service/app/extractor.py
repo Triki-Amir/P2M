@@ -4,8 +4,8 @@ import logging
 import httpx
 from typing import List, Dict, Any
 
-from app.database import SessionLocal
-from app.models import Document, Chunk, Tenant, DocumentCompliance
+from ingestion_service.database import SessionLocal
+from ingestion_service.models import Document, Chunk, Tenant, DocumentCompliance
 
 logger = logging.getLogger(__name__)
 

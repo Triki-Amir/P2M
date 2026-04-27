@@ -15,8 +15,8 @@ from urllib.parse import urlparse, unquote
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 from minio import Minio
-from app.database import get_db_session
-from app.models import Document
+from ingestion_service.database import get_db_session
+from ingestion_service.models import Document
 from ocr_service.main import run as run_ocr
 from nlp_pipeline_svc.app.main import run_consumer as run_nlp
 from indexer_svc.app.main import run_indexer

@@ -13,7 +13,7 @@ from typing import Any, Dict, Optional
 import aio_pika
 from aio_pika import Message, DeliveryMode, ExchangeType
 
-import app.config as settings # local config with RabbitMQ settings
+import ingestion_service.config as settings # local config with RabbitMQ settings
 
 logger = logging.getLogger(__name__)
 

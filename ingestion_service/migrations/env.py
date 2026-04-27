@@ -5,8 +5,8 @@ from os.path import abspath, dirname
 # Add the project root (c:\P2M) to sys.path so the 'app' package is importable
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
-from app.database import Base
-from app.models import Document, Chunk, PGVector, PGSparseVector  # ← added PGVector, PGSparseVector
+from ingestion_service.database import Base
+from ingestion_service.models import Document, Chunk, PGVector, PGSparseVector  # ← added PGVector, PGSparseVector
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
@@ -39,10 +39,10 @@ def process_revision_directives(context, revision, directives):
 def render_item(type_, obj, autogen_context):
     """Tell Alembic how to render custom PostgreSQL types in migration files."""
     if isinstance(obj, PGVector):
-        autogen_context.imports.add("from app.models import PGVector")
+        autogen_context.imports.add("from ingestion_service.models import PGVector")
         return repr(obj)  # renders as PGVector(1024)
     if isinstance(obj, PGSparseVector):
-        autogen_context.imports.add("from app.models import PGSparseVector")
+        autogen_context.imports.add("from ingestion_service.models import PGSparseVector")
         return repr(obj)  # renders as PGSparseVector(250002)
     return False  # fall back to default rendering for all other types
 

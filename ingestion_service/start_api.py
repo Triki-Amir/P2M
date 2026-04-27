@@ -14,7 +14,7 @@ if project_root not in sys.path:
 if __name__ == "__main__":
     api_port = int(os.getenv("API_PORT", "8000"))
     uvicorn.run(
-        "app.api:app",
+        "ingestion_service.api:app",
         host="0.0.0.0",
         port=api_port,
         reload=True,

@@ -9,8 +9,8 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from app.models import PGSparseVector
-from app.models import PGVector
+from ingestion_service.models import PGSparseVector
+from ingestion_service.models import PGVector
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
