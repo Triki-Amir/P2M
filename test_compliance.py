@@ -1,8 +1,8 @@
 import uuid
 import logging
 import json
-from app.database import SessionLocal
-from app.models import Tenant, Document, Chunk, DocumentCompliance
+from ingestion_service.database import SessionLocal
+from ingestion_service.models import Tenant, Document, Chunk, DocumentCompliance
 from compliance_service.app.extractor import run_compliance_for_document
 
 logging.basicConfig(level=logging.INFO)

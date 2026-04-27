@@ -24,7 +24,7 @@ pip install -r requirements.txt
 
 ### 3. Start API Server
 ```bash
-python -m uvicorn app.api:app --host 0.0.0.0 --port 8000 --reload
+python -m uvicorn ingestion_service.api:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 Server runs at: **http://localhost:8000**
@@ -119,7 +119,7 @@ app/
 
 ```bash
 # Start API
-python -m uvicorn app.api:app --reload
+python -m uvicorn ingestion_service.api:app --reload
 
 # Check migration version
 alembic current

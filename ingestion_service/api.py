@@ -16,9 +16,9 @@ from minio.error import S3Error
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
-from app.database import get_db, engine, Base, SessionLocal
-from app.models import Document, Tenant, User, Role
-from rabbitmq_server.Producers.ingestion import trigger_ingestion
+from ingestion_service.database import get_db, engine, Base, SessionLocal
+from ingestion_service.models import Document, Tenant, User, Role
+from ingestion_service.producer import trigger_ingestion
 from run_pipeline import main as run_local_pipeline
 
 load_dotenv()
@@ -168,7 +168,7 @@ async def startup_event():
 
 @app.get("/ao/tenders/{tenant_id}", status_code=200)
 def get_all_ao(tenant_id: uuid.UUID, db: Session = Depends(get_db)):
-    from app.models import DocumentCompliance, Document
+    from ingestion_service.models import DocumentCompliance, Document
     results = db.query(DocumentCompliance, Document).join(
         Document, DocumentCompliance.document_id == Document.id
     ).filter(
@@ -206,7 +206,7 @@ def get_compliant_ao(tenant_id: uuid.UUID, db: Session = Depends(get_db)):
     Called by the UI Appel d'Offre (AO) page to list all documents 
     that match society criteria.
     """
-    from app.models import DocumentCompliance, Document
+    from ingestion_service.models import DocumentCompliance, Document
     results = db.query(DocumentCompliance, Document).join(
         Document, DocumentCompliance.document_id == Document.id
     ).filter(
