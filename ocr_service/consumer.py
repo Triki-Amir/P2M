@@ -165,13 +165,14 @@ class OCRConsumer:
                         suffix=".pdf", delete=False,
                         prefix=f"{filename}_"
                     )
+                    tmp.close()  # Close file handle so MinIO can overwrite it on Windows
                     self.minio_client.fget_object(
                         bucket_name=storage_path.split("/")[0],
                         object_name="/".join(storage_path.split("/")[1:]),
                         file_path=tmp.name,
                     )
                     try:
-                        _run_ocr(tmp.name)   # writes ocr_completed.json via write_output()
+                        return _run_ocr(tmp.name)
                     finally:
                         os.unlink(tmp.name)
 
@@ -213,23 +214,25 @@ class OCRConsumer:
     ) -> None:
         """Update the documents table with the current pipeline status."""
         async with self.db_pool.acquire() as conn:
+            import uuid
+            doc_uuid = uuid.UUID(document_id)
             if error:
                 await conn.execute(
                     """
                     UPDATE documents
-                    SET pipeline_status = $1, error_message = $2, updated_at = now()
+                    SET status = $1, metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object('error', $2::text), updated_at = now()
                     WHERE id = $3
                     """,
-                    status, error, document_id,
+                    status, error, doc_uuid,
                 )
             else:
                 await conn.execute(
                     """
                     UPDATE documents
-                    SET pipeline_status = $1, updated_at = now()
+                    SET status = $1, updated_at = now()
                     WHERE id = $2
                     """,
-                    status, document_id,
+                    status, doc_uuid,
                 )
 
     async def _retry_or_dlq(
@@ -253,3 +256,47 @@ class OCRConsumer:
         else:
             logger.error("OCRConsumer: max retries reached → DLQ.")
             await message.reject(requeue=False)
+
+import asyncio
+import asyncpg
+from minio import Minio
+
+async def main():
+    import os
+    import logging
+    from dotenv import load_dotenv
+    load_dotenv()
+    
+    logging.basicConfig(level=logging.INFO)
+    print("Starting OCR RabbitMQ Consumer...")
+
+    dsn = os.getenv("DATABASE_URL", "postgresql://postgres:123456789@localhost:5432/postgres")
+    if dsn.startswith("postgresql://"):
+        dsn = dsn.replace("postgresql://", "postgres://", 1)
+        
+    db_pool = await asyncpg.create_pool(dsn)
+
+    mc = Minio(
+        os.getenv("MINIO_ENDPOINT", "localhost:9000"),
+        access_key=os.getenv("MINIO_ACCESS_KEY", "admin"),
+        secret_key=os.getenv("MINIO_SECRET_KEY", "password123"),
+        secure=os.getenv("MINIO_SECURE", "false").lower() == "true"
+    )
+
+    consumer = OCRConsumer(db_pool, mc)
+    await consumer.start()
+    
+    try:
+        await asyncio.Future()
+    except asyncio.CancelledError:
+        pass
+    finally:
+        await db_pool.close()
+
+if __name__ == "__main__":
+    target = ""
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Interrupted by user")
+

@@ -1,5 +1,5 @@
 {
-  "doc_id": "test_mi_parcours.pdf",
+  "doc_id": "nchallah_marbou7a.pdf_nyti20na.pdf",
   "source_lang": null,
   "pages": [
     {
@@ -209,6 +209,237 @@
         },
         {
           "block_id": 10,
+          "reading_order": null,
+          "block_label": "footer",
+          "content_type": "footer",
+          "is_nlp_relevant": true,
+          "plain_text": "Scanné avec CamScanner",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        }
+      ]
+    },
+    {
+      "page_index": 2,
+      "blocks": [
+        {
+          "block_id": 0,
+          "reading_order": 1,
+          "block_label": "doc_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "ANNEXE AU DOSSIER D’OFFRES N° 05/2026 - MODIFICATIONS ET PRÉCISIONS SUPPLÉMENTAIRES (Suite)",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 1,
+          "reading_order": 2,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Faisant suite aux dispositions précédemment énoncées, le CRBT apporte les précisions détaillées suivantes concernant l’allotissement et les spécifications techniques du projet.",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 2,
+          "reading_order": 3,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "4. Allotissement et Composition des Lots :",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 3,
+          "reading_order": 4,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Le projet est scindé en trois (3) lots distincts, permettant une réponse ciblée des soumissionnaires : - Lot 1 : Plateforme de criblage à haut débit (HTS) et Automatisation. Comprend une station de manipulation de liquides, des lecteurs de plaques multi-modes et les logiciels de contrôle associés.",
+          "languages": [
+            "fr",
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 4,
+          "reading_order": 5,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "- Lot 2 : Fermenteurs Pilotes et Bioréacteurs. Comprend des fermenteurs d'un volume total de 50L et 100L en acier inoxydable 316L, avec systèmes de contrôle avancés (pH, DO, température, agitation).",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 5,
+          "reading_order": 6,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "- Lot 3 : Systèmes d'Analyse Avancée. Comprend un Séquenceur de Nouvelle Génération (NGS), un Analyseur Cellulaire par Imagerie, et un système de Gestion de Données de Laboratoire (LIMS).",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 6,
+          "reading_order": 7,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "5. Spécifications Techniques Minimales Clés (Résumé des Équipements Clés) :",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 7,
+          "reading_order": 8,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Les équipements devront, au minimum, répondre aux exigences suivantes pour être jugés conformes :",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 8,
+          "reading_order": 9,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "- Criblage HTS : Cadence minimale de 50 plaques/jour (format 384 puits). Logiciel de gestion de données intégré avec support de l'IA pour la détection de phénotypes.",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 9,
+          "reading_order": 10,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "• Fermentateur 50L : Capteurs à usage unique optionnels (pH/DO). Système de régulation de mousse automatique. Matériau certifié USP Class VI pour les parties en contact.",
+          "languages": [
+            "fr",
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 10,
+          "reading_order": 11,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "• Séquenceur NGS : Capacité de séquence à haut débit (>100 Gbase/run). Kits de préparation de librairies certifiés pour les applications biopharmaceutiques.",
+          "languages": [
+            "fr",
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 11,
+          "reading_order": 12,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "• Système LIMS : Architecture Web, support multi-utilisateurs. Capacité d'intégration de données tierces (via API). Conformité FDA 21 CFR Part 11 requise.",
+          "languages": [
+            "en",
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 12,
+          "reading_order": 13,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "6. Chronogramme de Livraison et d'Installation :",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 13,
+          "reading_order": 14,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Un chronogramme détaillé de déploiement doit être fourni, en respectant à l'définité maximum de six (6) mois après notification du marché pour la mise en service finale de tous les lots.",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 14,
+          "reading_order": 15,
+          "block_label": "paragraph_title",
+          "content_type": "title",
+          "is_nlp_relevant": true,
+          "plain_text": "7. Critères d'Évaluation Technique :",
+          "languages": [
+            "fr"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 15,
+          "reading_order": 16,
+          "block_label": "text",
+          "content_type": "body_text",
+          "is_nlp_relevant": true,
+          "plain_text": "Les offres techniques seront évaluées selon les critères suivants. Conformité aux spécifications (30 pts), Performance et qualité des équipements (25 pts), Service après-vente et maintenance (20 pts), installation et formation (15 pts), Références et expérience du soumissionnaire (10 pts).",
+          "languages": [
+            "fr",
+            "en"
+          ],
+          "section_title": null,
+          "context": null
+        },
+        {
+          "block_id": 16,
           "reading_order": null,
           "block_label": "footer",
           "content_type": "footer",

@@ -98,7 +98,7 @@ class NLPPublisher:
         }
 
         try:
-            await self._exchange.publish(
+            await self._channel.default_exchange.publish(
                 Message(
                     body=json.dumps(payload).encode("utf-8"),
                     content_type="application/json",

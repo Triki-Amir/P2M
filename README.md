@@ -1,5 +1,81 @@
 ﻿# P2M - Arborescence du projet
+### Vue d'ensemble (Graphe de la Pipeline)
 
+```mermaid
+graph TD
+    %% Configuration du Thème (Design dynamique)
+    classDef client fill:#3b82f6,stroke:#1e3a8a,stroke-width:2px,color:#fff,rx:8px,ry:8px;
+    classDef api fill:#8b5cf6,stroke:#581c87,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+    classDef mq fill:#f59e0b,stroke:#b45309,stroke-width:3px,color:#fff,stroke-dasharray: 5 5;
+    classDef microservice fill:#10b981,stroke:#065f46,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+    classDef db fill:#ef4444,stroke:#7f1d1d,stroke-width:2px,color:#fff,rx:15px,ry:15px;
+    classDef ai fill:#ec4899,stroke:#701a75,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+
+    %% Entités
+    subgraph Frontend ["🟢 Interface Utilisateur"]
+        UI["💻 Frontend (React/Vite)"]:::client
+    end
+
+    subgraph EntryPoint ["🔵 Couche d'Entrée & Auth"]
+        API["🚀 FastAPI (Upload & Auth)"]:::api
+    end
+
+    subgraph EventBus ["🟠 Message Broker (RabbitMQ)"]
+        Q1(("ocr_queue")):::mq
+        Q2(("nlp_queue")):::mq
+        Q3(("indexer_queue")):::mq
+    end
+
+    subgraph Pipeline ["🟢 Document Processing Pipeline"]
+        OCR["👁️ OCR Service (PaddleOCR)"]:::microservice
+        
+        subgraph NLP ["🧠 NLP Service (Hybride)"]
+            M["Metadata LLM/Regex"] 
+            T["Translation"] 
+            C["Semantic Chunker"]
+            M -.-> T -.-> C
+        end
+        class M,T,C microservice
+        
+        IDX["⚙️ Indexer Service"]:::microservice
+    end
+
+    subgraph Databases ["🔴 Persistance des Données"]
+        MinIO[("📦 MinIO: PDF Storage")]:::db
+        PG[("🗄️ PostgreSQL: Users")]:::db
+        PGV[("📊 pgvector: Chunks")]:::db
+    end
+
+    subgraph SmartLayer ["🟣 Couche Intelligente (Smart Layer)"]
+        COMP["✅ Compliance Service"]:::ai
+        RAG["🤖 RAG Service (Ollama)"]:::ai
+    end
+
+    %% Relations (Cheminement du document)
+    UI == 1. Upload PDF ==> API
+    UI <== 💬 WebSocket Chat ==> RAG
+
+    API == "2. Save PDF" ==> MinIO
+    API == "3. Metadata" ==> PG
+    API == "4. Publisher" ==> Q1
+
+    Q1 -. "Consume" .-> OCR
+    OCR -. "Read PDF" .-> MinIO
+    OCR == "5. ocr_completed" ==> Q2
+
+    Q2 -. "Consume" .-> M
+    C == "6. nlp_completed" ==> Q3
+
+    Q3 -. "Consume" .-> IDX
+    IDX == "7. Upsert Tensors" ==> PGV
+    IDX -. "Update Status" .-> PG
+
+    %% IA Operations
+    RAG -. "Semantic/BM25 Search" .-> PGV
+    COMP -. "Rule Matching" .-> PGV
+```
+
+---
 Cette arborescence annotée décrit chaque composant du projet pour faciliter la compréhension globale de l'architecture par un modèle d'IA ou un nouveau développeur.
 
 ```text

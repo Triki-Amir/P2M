@@ -82,6 +82,7 @@ class HybridRetriever:
         """
         Main entry point. Returns fused, ranked SourceChunk list.
         """
+        logger.info(f"HybridRetriever running search for query: '{query}'")
         # 1. Embed query
         query_vector = await self.embed_fn(query)
         vector_str = self._format_vector(query_vector)

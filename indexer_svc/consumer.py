@@ -19,6 +19,7 @@ import indexer_svc.app.config as settings
 from indexer_svc.app.embedder import Embedder
 from indexer_svc.app.store import VectorStore
 from shared.models import NlpChunk
+from indexer_svc.publisher import trigger_compliance_task
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,7 @@ class IndexerConsumer:
 
         self.connection_pool: Optional[Pool] = None
         self.channel_pool: Optional[Pool] = None
+        self.consume_channel: Optional[aio_pika.Channel] = None
         self.consumer_tag: Optional[str] = None
         self.running = False
 
@@ -71,40 +73,41 @@ class IndexerConsumer:
         self.connection_pool = Pool(self._create_connection, max_size=5)
         self.channel_pool = Pool(self._create_channel, max_size=20)
 
-        async with self.channel_pool.acquire() as channel:
-            # DLX / DLQ
-            dlx = await channel.declare_exchange(
-                f"{settings.INDEXER_QUEUE}.dlx",
-                aio_pika.ExchangeType.DIRECT,
-                durable=True,
-            )
-            dlq = await channel.declare_queue(
-                f"{settings.INDEXER_QUEUE}.dlq", durable=True
-            )
-            await dlq.bind(dlx, routing_key=settings.INDEXER_QUEUE)
+        self.consume_channel = await self._create_channel()
 
-            # Main queue
-            queue = await channel.declare_queue(
-                settings.INDEXER_QUEUE,
-                durable=True,
-                arguments={
-                    "x-message-ttl": 3_600_000,
-                    "x-max-length": 10_000,
-                    "x-dead-letter-exchange": f"{settings.INDEXER_QUEUE}.dlx",
-                    "x-dead-letter-routing-key": settings.INDEXER_QUEUE,
-                },
-            )
+        # DLX / DLQ
+        dlx = await self.consume_channel.declare_exchange(
+            f"{settings.INDEXER_QUEUE}.dlx",
+            aio_pika.ExchangeType.DIRECT,
+            durable=True,
+        )
+        dlq = await self.consume_channel.declare_queue(
+            f"{settings.INDEXER_QUEUE}.dlq", durable=True
+        )
+        await dlq.bind(dlx, routing_key=settings.INDEXER_QUEUE)
 
-            self.consumer_tag = await queue.consume(self._on_message, no_ack=False)
-            logger.info("IndexerConsumer: listening on '%s'", settings.INDEXER_QUEUE)
+        # Main queue
+        queue = await self.consume_channel.declare_queue(
+            settings.INDEXER_QUEUE,
+            durable=True,
+            arguments={
+                "x-message-ttl": 3_600_000,
+                "x-max-length": 10_000,
+                "x-dead-letter-exchange": f"{settings.INDEXER_QUEUE}.dlx",
+                "x-dead-letter-routing-key": settings.INDEXER_QUEUE,
+            },
+        )
+
+        self.consumer_tag = await queue.consume(self._on_message, no_ack=False)
+        logger.info("IndexerConsumer: listening on '%s'", settings.INDEXER_QUEUE)
 
     async def stop(self):
         logger.info("IndexerConsumer: shutting down...")
         self.running = False
         try:
-            if self.consumer_tag:
-                async with self.channel_pool.acquire() as channel:
-                    await channel.cancel(self.consumer_tag)
+            if self.consumer_tag and self.consume_channel:
+                await self.consume_channel.cancel(self.consumer_tag)
+                await self.consume_channel.close()
         except Exception as exc:
             logger.warning("IndexerConsumer: error cancelling tag: %s", exc)
 
@@ -112,8 +115,7 @@ class IndexerConsumer:
             await self.channel_pool.close()
         if self.connection_pool:
             await self.connection_pool.close()
-        logger.info("IndexerConsumer: stopped cleanly.")
-
+        
     # ── Message handler ───────────────────────────────────────────────────────
 
     async def _on_message(self, message: IncomingMessage):
@@ -161,7 +163,7 @@ class IndexerConsumer:
 
             # 4. Embed + store in pgvector (blocking — run in thread pool)
             try:
-                await asyncio.wait_for(
+                doc_uuid, db_tenant_id = await asyncio.wait_for(
                     asyncio.get_event_loop().run_in_executor(
                         None,
                         self._embed_and_store,
@@ -182,7 +184,14 @@ class IndexerConsumer:
                 await self._retry_or_dlq(message, body)
                 return
 
-            # 5. Update PostgreSQL → indexed (pipeline complete ✅)
+            # 5. Trigger compliance if valid
+            if doc_uuid and db_tenant_id:
+                try:
+                    await asyncio.to_thread(trigger_compliance_task, str(doc_uuid), str(db_tenant_id))
+                except Exception as e:
+                    logger.error("[indexer] Failed to trigger compliance task: %s", e)
+
+            # 6. Update PostgreSQL → indexed (pipeline complete ✅)
             await self._update_status(document_id, "indexed")
             logger.info("IndexerConsumer: doc=%s fully indexed. Pipeline complete ✅", document_id)
 
@@ -193,7 +202,7 @@ class IndexerConsumer:
         document_id: str,
         filename: str,
         chunks: list[NlpChunk],
-    ) -> None:
+    ) -> tuple[str | None, str | None]:
         """Embed chunks and upsert into pgvector. Runs synchronously in a thread."""
         texts     = [c.text_en for c in chunks]
         chunk_ids = [c.chunk_id for c in chunks]
@@ -201,10 +210,11 @@ class IndexerConsumer:
         embeddings = self.embedder.embed(texts, chunk_ids)
 
         with VectorStore(dsn=settings.DB_DSN) as store:
-            n = store.upsert_chunks(chunks, embeddings, doc_id=filename)
+            n, doc_uuid, tenant_id = store.upsert_chunks(chunks, embeddings, doc_id=filename)
             logger.info(
                 "IndexerConsumer: upserted %d chunks for doc=%s", n, document_id
             )
+            return doc_uuid, tenant_id
 
     # ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -215,23 +225,25 @@ class IndexerConsumer:
         error: str | None = None,
     ) -> None:
         async with self.db_pool.acquire() as conn:
+            import uuid
+            doc_uuid = uuid.UUID(document_id)
             if error:
                 await conn.execute(
                     """
                     UPDATE documents
-                    SET pipeline_status = $1, error_message = $2, updated_at = now()
+                    SET status = $1, metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object('error', $2::text), updated_at = now()
                     WHERE id = $3
                     """,
-                    status, error, document_id,
+                    status, error, doc_uuid,
                 )
             else:
                 await conn.execute(
                     """
                     UPDATE documents
-                    SET pipeline_status = $1, updated_at = now()
+                    SET status = $1, updated_at = now()
                     WHERE id = $2
                     """,
-                    status, document_id,
+                    status, doc_uuid,
                 )
 
     async def _retry_or_dlq(
@@ -254,3 +266,38 @@ class IndexerConsumer:
         else:
             logger.error("IndexerConsumer: max retries reached → DLQ.")
             await message.reject(requeue=False)
+
+import asyncio
+import asyncpg
+    
+async def main():
+    import os
+    import logging
+    from dotenv import load_dotenv
+    load_dotenv()
+    
+    logging.basicConfig(level=logging.INFO)
+    print("Starting Indexer RabbitMQ Consumer...")
+
+    dsn = os.getenv("DATABASE_URL", "postgresql://postgres:123456789@localhost:5432/postgres")
+    if dsn and dsn.startswith("postgresql://"):
+        dsn = dsn.replace("postgresql://", "postgres://", 1)
+        
+    db_pool = await asyncpg.create_pool(dsn)
+
+    consumer = IndexerConsumer(db_pool)
+    await consumer.start()
+    
+    try:
+        await asyncio.Future()
+    except asyncio.CancelledError:
+        pass
+    finally:
+        await db_pool.close()
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Interrupted by user")
+

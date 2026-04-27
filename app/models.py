@@ -298,4 +298,34 @@ class User(Base):
     def __repr__(self):
         return f"<User {self.email}>"
 
+class DocumentCompliance(Base):
+    __tablename__ = "document_compliance"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        server_default=text("uuid_generate_v4()")
+    )
+    document_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("documents.id", ondelete="CASCADE"),
+        nullable=False,
+        unique=True
+    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("tenants.id", ondelete="CASCADE"),
+        nullable=False
+    )
+    
+    extracted_criteria: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    compliance_details: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    is_compliant: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    
+    analyzed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=text("now()"),
+    )
+
 

@@ -76,7 +76,8 @@ TABLE_CONTEXT_TYPES: set[str] = {"body_text", "title"}
 OUTPUT_EVENT: str = "ocr_completed"
 
 # ── RabbitMQ ──────────────────────────────────────────────────────────────────
-
+from dotenv import load_dotenv
+load_dotenv()
 RABBITMQ_URL   = os.getenv("RABBITMQ_URL")
 EVENT_EXCHANGE = os.getenv("EVENT_EXCHANGE", "p2m_events")
 OCR_QUEUE      = os.getenv("OCR_QUEUE",      "ocr_queue")
