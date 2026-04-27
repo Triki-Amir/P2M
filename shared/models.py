@@ -89,6 +89,10 @@ class OcrDocument(BaseModel):
         default=None,
         description="Detected dominant language: 'fr' | 'ar' | 'en' | None"
     )
+    file_size: Optional[int] = Field(
+        default=None,
+        description="Size of the original PDF file in bytes."
+    )
     pages: list[OcrPage]
 
 
@@ -127,7 +131,8 @@ class NlpDocument(BaseModel):
         description=(
             "Document-level metadata extracted before chunking. "
             "Keys: title, nit_number, organization, client, location, "
-            "deadline (ISO 8601), budget, contact_email, contact_phone."
+            "deadline (ISO 8601), budget, contact_email, contact_phone, "
+            "num_pages, file_size (bytes)."
         ),
     )
     chunks: list[NlpChunk]
