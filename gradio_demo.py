@@ -53,8 +53,8 @@ def analyze_ocr(uploaded_file, pasted_json: str):
                     {
                         "page_index": page.page_index,
                         "block_index": block_index,
-                        "type": block.type,
-                        "text_preview": block.text[:180],
+                        "type": block.block_label,
+                        "text_preview": block.plain_text[:180],
                         "section_title": block.section_title,
                         "context": block.context,
                     }
