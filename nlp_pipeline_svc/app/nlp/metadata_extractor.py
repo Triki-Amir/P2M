@@ -165,7 +165,8 @@ def extract_metadata(ocr_doc) -> dict:
 
     Returns dict with keys:
         title, nit_number, organization, client, location,
-        deadline, budget, contact_email, contact_phone
+        deadline, budget, contact_email, contact_phone,
+        num_pages, file_size
     """
     # Collect text from NLP-relevant blocks (first 5 pages max)
     lines = []
@@ -176,7 +177,10 @@ def extract_metadata(ocr_doc) -> dict:
 
     full_text = "\n".join(lines)
     if not full_text:
-        return {}
+        result: dict = {"num_pages": len(ocr_doc.pages)}
+        if ocr_doc.file_size is not None:
+            result["file_size"] = ocr_doc.file_size
+        return result
 
     # Stage 1
     meta = _regex_extract(full_text)
@@ -198,4 +202,10 @@ def extract_metadata(ocr_doc) -> dict:
     }
 
     logger.info("[metadata_extractor] extracted: %s", final)
+
+    # Append file-level metadata derived from the OcrDocument itself
+    final["num_pages"] = len(ocr_doc.pages)
+    if ocr_doc.file_size is not None:
+        final["file_size"] = ocr_doc.file_size
+
     return final

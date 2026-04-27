@@ -76,9 +76,14 @@ def run_indexer() -> int:
             doc_id=nlp_doc.doc_id,
         )
 
+        # 5. Persist NLP-extracted metadata (title, num_pages, file_size, …)
+        #    back to the documents table so the API can serve it.
+        if document_id and nlp_doc.doc_metadata:
+            store.update_document_metadata(document_id, nlp_doc.doc_metadata)
+
     logger.info("[indexer] Done — %d chunks indexed for '%s'.", n, nlp_doc.doc_id)
     
-    # 5. Trigger compliance service via RabbitMQ event
+    # 6. Trigger compliance service via RabbitMQ event
     if document_id and tenant_id:
         try:
             # We import the publisher only if needed
