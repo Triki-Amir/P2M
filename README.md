@@ -1,126 +1,110 @@
-﻿# P2M - Arborescence du projet
-### Vue d'ensemble (Graphe de la Pipeline)
+# P2M - Document Processing & RAG Platform
 
-```mermaid
-graph TD
-    %% Configuration du Thème (Design dynamique)
-    classDef client fill:#3b82f6,stroke:#1e3a8a,stroke-width:2px,color:#fff,rx:8px,ry:8px;
-    classDef api fill:#8b5cf6,stroke:#581c87,stroke-width:2px,color:#fff,rx:5px,ry:5px;
-    classDef mq fill:#f59e0b,stroke:#b45309,stroke-width:3px,color:#fff,stroke-dasharray: 5 5;
-    classDef microservice fill:#10b981,stroke:#065f46,stroke-width:2px,color:#fff,rx:10px,ry:10px;
-    classDef db fill:#ef4444,stroke:#7f1d1d,stroke-width:2px,color:#fff,rx:15px,ry:15px;
-    classDef ai fill:#ec4899,stroke:#701a75,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+## 1. Architecture Overview
+P2M is a microservices-based Document Processing and Retrieval-Augmented Generation (RAG) platform. The system follows an event-driven architecture utilizing RabbitMQ as the central message broker, PostgreSQL (with pgvector) for relational data and embeddings, MinIO for S3-compatible document storage, and Redis for caching and chat history management.
 
-    %% Entités
-    subgraph Frontend ["🟢 Interface Utilisateur"]
-        UI["💻 Frontend (React/Vite)"]:::client
-    end
+**Core Data Flow:**
+1. **Ingestion**: A user uploads a document through the Frontend/API. The document is saved to MinIO, and a metadata record is created in PostgreSQL. An `ocr_task` event is published to RabbitMQ.
+2. **OCR & Extraction**: The OCR microservice picks up the message, downloads the document from MinIO, extracts text/images using local models or the PaddleOCR API, and publishes an `nlp_task` event.
+3. **NLP Structuring**: The NLP microservice processes the raw text, cleans it, segments it, and publishes an `indexer_task` event.
+4. **Indexing**: The Indexer microservice receives the cleaned chunks, interacts with an embedding model to generate vector embeddings, and stores these into the Postgres `pgvector` tables.
+5. **RAG & Chat**: The RAG service retrieves matching context from PostgreSQL via vector similarity search and streams answers to the client using WebSockets.
 
-    subgraph EntryPoint ["🔵 Couche d'Entrée & Auth"]
-        API["🚀 FastAPI (Upload & Auth)"]:::api
-    end
+---
 
-    subgraph EventBus ["🟠 Message Broker (RabbitMQ)"]
-        Q1(("ocr_queue")):::mq
-        Q2(("nlp_queue")):::mq
-        Q3(("indexer_queue")):::mq
-    end
+## 2. Services: Roles and Details
 
-    subgraph Pipeline ["🟢 Document Processing Pipeline"]
-        OCR["👁️ OCR Service (PaddleOCR)"]:::microservice
-        
-        subgraph NLP ["🧠 NLP Service (Hybride)"]
-            M["Metadata LLM/Regex"] 
-            T["Translation"] 
-            C["Semantic Chunker"]
-            M -.-> T -.-> C
-        end
-        class M,T,C microservice
-        
-        IDX["⚙️ Indexer Service"]:::microservice
-    end
+| Service | Role & Responsibility | Tech Stack | Port |
+| :--- | :--- | :--- | :--- |
+| **Frontend** | User Interface for uploading documents and chatting with the AI. | React, Vite, TailwindCSS | `5173` |
+| **Ingestion API**| Entry point for file uploads, DB metadata creation, and triggering the pipeline. | Python, FastAPI, SQLAlchemy | `8000` |
+| **OCR Service** | Asynchronous worker that performs Optical Character Recognition on uploaded documents. | Python, PaddleOCR | N/A |
+| **NLP Service** | Asynchronous worker that processes OCR output text, structures, and cleans it. | Python, Spacy/NLTK | N/A |
+| **Indexer Service**| Asynchronous worker that chunks and embeds text, pushing to pgvector database. | Python, LangChain, HuggingFace | N/A |
+| **RAG Service** | WebSocket API providing context-aware answers to user queries. | Python, FastAPI WS, Ollama | `8001` |
+| **Infrastructure** | Database (`5432`), RabbitMQ (`5672`), MinIO (`9000`/`9001`), Redis (`6379`) | Docker | Various |
 
-    subgraph Databases ["🔴 Persistance des Données"]
-        MinIO[("📦 MinIO: PDF Storage")]:::db
-        PG[("🗄️ PostgreSQL: Users")]:::db
-        PGV[("📊 pgvector: Chunks")]:::db
-    end
+---
 
-    subgraph SmartLayer ["🟣 Couche Intelligente (Smart Layer)"]
-        COMP["✅ Compliance Service"]:::ai
-        RAG["🤖 RAG Service (Ollama)"]:::ai
-    end
+## 3. How to Run It From Scratch
 
-    %% Relations (Cheminement du document)
-    UI == 1. Upload PDF ==> API
-    UI <== 💬 WebSocket Chat ==> RAG
+You will need Docker Desktop, Python 3.10+, Node 18+, and Ollama installed. Open **separate terminals** for each of the following components to run them concurrently.
 
-    API == "2. Save PDF" ==> MinIO
-    API == "3. Metadata" ==> PG
-    API == "4. Publisher" ==> Q1
+### Terminal 1: Infrastructure
+```bash
+docker-compose -f postgres_server/docker-compose.yml up -d
+docker-compose -f minio_server/docker-compose.yml up -d
+docker-compose -f rabbitmq_server/docker-compose.yml up -d
+docker-compose -f redis_server/docker-compose.yml up -d
+```
 
-    Q1 -. "Consume" .-> OCR
-    OCR -. "Read PDF" .-> MinIO
-    OCR == "5. ocr_completed" ==> Q2
+### Terminal 2: Ingestion Service (API)
+```powershell
+.\.venv\Scripts\Activate.ps1
+cd ingestion_service
+python start_api.py
+```
 
-    Q2 -. "Consume" .-> M
-    C == "6. nlp_completed" ==> Q3
+### Terminal 3: OCR Service
+```powershell
+.\.venv\Scripts\Activate.ps1
+cd ocr_service
+python consumer.py
+```
 
-    Q3 -. "Consume" .-> IDX
-    IDX == "7. Upsert Tensors" ==> PGV
-    IDX -. "Update Status" .-> PG
+### Terminal 4: NLP Pipeline Service
+```powershell
+.\.venv\Scripts\Activate.ps1
+cd nlp_pipeline_svc
+python consumer.py
+```
 
-    %% IA Operations
-    RAG -. "Semantic/BM25 Search" .-> PGV
-    COMP -. "Rule Matching" .-> PGV
+### Terminal 5: Indexer Service
+```powershell
+.\.venv\Scripts\Activate.ps1
+cd indexer_svc
+python consumer.py
+```
+
+### Terminal 6: RAG Service (Chat WebSocket)
+```powershell
+.\.venv\Scripts\Activate.ps1
+cd rag_service
+python start_rag.py
+```
+
+### Terminal 7: Frontend Application
+```powershell
+cd front-end
+npm install
+npm run dev
+```
+
+### Terminal 8: Compliance Service (Optional)
+```powershell
+.\.venv\Scripts\Activate.ps1
+cd compliance_service
+python consumer.py
 ```
 
 ---
-Cette arborescence annotée décrit chaque composant du projet pour faciliter la compréhension globale de l'architecture par un modèle d'IA ou un nouveau développeur.
+
+## 4. Project Skeleton
 
 ```text
 P2M/
-├── app/                              # Application API backend principale gérant la logique métier et la BDD
-│   ├── migrations/                   # Scripts de migration de base de données (Alembic)
-│   ├── api.py                        # Définition des endpoints REST de l'API principale
-│   ├── database.py                   # Configuration de la connexion à la base de données PostgreSQL
-│   ├── models.py                     # Définition des modèles de données (ORM SQLAlchemy)
-│   └── start_api.py                  # Script de démarrage du serveur API backend
-├── front-end/                        # Interface utilisateur web
-│   ├── src/                          # Code source React/TypeScript de l'application front-end
-│   ├── package.json                  # Dépendances et scripts de build du front-end
-│   └── vite.config.ts                # Configuration du bundler Vite pour le front-end
-├── indexer_svc/                      # Microservice d'indexation vectorielle des documents
-│   ├── app/embedder.py               # Génération des embeddings vectoriels depuis le texte
-│   ├── app/main.py                   # Point d'entrée de l'API du service d'indexation
-│   └── app/store.py                  # Logique d'insertion des vecteurs dans PostgreSQL/pgvector
-├── minio_server/                     # Configuration du stockage d'objets (documents bruts)
-│   ├── minio-backend/server.js       # Serveur Node.js gérant les uploads de PDF vers MinIO
-│   └── docker-compose.yml            # Description du conteneur MinIO
-├── nlp_pipeline_svc/                 # Microservice de traitement du langage naturel (NLP)
-│   ├── app/nlp/chunker.py            # Découpage du texte en segments pour l'indexation RAG
-│   ├── app/nlp/cleaning.py           # Nettoyage et normalisation des textes extraits
-│   └── app/pipeline.py               # Orchestration des étapes de transformation NLP
-├── ocr_service/                      # Microservice d'extraction de texte (OCR) depuis les PDFs
-│   ├── paddle_ocr.py                 # Implémentation du moteur OCR via PaddleOCR
-│   ├── pdf_to_images.py              # Conversion des pages PDF en images pour traitement OCR
-│   └── main.py                       # Point d'entrée de l'API / worker de l'OCR
-├── postgres_server/                  # Base de données relationnelle et vectorielle (pgvector)
-│   ├── init/                         # Scripts SQL d'initialisation des tables et schémas
-│   └── docker-compose.yml            # Description du conteneur PostgreSQL
-├── rabbitmq_server/                  # Courtier de messages pour l'architecture événementielle
-│   ├── consumers/ocr_services.py     # Worker consommant les tâches OCR depuis la file d'attente
-│   └── Producers/ingestion.py        # Envoie des événements d'ingestion de nouveaux documents
-├── rag_service/                      # Microservice RAG (Retrieval-Augmented Generation) pour le chat
-│   ├── retriever.py                  # Recherche sémantique de contexte dans la BDD vectorielle
-│   ├── generator.py                  # Génération de réponses IA avec le LLM basé sur le contexte
-│   ├── websocket_handler.py          # Gestion des connexions WebSocket pour le chat en temps réel
-│   └── start_rag.py                  # Point d'entrée du service RAG
-├── redis_server/                     # Base de données en mémoire pour le cache et les sessions
-├── shared/                           # Code commun partagé entre les différents microservices Python
-│   ├── event_bus.py                  # Abstraction de la communication asynchrone via RabbitMQ
-│   └── models.py                     # Modèles Pydantic partagés (contrats d'interfaces)
-├── ARCHITECTURE.md                   # Documentation détaillée sur l'architecture globale
-├── QUICK_START.md                    # Guide rapide pour l'installation, le build et le lancement
-└── run_pipeline.py                   # Script global d'exécution complète d'un pipeline de test
++-- .env                       # Root environment parameters
++-- README.md                  # Main Architecture and Setup Guide (This file)
++-- app/                       # Shared modules and models
++-- front-end/                 # React UI application
++-- ingestion_service/         # REST API for File Upload & Metadata
++-- ocr_service/               # OCR microservice worker
++-- nlp_pipeline_svc/          # Text structuring microservice worker
++-- indexer_svc/               # Embedding microservice worker
++-- rag_service/               # RAG Query & WebSocket server
++-- compliance_service/        # Regulatory check service
++-- postgres_server/           # PostgreSQL / pgvector config
++-- minio_server/              # MinIO config
++-- rabbitmq_server/           # RabbitMQ config
++-- redis_server/              # Redis config
 ```
