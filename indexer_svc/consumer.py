@@ -55,7 +55,7 @@ class IndexerConsumer:
 
     async def _create_connection(self) -> aio_pika.RobustConnection:
         return await connect_robust(
-            settings.RABBITMQ_URL, timeout=30, reconnect_interval=5
+            settings.RABBITMQ_URL, timeout=30, reconnect_interval=5, heartbeat=3600
         )
 
     async def _create_channel(self) -> aio_pika.Channel:

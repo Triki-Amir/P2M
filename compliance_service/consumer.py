@@ -48,7 +48,12 @@ async def process_message(message: aio_pika.IncomingMessage):
             raise
 
 async def start_consumer():
-    connection = await aio_pika.connect_robust(RABBITMQ_URL)
+    # Increase heartbeat to prevent aiormq from dropping the connection during long LLM inferences
+    connection = await aio_pika.connect_robust(
+        RABBITMQ_URL,
+        heartbeat=3600,  # 1 hour
+        timeout=60
+    )
     channel = await connection.channel()
     await channel.set_qos(prefetch_count=1)
     queue = await channel.declare_queue(QUEUE_NAME, durable=True)

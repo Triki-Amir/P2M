@@ -48,22 +48,19 @@ python start_api.py
 ### Terminal 3: OCR Service
 ```powershell
 .\.venv\Scripts\Activate.ps1
-cd ocr_service
-python consumer.py
+python -m ocr_service.consumer
 ```
 
 ### Terminal 4: NLP Pipeline Service
 ```powershell
 .\.venv\Scripts\Activate.ps1
-cd nlp_pipeline_svc
-python consumer.py
+python -m nlp_pipeline_svc.consumer
 ```
 
 ### Terminal 5: Indexer Service
 ```powershell
 .\.venv\Scripts\Activate.ps1
-cd indexer_svc
-python consumer.py
+python -m indexer_svc.consumer
 ```
 
 ### Terminal 6: RAG Service (Chat WebSocket)
@@ -83,8 +80,7 @@ npm run dev
 ### Terminal 8: Compliance Service (Optional)
 ```powershell
 .\.venv\Scripts\Activate.ps1
-cd compliance_service
-python consumer.py
+python -m compliance_service.consumer
 ```
 
 ---

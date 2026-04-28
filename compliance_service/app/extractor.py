@@ -12,9 +12,9 @@ logger = logging.getLogger(__name__)
 # Constants for Ollama (or other LLM endpoint)
 LLM_URL = os.getenv("LLM_URL", "http://localhost:11434/api/generate")
 # It's better to use a model that outputs json reliably like llama3 or similar
-MODEL_NAME = os.getenv("COMPLIANCE_LLM_MODEL", "llama3")
+MODEL_NAME = os.getenv("COMPLIANCE_LLM_MODEL", "deepseek-v3.1:671b-cloud")
 
-WINDOW_SIZE = 5
+WINDOW_SIZE = 20
 
 EXTRACTION_PROMPT_TEMPLATE = """Tu es un expert en analyse de marchés publics. À partir des extraits de texte suivants, extrais les critères d'éligibilité. Si une information est absente, utilise 'null'. Réponds uniquement en JSON valide.
 
@@ -51,7 +51,7 @@ Extractions :
 """
 
 async def call_llm(prompt: str) -> dict:
-    """Async call to local Ollama for JSON extraction."""
+    """Async call to Ollama for JSON extraction."""
     payload = {
         "model": MODEL_NAME,
         "prompt": prompt,
@@ -64,7 +64,27 @@ async def call_llm(prompt: str) -> dict:
             response = await client.post(LLM_URL, json=payload, timeout=60.0)
             response.raise_for_status()
             data = response.json()
+            
+            if "error" in data:
+                logger.error(f"LLM returned an error: {data['error']}")
+                return {}
+                
             result_text = data.get("response", "")
+            
+            if result_text:
+                result_text = result_text.strip()
+                if result_text.startswith("```json"):
+                    result_text = result_text[7:]
+                elif result_text.startswith("```"):
+                    result_text = result_text[3:]
+                if result_text.endswith("```"):
+                    result_text = result_text[:-3]
+                result_text = result_text.strip()
+
+            if not result_text:
+                logger.error(f"LLM returned an empty response. Raw data: {data}")
+                return {}
+                
             return json.loads(result_text)
     except Exception as e:
         logger.error(f"Error calling LLM or parsing JSON: {e}")

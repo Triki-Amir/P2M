@@ -57,6 +57,7 @@ class OCRConsumer:
             settings.RABBITMQ_URL,
             timeout=30,
             reconnect_interval=5,
+            heartbeat=3600
         )
 
     async def _create_channel(self) -> aio_pika.Channel:
