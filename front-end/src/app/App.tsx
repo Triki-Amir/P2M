@@ -72,6 +72,8 @@ const App: React.FC = () => {
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [isLoadingTenders, setIsLoadingTenders] = useState(false);
 
+  const [unreadCount, setUnreadCount] = useState(0);
+
   const [tenantEmail, setTenantEmail] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -84,9 +86,27 @@ const App: React.FC = () => {
 
   const API_BASE_URL = (import.meta as ImportMeta & { env?: Record<string, string> }).env?.VITE_API_URL || 'http://localhost:8000';
 
+  const fetchUnreadCount = async () => {
+    try {
+      const tenantStr = localStorage.getItem('tenant');
+      if (!tenantStr) return;
+      const tenant = JSON.parse(tenantStr);
+      const res = await fetch(`${API_BASE_URL}/notifications/by-tenant/${tenant.id}/unread-count`);
+      if (res.ok) {
+        const data = await res.json();
+        setUnreadCount(data.count ?? 0);
+      }
+    } catch {
+      // silent – don't disrupt UX
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchTenders();
+      fetchUnreadCount();
+      const interval = setInterval(fetchUnreadCount, 30_000);
+      return () => clearInterval(interval);
     }
   }, [isAuthenticated]);
 
@@ -403,7 +423,8 @@ const App: React.FC = () => {
       <main className="pl-64 flex flex-col min-h-screen">
         <Navbar 
           onProfileClick={() => setActiveTab('profile')} 
-          onNotificationsClick={() => setActiveTab('notifications')}
+          onNotificationsClick={() => { setActiveTab('notifications'); setUnreadCount(0); }}
+          unreadCount={unreadCount}
         />
         
         <div className="flex-1 p-8 max-w-7xl mx-auto w-full">

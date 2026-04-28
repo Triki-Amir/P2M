@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Search, Bell, User, ChevronDown } from 'lucide-react';
+import { Search, Bell, ChevronDown } from 'lucide-react';
 
 interface NavbarProps {
   onProfileClick?: () => void;
   onNotificationsClick?: () => void;
+  unreadCount?: number;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onNotificationsClick }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onNotificationsClick, unreadCount = 0 }) => {
   const [user, setUser] = useState<{ full_name: string; email: string } | null>(null);
 
   useEffect(() => {
@@ -45,7 +46,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onNotificationsC
         >
           <div className="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative">
             <Bell className="w-5 h-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            {unreadCount > 0 ? (
+              <span className="absolute top-1 right-1 min-w-[16px] h-4 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full border-2 border-white px-0.5">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            ) : (
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            )}
           </div>
         </div>
 
