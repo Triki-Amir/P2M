@@ -3,7 +3,7 @@ import os
 import traceback
 import hashlib
 import secrets
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Optional
 from io import BytesIO
 from pathlib import Path
@@ -18,7 +18,7 @@ from pydantic import BaseModel, Field
 import fitz  # PyMuPDF
 
 from ingestion_service.database import get_db, engine, Base, SessionLocal
-from ingestion_service.models import Document, Tenant, User, Role
+from ingestion_service.models import Document, Tenant, User, Role, Notification
 from ingestion_service.producer import trigger_ingestion
 from run_pipeline import main as run_local_pipeline
 
@@ -93,6 +93,83 @@ def _verify_password(password: str, stored_hash: str) -> bool:
         return False
 
 
+def _create_notification_db(
+    db: Session,
+    tenant_id: uuid.UUID,
+    document_id: Optional[uuid.UUID],
+    type_: str,
+    category: str,
+    title: str,
+    description: str,
+):
+    """Create a notification, skipping silently if one already exists for this document+category."""
+    try:
+        if document_id is not None:
+            existing = db.query(Notification).filter(
+                Notification.document_id == document_id,
+                Notification.category == category,
+            ).first()
+            if existing:
+                return
+        notif = Notification(
+            tenant_id=tenant_id,
+            document_id=document_id,
+            type=type_,
+            category=category,
+            title=title,
+            description=description,
+        )
+        db.add(notif)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"Warning: Failed to create notification ({category}): {e}")
+
+
+def _check_deadline_notifications(tenant_id: uuid.UUID, db: Session):
+    """Check DocumentCompliance records for approaching deadlines and create warnings."""
+    from ingestion_service.models import DocumentCompliance
+    from datetime import date as date_type
+
+    try:
+        results = (
+            db.query(DocumentCompliance, Document)
+            .join(Document, DocumentCompliance.document_id == Document.id)
+            .filter(DocumentCompliance.tenant_id == tenant_id)
+            .all()
+        )
+        today = datetime.now(timezone.utc).date()
+        for comp, doc in results:
+            if not comp.extracted_criteria:
+                continue
+            deadline_str = comp.extracted_criteria.get("admin_criteria", {}).get("deadline")
+            if not deadline_str or deadline_str in ("null", None):
+                continue
+            try:
+                deadline_date = date_type.fromisoformat(str(deadline_str))
+                days_until = (deadline_date - today).days
+                if 0 <= days_until <= 2:
+                    if days_until == 0:
+                        desc = f'La date limite pour "{doc.filename}" est aujourd\'hui.'
+                    elif days_until == 1:
+                        desc = f'La date limite pour "{doc.filename}" est demain.'
+                    else:
+                        desc = f'La date limite pour "{doc.filename}" est dans {days_until} jours.'
+                    _create_notification_db(
+                        db=db,
+                        tenant_id=tenant_id,
+                        document_id=doc.id,
+                        type_="warning",
+                        category="deadline_warning",
+                        title="Date Limite Approchante",
+                        description=desc,
+                    )
+            except (ValueError, TypeError):
+                continue
+    except Exception as e:
+        print(f"Warning: Deadline notification check failed: {e}")
+
+
 def _update_document_status(doc_id: str, status: str, extra_metadata: Optional[dict] = None):
     db = SessionLocal()
     try:
@@ -108,6 +185,16 @@ def _update_document_status(doc_id: str, status: str, extra_metadata: Optional[d
                 **extra_metadata,
             }
         db.commit()
+        if status == "completed":
+            _create_notification_db(
+                db=db,
+                tenant_id=doc.tenant_id,
+                document_id=doc.id,
+                type_="info",
+                category="analyse_complete",
+                title="Analyse IA Terminée",
+                description=f'Votre document "{doc.filename}" a été traité.',
+            )
     finally:
         db.close()
 
@@ -230,8 +317,73 @@ def get_compliant_ao(tenant_id: uuid.UUID, db: Session = Depends(get_db)):
 
 # --- EOF ---
 
+# --- NOTIFICATIONS ---
 
-class SignupRequest(BaseModel):
+@app.get("/notifications/by-tenant/{tenant_id}", status_code=200)
+def get_notifications(tenant_id: uuid.UUID, db: Session = Depends(get_db)):
+    """Return all notifications for a tenant, checking for new deadline warnings first."""
+    _check_deadline_notifications(tenant_id, db)
+    notifications = (
+        db.query(Notification)
+        .filter(Notification.tenant_id == tenant_id)
+        .order_by(Notification.created_at.desc())
+        .all()
+    )
+    return [
+        {
+            "id": str(n.id),
+            "type": n.type,
+            "category": n.category,
+            "title": n.title,
+            "description": n.description,
+            "is_read": n.is_read,
+            "created_at": n.created_at.isoformat(),
+        }
+        for n in notifications
+    ]
+
+
+@app.get("/notifications/by-tenant/{tenant_id}/unread-count", status_code=200)
+def get_unread_count(tenant_id: uuid.UUID, db: Session = Depends(get_db)):
+    """Return the number of unread notifications for a tenant."""
+    count = (
+        db.query(Notification)
+        .filter(Notification.tenant_id == tenant_id, Notification.is_read == False)
+        .count()
+    )
+    return {"count": count}
+
+
+@app.patch("/notifications/{notification_id}/read", status_code=200)
+def mark_notification_read(notification_id: uuid.UUID, db: Session = Depends(get_db)):
+    """Mark a single notification as read."""
+    notif = db.query(Notification).filter(Notification.id == notification_id).first()
+    if not notif:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    notif.is_read = True
+    db.commit()
+    return {"message": "Marked as read"}
+
+
+@app.delete("/notifications/{notification_id}", status_code=200)
+def dismiss_notification(notification_id: uuid.UUID, db: Session = Depends(get_db)):
+    """Delete (dismiss) a single notification."""
+    notif = db.query(Notification).filter(Notification.id == notification_id).first()
+    if not notif:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    db.delete(notif)
+    db.commit()
+    return {"message": "Notification dismissed"}
+
+
+@app.delete("/notifications/by-tenant/{tenant_id}", status_code=200)
+def clear_all_notifications(tenant_id: uuid.UUID, db: Session = Depends(get_db)):
+    """Delete all notifications for a tenant."""
+    db.query(Notification).filter(Notification.tenant_id == tenant_id).delete()
+    db.commit()
+    return {"message": "All notifications cleared"}
+
+
     tenant_name: str = Field(min_length=2, max_length=255)
     tenant_email: str = Field(min_length=3, max_length=255)
     full_name: str = Field(min_length=2, max_length=255)

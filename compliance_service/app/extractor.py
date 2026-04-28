@@ -281,6 +281,48 @@ async def run_compliance_for_document(doc_id: str, tenant_db_id: str) -> None:
 
         await asyncio.to_thread(save_compliance)
         logger.info(f"Compliance check completed for document {doc_id}.")
+
+        # 5b. Create compliance notification
+        def create_compliance_notification():
+            try:
+                from ingestion_service.models import Notification
+                notif_db = SessionLocal()
+                try:
+                    existing = notif_db.query(Notification).filter(
+                        Notification.document_id == doc_entry.id,
+                        Notification.category == "compliance_result",
+                    ).first()
+                    if existing:
+                        return
+                    org_name = (
+                        doc_entry.doc_metadata.get("organization_name", doc_entry.filename)
+                        if doc_entry.doc_metadata
+                        else doc_entry.filename
+                    )
+                    if comparison_results["is_compliant"]:
+                        notif_type = "success"
+                        notif_title = "Proposition Acceptée"
+                        notif_desc = f'L\'appel d\'offres pour "{org_name}" correspond à votre profil.'
+                    else:
+                        notif_type = "info"
+                        notif_title = "Nouvel Appel d'Offres Publié"
+                        notif_desc = f'Un nouvel appel d\'offres "{org_name}" a été analysé.'
+                    notif = Notification(
+                        tenant_id=tenant.id,
+                        document_id=doc_entry.id,
+                        type=notif_type,
+                        category="compliance_result",
+                        title=notif_title,
+                        description=notif_desc,
+                    )
+                    notif_db.add(notif)
+                    notif_db.commit()
+                finally:
+                    notif_db.close()
+            except Exception as e:
+                logger.error(f"Failed to create compliance notification: {e}")
+
+        await asyncio.to_thread(create_compliance_notification)
         
         # 6. Publish event back to UI with Appel d'Offres metadata
         try:

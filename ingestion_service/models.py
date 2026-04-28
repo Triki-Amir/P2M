@@ -298,6 +298,47 @@ class User(Base):
     def __repr__(self):
         return f"<User {self.email}>"
 
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        server_default=text("uuid_generate_v4()")
+    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("tenants.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True
+    )
+    document_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("documents.id", ondelete="CASCADE"),
+        nullable=True
+    )
+    type: Mapped[str] = mapped_column(String(20), nullable=False)      # 'info' | 'success' | 'warning'
+    category: Mapped[str] = mapped_column(String(50), nullable=False)  # for deduplication
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    is_read: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=text("now()"),
+        index=True
+    )
+
+    __table_args__ = (
+        UniqueConstraint("document_id", "category", name="uq_notification_doc_category"),
+        Index("ix_notifications_tenant_id", "tenant_id"),
+        Index("ix_notifications_is_read", "is_read"),
+    )
+
+    def __repr__(self):
+        return f"<Notification {self.category} for tenant {self.tenant_id}>"
+
+
 class DocumentCompliance(Base):
     __tablename__ = "document_compliance"
 
