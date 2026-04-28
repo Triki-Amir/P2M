@@ -15,6 +15,7 @@ from minio import Minio
 from minio.error import S3Error
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
+import fitz  # PyMuPDF
 
 from ingestion_service.database import get_db, engine, Base, SessionLocal
 from ingestion_service.models import Document, Tenant, User, Role
@@ -413,6 +414,16 @@ async def upload_document(
 
     # 2. Prepare Metadata
     file_content = await file.read()
+    
+    # 2.b Extract PDF metadata (page count)
+    page_count = 0
+    try:
+        pdf_stream = BytesIO(file_content)
+        with fitz.open(stream=pdf_stream, filetype="pdf") as doc:
+            page_count = len(doc)
+    except Exception as e:
+        print(f"Error extracting PDF metadata: {e}")
+
     timestamp = int(datetime.now(timezone.utc).timestamp() * 1000)
     storage_filename = f"{timestamp}-{file.filename or 'unnamed.pdf'}"
 
@@ -432,7 +443,10 @@ async def upload_document(
             mime_type=file.content_type,
             language=language,
             status="uploaded",
-            doc_metadata={}
+            doc_metadata={
+                "page_count": page_count,
+                "file_size_bytes": len(file_content)
+            }
         )
         db.add(new_doc)
         db.commit()
