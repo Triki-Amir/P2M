@@ -3,9 +3,10 @@ import { Search, Bell, User, ChevronDown } from 'lucide-react';
 
 interface NavbarProps {
   onProfileClick?: () => void;
+  onNotificationsClick?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onProfileClick }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onNotificationsClick }) => {
   const [user, setUser] = useState<{ full_name: string; email: string } | null>(null);
 
   useEffect(() => {
@@ -38,7 +39,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onProfileClick }) => {
       </div>
 
       <div className="flex items-center gap-6">
-        <div className="relative cursor-pointer group">
+        <div 
+          className="relative cursor-pointer group"
+          onClick={onNotificationsClick}
+        >
           <div className="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative">
             <Bell className="w-5 h-5" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>

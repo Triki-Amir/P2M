@@ -401,7 +401,10 @@ const App: React.FC = () => {
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       
       <main className="pl-64 flex flex-col min-h-screen">
-        <Navbar onProfileClick={() => setActiveTab('profile')} />
+        <Navbar 
+          onProfileClick={() => setActiveTab('profile')} 
+          onNotificationsClick={() => setActiveTab('notifications')}
+        />
         
         <div className="flex-1 p-8 max-w-7xl mx-auto w-full">
           {activeTab === 'dashboard' && renderDashboard()}
