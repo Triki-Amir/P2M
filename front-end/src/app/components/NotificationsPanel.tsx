@@ -43,8 +43,10 @@ export const NotificationsPanel: React.FC = () => {
     try {
       const res = await fetch(`${API_BASE_URL}/notifications/by-tenant/${tenantId}`);
       if (!res.ok) throw new Error('Impossible de charger les notifications');
-      const data: Notification[] = await res.json();
-      setNotifications(data);
+      const data = await res.json();
+      // Handle the { value: [...], Count: X } format from the API
+      const notificationsList = Array.isArray(data) ? data : (data.value || []);
+      setNotifications(notificationsList);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue');
     } finally {

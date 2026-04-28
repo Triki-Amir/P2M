@@ -301,12 +301,12 @@ async def run_compliance_for_document(doc_id: str, tenant_db_id: str) -> None:
                     )
                     if comparison_results["is_compliant"]:
                         notif_type = "success"
-                        notif_title = "Proposition Acceptée"
-                        notif_desc = f'L\'appel d\'offres pour "{org_name}" correspond à votre profil.'
+                        notif_title = "✅ Proposition Éligible"
+                        notif_desc = f'Félicitations ! Votre profil est 100% conforme pour l\'appel d\'offres "{org_name}".'
                     else:
                         notif_type = "info"
-                        notif_title = "Nouvel Appel d'Offres Publié"
-                        notif_desc = f'Un nouvel appel d\'offres "{org_name}" a été analysé.'
+                        notif_title = "📢 Appel d'Offres Analysé"
+                        notif_desc = f'L\'appel d\'offres "{org_name}" a été ajouté. Cliquez pour voir les détails de conformité.'
                     notif = Notification(
                         tenant_id=tenant.id,
                         document_id=doc_entry.id,

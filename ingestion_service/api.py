@@ -148,20 +148,36 @@ def _check_deadline_notifications(tenant_id: uuid.UUID, db: Session):
             try:
                 deadline_date = date_type.fromisoformat(str(deadline_str))
                 days_until = (deadline_date - today).days
-                if 0 <= days_until <= 2:
+                # Generate different notifications based on urgency
+                if 0 <= days_until <= 7:
                     if days_until == 0:
-                        desc = f'La date limite pour "{doc.filename}" est aujourd\'hui.'
+                        type_ = "warning"
+                        title = "🔥 Date Limite : Aujourd'hui !"
+                        desc = f'La date limite pour "{doc.filename}" est aujourd\'hui. Ne tardez pas !'
+                        category = "deadline_today"
                     elif days_until == 1:
+                        type_ = "warning"
+                        title = "⚠️ Date Limite : Demain"
                         desc = f'La date limite pour "{doc.filename}" est demain.'
-                    else:
+                        category = "deadline_tomorrow"
+                    elif days_until <= 3:
+                        type_ = "warning"
+                        title = "Urgent : Date Limite Approche"
                         desc = f'La date limite pour "{doc.filename}" est dans {days_until} jours.'
+                        category = f"deadline_{days_until}d"
+                    else:
+                        type_ = "info"
+                        title = "Rappel : Date Limite"
+                        desc = f'La date limite pour "{doc.filename}" est dans {days_until} jours.'
+                        category = f"deadline_{days_until}d"
+
                     _create_notification_db(
                         db=db,
                         tenant_id=tenant_id,
                         document_id=doc.id,
-                        type_="warning",
-                        category="deadline_warning",
-                        title="Date Limite Approchante",
+                        type_=type_,
+                        category=category,
+                        title=title,
                         description=desc,
                     )
             except (ValueError, TypeError):
@@ -384,6 +400,7 @@ def clear_all_notifications(tenant_id: uuid.UUID, db: Session = Depends(get_db))
     return {"message": "All notifications cleared"}
 
 
+class SignupRequest(BaseModel):
     tenant_name: str = Field(min_length=2, max_length=255)
     tenant_email: str = Field(min_length=3, max_length=255)
     full_name: str = Field(min_length=2, max_length=255)
