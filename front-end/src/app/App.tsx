@@ -423,7 +423,7 @@ const App: React.FC = () => {
       <main className="pl-64 flex flex-col min-h-screen">
         <Navbar 
           onProfileClick={() => setActiveTab('profile')} 
-          onNotificationsClick={() => { setActiveTab('notifications'); setUnreadCount(0); }}
+          onNotificationsClick={() => setActiveTab('notifications')}
           unreadCount={unreadCount}
         />
         
