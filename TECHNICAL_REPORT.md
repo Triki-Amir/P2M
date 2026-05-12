@@ -4,6 +4,27 @@
 
 P2M is a microservices platform for document ingestion, OCR, NLP processing, indexing, compliance evaluation, and RAG-based Q&A.
 
+```mermaid
+flowchart LR
+    U[User] --> FE[Frontend]
+    FE --> ING[Ingestion API]
+    ING --> MINIO[(MinIO)]
+    ING --> PG[(PostgreSQL + pgvector)]
+    ING --> Q1[[ocr_queue]]
+    Q1 --> OCR[OCR Service]
+    OCR --> Q2[[nlp_queue]]
+    Q2 --> NLP[NLP Service]
+    NLP --> Q3[[indexer_queue]]
+    Q3 --> IDX[Indexer Service]
+    IDX --> PG
+    IDX --> Q4[[compliance_queue]]
+    Q4 --> COMP[Compliance Service]
+    COMP --> PG
+    FE --> RAG[RAG Service]
+    RAG --> PG
+    RAG --> REDIS[(Redis)]
+```
+
 ### Core flow
 1. **Frontend** uploads a PDF to **Ingestion API**.
 2. **Ingestion API** stores file in **MinIO**, metadata in **PostgreSQL**, and publishes a task to **RabbitMQ**.
@@ -12,6 +33,12 @@ P2M is a microservices platform for document ingestion, OCR, NLP processing, ind
 5. **Indexer Service** consumes from `indexer_queue`, generates dense/sparse embeddings, stores chunks in PostgreSQL/pgvector, and triggers compliance.
 6. **Compliance Service** consumes from `compliance_queue`, extracts eligibility criteria with an LLM, compares against tenant profile, stores result, and emits UI event.
 7. **RAG Service** serves WebSocket chat; retrieves indexed chunks from PostgreSQL and generates responses via Ollama.
+
+### Pipeline explanation
+- The processing chain is fully asynchronous and queue-driven.
+- Stage progression is `ocr_queue` → `nlp_queue` → `indexer_queue` → `compliance_queue`.
+- Each microservice has one clear responsibility: OCR extraction, NLP structuring, embedding/indexing, then eligibility/compliance evaluation.
+- This pipeline design supports horizontal scaling, retries/DLQ handling, and resilient stage-by-stage recovery.
 
 ### Main shared infrastructure
 - **RabbitMQ**: async service-to-service messaging
