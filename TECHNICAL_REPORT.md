@@ -189,6 +189,73 @@ flowchart LR
 **Technologies**
 - Python, FastAPI WebSocket, asyncpg, pgvector, Ollama, LangChain Postgres memory
 
+**LaTeX / XeLaTeX explanation (copy-ready):**
+
+```latex
+\subsection{RAG Service (rag\_service)}
+\textbf{Goal:} answer user questions over one selected document using retrieval-augmented generation.
+
+\subsubsection{Execution mode (end-to-end)}
+\begin{enumerate}
+  \item The client opens a WebSocket connection to \texttt{/rag/ws}.
+  \item The client sends \texttt{document\_id} and \texttt{query}.
+  \item The pipeline retrieves relevant chunks from PostgreSQL.
+  \item The generator streams answer tokens from Ollama.
+  \item The service stores user/assistant turns for multi-turn context.
+\end{enumerate}
+
+\subsubsection{How the hybrid retriever is built}
+\textbf{Step 1 -- Dense semantic retrieval (pgvector):}
+\begin{itemize}
+  \item The query is embedded with \texttt{BAAI/bge-m3} (same model as indexing).
+  \item PostgreSQL \texttt{pgvector} search uses inner product (\texttt{<\#>}) to rank semantic similarity.
+\end{itemize}
+
+\textbf{Step 2 -- Sparse keyword retrieval (BM25-style FTS):}
+\begin{itemize}
+  \item PostgreSQL full-text search computes \texttt{ts\_rank\_cd(to\_tsvector, plainto\_tsquery)}.
+  \item This captures exact and lexical term overlap.
+\end{itemize}
+
+\textbf{Step 3 -- Fusion with Reciprocal Rank Fusion (RRF):}
+\[
+\mathrm{RRF}(d) = \sum_{i \in \{\text{semantic},\text{bm25}\}} \frac{1}{k + \mathrm{rank}_i(d)}
+\]
+\begin{itemize}
+  \item Chunks from both rankings are merged by \texttt{chunk\_id}.
+  \item Final chunks are sorted by descending RRF score.
+  \item This improves robustness versus using only one retriever.
+\end{itemize}
+
+\subsubsection{Tools and modules used inside the RAG service}
+\begin{itemize}
+  \item \textbf{API/Session layer:}
+  \begin{itemize}
+    \item \texttt{start\_rag.py} (FastAPI app, startup, health checks)
+    \item \texttt{websocket\_handler.py} (session lifecycle, message validation, event streaming)
+  \end{itemize}
+  \item \textbf{Orchestration layer:}
+  \begin{itemize}
+    \item \texttt{pipeline.py} (retrieve $\rightarrow$ build context $\rightarrow$ stream answer $\rightarrow$ persist memory)
+  \end{itemize}
+  \item \textbf{Retrieval layer:}
+  \begin{itemize}
+    \item \texttt{retriever.py} (semantic pgvector + BM25 full-text + RRF fusion)
+    \item \texttt{asyncpg} for PostgreSQL access
+  \end{itemize}
+  \item \textbf{Generation layer:}
+  \begin{itemize}
+    \item \texttt{generator.py} (streaming inference via Ollama HTTP API)
+    \item \texttt{httpx} for async streaming calls
+  \end{itemize}
+  \item \textbf{Memory layer:}
+  \begin{itemize}
+    \item \texttt{memory.py} with \texttt{langchain\_postgres.PostgresChatMessageHistory}
+    \item Sliding-window conversation memory stored in PostgreSQL
+  \end{itemize}
+\end{itemize}
+```
+
 ---
 
 ## 3. Shared Modules
