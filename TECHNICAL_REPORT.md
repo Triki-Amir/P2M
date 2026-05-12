@@ -208,7 +208,7 @@ flowchart LR
 \textbf{Step 1 -- Dense semantic retrieval (pgvector):}
 \begin{itemize}
   \item The query is embedded with \texttt{BAAI/bge-m3} (same model as indexing).
-  \item PostgreSQL \texttt{pgvector} search uses \texttt{<\#>} (negative inner product operator used as a distance metric).
+  \item PostgreSQL \texttt{pgvector} search uses \verb|<#>| (negative inner product operator used as a distance metric).
   \item Lower returned distance means higher semantic relevance.
 \end{itemize}
 
@@ -223,7 +223,7 @@ flowchart LR
 \mathrm{RRF}(d) = \sum_{i \in \{\text{semantic},\text{bm25}\}} \frac{1}{k + \mathrm{rank}_i(d)}
 \]
 \begin{itemize}
-  \item \(k\) is a smoothing constant; in this service \(\texttt{RRF\_K}=60\) by default.
+  \item \(k\) is a smoothing constant; in this service the default is \texttt{RRF\_K = 60}.
   \item Chunks from both rankings are merged by \texttt{chunk\_id}.
   \item Final chunks are sorted by descending RRF score.
   \item This improves robustness versus using only one retriever.
