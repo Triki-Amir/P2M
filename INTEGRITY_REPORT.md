@@ -33,6 +33,33 @@ This design improves automation, traceability, and scalability while decoupling 
 - **PostgreSQL + pgvector** centralizes structured and vectorized data.
 - **MinIO** stores source PDFs.
 
+```mermaid
+flowchart LR
+    U[User] --> FE[Frontend]
+    FE --> ING[Ingestion API]
+    ING --> MINIO[(MinIO)]
+    ING --> PG[(PostgreSQL + pgvector)]
+    ING --> Q1[[ocr_queue]]
+    Q1 --> OCR[OCR Service]
+    OCR --> Q2[[nlp_queue]]
+    Q2 --> NLP[NLP Service]
+    NLP --> Q3[[indexer_queue]]
+    Q3 --> IDX[Indexer Service]
+    IDX --> PG
+    IDX --> Q4[[compliance_queue]]
+    Q4 --> COMP[Compliance Service]
+    COMP --> PG
+    FE --> RAG[RAG Service]
+    RAG --> PG
+    RAG --> REDIS[(Redis)]
+```
+
+### Pipeline explanation
+- Upload starts in the frontend and ingestion API, where the file is stored and the first queue event is published.
+- The event-driven pipeline then advances in order: `ocr_queue` → `nlp_queue` → `indexer_queue` → `compliance_queue`.
+- Each worker consumes one queue, processes one concern, persists results/status, and publishes the next stage event.
+- This architecture improves integrity through clear boundaries, traceable transitions, and reduced coupling between services.
+
 ## 5. Interfaces
 
 ### User-facing interfaces

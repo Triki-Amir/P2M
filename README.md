@@ -3,12 +3,38 @@
 ## 1. Architecture Overview
 P2M is a microservices-based Document Processing and Retrieval-Augmented Generation (RAG) platform. The system follows an event-driven architecture utilizing RabbitMQ as the central message broker, PostgreSQL (with pgvector) for relational data and embeddings, MinIO for S3-compatible document storage, and Redis for caching and chat history management.
 
+```mermaid
+flowchart LR
+    U[User] --> FE[Frontend]
+    FE --> ING[Ingestion API]
+    ING --> MINIO[(MinIO)]
+    ING --> PG[(PostgreSQL + pgvector)]
+    ING --> Q1[[ocr_queue]]
+    Q1 --> OCR[OCR Service]
+    OCR --> Q2[[nlp_queue]]
+    Q2 --> NLP[NLP Service]
+    NLP --> Q3[[indexer_queue]]
+    Q3 --> IDX[Indexer Service]
+    IDX --> PG
+    IDX --> Q4[[compliance_queue]]
+    Q4 --> COMP[Compliance Service]
+    COMP --> PG
+    FE --> RAG[RAG Service]
+    RAG --> PG
+    RAG --> REDIS[(Redis)]
+```
+
 **Core Data Flow:**
 1. **Ingestion**: A user uploads a document through the Frontend/API. The document is saved to MinIO, and a metadata record is created in PostgreSQL. An `ocr_task` event is published to RabbitMQ.
 2. **OCR & Extraction**: The OCR microservice picks up the message, downloads the document from MinIO, extracts text/images using local models or the PaddleOCR API, and publishes an `nlp_task` event.
 3. **NLP Structuring**: The NLP microservice processes the raw text, cleans it, segments it, and publishes an `indexer_task` event.
 4. **Indexing**: The Indexer microservice receives the cleaned chunks, interacts with an embedding model to generate vector embeddings, and stores these into the Postgres `pgvector` tables.
 5. **RAG & Chat**: The RAG service retrieves matching context from PostgreSQL via vector similarity search and streams answers to the client using WebSockets.
+
+### Pipeline explanation
+- The pipeline is asynchronous and event-driven: each stage consumes one RabbitMQ queue and publishes to the next.
+- Queue order is: `ocr_queue` → `nlp_queue` → `indexer_queue` → `compliance_queue`.
+- This separation allows retry handling, independent scaling, and better fault isolation per stage.
 
 ---
 
