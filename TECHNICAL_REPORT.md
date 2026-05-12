@@ -208,7 +208,8 @@ flowchart LR
 \textbf{Step 1 -- Dense semantic retrieval (pgvector):}
 \begin{itemize}
   \item The query is embedded with \texttt{BAAI/bge-m3} (same model as indexing).
-  \item PostgreSQL \texttt{pgvector} search uses inner product (\texttt{<\#>}) to rank semantic similarity.
+  \item PostgreSQL \texttt{pgvector} search uses \texttt{<\#>} (negative inner product distance proxy).
+  \item Lower returned distance means higher semantic relevance.
 \end{itemize}
 
 \textbf{Step 2 -- Sparse keyword retrieval (BM25-style FTS):}
@@ -222,6 +223,7 @@ flowchart LR
 \mathrm{RRF}(d) = \sum_{i \in \{\text{semantic},\text{bm25}\}} \frac{1}{k + \mathrm{rank}_i(d)}
 \]
 \begin{itemize}
+  \item \(k\) is a smoothing constant (commonly \(60\)); in this service it is configured by \texttt{RRF\_K}.
   \item Chunks from both rankings are merged by \texttt{chunk\_id}.
   \item Final chunks are sorted by descending RRF score.
   \item This improves robustness versus using only one retriever.
